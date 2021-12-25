@@ -1,0 +1,10 @@
+.header {
+  display: flex;
+  background-color: black;
+  color: #fff;
+}
+
+.title {
+  text-align: center;
+  margin: 1em auto;
+}
