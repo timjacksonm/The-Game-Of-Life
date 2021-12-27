@@ -4,7 +4,7 @@ import Header from "./components/header/header";
 import Options from "./components/options/options";
 
 const App = () => {
-  const [gridValue, setGridValue] = useState(100);
+  const [gridValue, setGridValue] = useState(4);
 
   useEffect(() => {
     console.log(gridValue);
@@ -12,7 +12,7 @@ const App = () => {
   return (
     <div>
       <Header />
-      <Options setGridValue={setGridValue} />
+      <Options gridValue={gridValue} setGridValue={setGridValue} />
       <Grid gridValue={gridValue} />
     </div>
   );

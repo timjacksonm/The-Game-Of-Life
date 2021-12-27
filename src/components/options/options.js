@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import "./styles.css";
 
-const Options = ({ setGridValue }) => {
+const Options = ({ gridValue, setGridValue }) => {
   const slider = useRef();
 
   return (
@@ -17,6 +17,7 @@ const Options = ({ setGridValue }) => {
           min="4"
           max="80"
           step="4"
+          value={gridValue}
           className="slider"
           id="myRange"
         />
