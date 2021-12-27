@@ -1,0 +1,10 @@
+.container {
+  display: grid;
+  width: 80vh;
+  height: 80vh;
+  margin: 1em auto;
+}
+
+.cell {
+  border: 1px solid #000;
+}

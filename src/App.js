@@ -13,7 +13,7 @@ const App = () => {
     <div>
       <Header />
       <Options setGridValue={setGridValue} />
-      <Grid />
+      <Grid gridValue={gridValue} />
     </div>
   );
 };

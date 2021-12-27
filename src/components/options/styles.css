@@ -1,0 +1,12 @@
+.optionsContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
