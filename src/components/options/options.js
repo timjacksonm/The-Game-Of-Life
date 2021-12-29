@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import "./styles.css";
+import React, { useRef } from 'react';
+import './styles.css';
 
 const Options = ({ gridValue, setGridValue }) => {
   const slider = useRef();

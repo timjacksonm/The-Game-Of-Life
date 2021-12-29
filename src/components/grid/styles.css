@@ -8,3 +8,7 @@
 .cell {
   border: 1px solid #000;
 }
+
+.active {
+  background-color: greenyellow;
+}

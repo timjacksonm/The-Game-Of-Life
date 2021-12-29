@@ -1,18 +1,30 @@
-import React from "react";
-import "./styles.css";
+import React from 'react';
+import { useGrid } from '../hooks';
+import './styles.css';
 
-const Grid = ({ gridValue }) => {
+const Grid = ({ start, rows, columns }) => {
+  const { array, defineCell } = useGrid(rows, columns);
+
   return (
     <div
       className="container"
       style={{
-        gridTemplateColumns: `repeat(${gridValue}, 1fr)`,
-        gridTemplateRows: `repeat(${gridValue}, 1fr)`,
+        gridTemplateRows: `repeat(${rows}, 1fr)`,
+        gridTemplateColumns: `repeat(${columns}, 1fr)`,
       }}
     >
-      {Array.from({ length: gridValue * gridValue }).map((cell, index) => {
-        return <div className="cell" key={index} id={index}></div>;
-      })}
+      {array.map((row, rowIndex) =>
+        row.map((cell, cellIndex) => {
+          return (
+            <div
+              className={cell === 0 ? 'cell' : 'cell active'}
+              key={`${rowIndex}${cellIndex}`}
+              id={`${rowIndex} ${cellIndex}`}
+              onClick={defineCell}
+            ></div>
+          );
+        })
+      )}
     </div>
   );
 };
