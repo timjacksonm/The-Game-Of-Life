@@ -15,7 +15,30 @@ export function useGrid(rows, columns) {
   };
 
   useEffect(() => {
-    setArray(create2dArray(rows, columns));
+    if (rows > 4) {
+      const arrCopy = array;
+      const rowsToAdd = (rows - arrCopy.length) / 2;
+      const columnsToAdd = (columns - arrCopy.length) / 2;
+      // modify array copy
+      for (let i = 0; i < arrCopy.length; i++) {
+        //row to modify
+        arrCopy[i] = [
+          ...new Array(columnsToAdd).fill(0),
+          ...arrCopy[i],
+          ...new Array(columnsToAdd).fill(0),
+        ];
+      }
+      //add new rows
+      for (let i = 0; i < rowsToAdd; i++) {
+        arrCopy.unshift(new Array(Number(columns)).fill(0));
+      }
+      for (let i = 0; i < rowsToAdd; i++) {
+        arrCopy.push(new Array(Number(columns)).fill(0));
+      }
+      setArray(arrCopy);
+    } else {
+      setArray(create2dArray(rows, columns));
+    }
   }, [rows, columns]);
 
   return { array: array, defineCell: defineCell };
