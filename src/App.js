@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import Grid from './components/grid/grid';
-import Header from './components/header/header';
-import Options from './components/options/options';
+import React, { useState, useEffect } from "react";
+import Grid from "./components/grid/grid";
+import Header from "./components/header/header";
+import Options from "./components/options/options";
 
 const App = () => {
   const [gridValue, setGridValue] = useState(4);
-  const [status, setStatus] = useState('Start');
+  const [status, setStatus] = useState("Start");
 
   return (
     <div>
