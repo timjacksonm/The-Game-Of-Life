@@ -2,19 +2,21 @@ import React, { useRef } from "react";
 import Button from "../button/button";
 import "./styles.css";
 
-const Options = ({ start, setStart, gridValue, setGridValue }) => {
+const Options = ({ start, setStart, gridValue, setGridValue, showOptions }) => {
   const slider = useRef();
 
   return (
-    <div className="optionsContainer">
+    <div
+      className={showOptions ? "optionsContainer" : "optionsContainer hidden"}
+    >
+      {!start ? (
+        <Button name="Start" action={() => setStart(true)} />
+      ) : (
+        <Button name="Pause" action={() => setStart(false)} />
+      )}
+      <Button name="Load Template" action={() => console.log("load")} />
+      <Button name="Save Template" action={() => console.log("save")} />
       <div className="label">
-        {!start ? (
-          <Button name="Start" action={() => setStart(true)} />
-        ) : (
-          <Button name="Pause" action={() => setStart(false)} />
-        )}
-        <Button name="Load Template" action={() => console.log("load")} />
-        <Button name="Save Template" action={() => console.log("save")} />
         <p>cell count</p>
         <input
           onChange={(e) => {
@@ -30,6 +32,7 @@ const Options = ({ start, setStart, gridValue, setGridValue }) => {
           id="myRange"
         />
       </div>
+
       <div className="label">
         <p>speed</p>
         <input type="range" min="1" max="10" />

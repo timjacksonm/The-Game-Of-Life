@@ -6,11 +6,13 @@ import Options from "./components/options/options";
 const App = () => {
   const [gridValue, setGridValue] = useState(4);
   const [start, setStart] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
 
   return (
     <div>
-      <Header />
+      <Header showOptions={showOptions} setShowOptions={setShowOptions} />
       <Options
+        showOptions={showOptions}
         start={start}
         setStart={setStart}
         gridValue={gridValue}

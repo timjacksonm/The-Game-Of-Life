@@ -1,5 +1,7 @@
 .buttonStyle {
   color: #fff;
   background-color: blue;
-  padding: 0.5em;
+  padding: 1em;
+  border-radius: 5px;
+  border: 2px solid blue;
 }
