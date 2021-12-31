@@ -7,10 +7,6 @@ import './styles.css';
 
 const Grid = ({ status, rows, columns }) => {
   const [array, setArray] = useImmer([]);
-  useEffect(() => {
-    //on mount fill default grid of rows and columns
-    setArray(create2dArray(rows, columns));
-  }, []);
 
   const defineCell = (e) => {
     const { row, column } = {
@@ -22,32 +18,31 @@ const Grid = ({ status, rows, columns }) => {
     });
   };
 
-  function updateSize(template, size) {
-    let arrTemplate = template;
-    const start = (arrTemplate.length - array.length) / 2;
+  function updateSize(template) {
+    const start = (template.length - array.length) / 2;
 
     //update 2dArray to larger size
-    if (array.length < arrTemplate.length) {
-      for (let i = 0; i < arrTemplate.length; i++) {
+    if (array.length < template.length) {
+      for (let i = 0; i < template.length; i++) {
         if (start + array.length === i) {
           break;
         }
         if (i >= start) {
-          arrTemplate[i].splice(start, array.length, ...array[i - start]);
+          template[i].splice(start, array.length, ...array[i - start]);
         }
       }
-      setArray(arrTemplate);
+      setArray(template);
     }
     //update 2dArray to smaller size
-    if (array.length > arrTemplate.length) {
+    if (array.length > template.length) {
       setArray((prevValue) => {
         const arrayCopy = prevValue;
-        while (arrayCopy.length > size) {
+        while (arrayCopy.length > template.length) {
           arrayCopy.pop();
           arrayCopy.shift();
         }
         for (let i = 0; i < arrayCopy.length; i++) {
-          while (arrayCopy[i].length > size) {
+          while (arrayCopy[i].length > template.length) {
             arrayCopy[i].pop();
             arrayCopy[i].shift();
           }
@@ -56,10 +51,14 @@ const Grid = ({ status, rows, columns }) => {
       });
     }
   }
+  useEffect(() => {
+    //on mount fill default grid of rows and columns
+    setArray(create2dArray(rows, columns));
+  }, []);
 
   useEffect(() => {
-    //if template slice into current size
-    updateSize(create2dArray(rows, columns), rows);
+    //update grid if rows & columns amount change
+    updateSize(create2dArray(rows, columns));
   }, [rows, columns]);
 
   return (
