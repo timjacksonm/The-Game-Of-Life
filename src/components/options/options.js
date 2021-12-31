@@ -1,12 +1,20 @@
-import React, { useRef } from 'react';
-import './styles.css';
+import React, { useRef } from "react";
+import Button from "../button/button";
+import "./styles.css";
 
-const Options = ({ gridValue, setGridValue }) => {
+const Options = ({ start, setStart, gridValue, setGridValue }) => {
   const slider = useRef();
 
   return (
     <div className="optionsContainer">
       <div className="label">
+        {!start ? (
+          <Button name="Start" action={() => setStart(true)} />
+        ) : (
+          <Button name="Pause" action={() => setStart(false)} />
+        )}
+        <Button name="Load Template" action={() => console.log("load")} />
+        <Button name="Save Template" action={() => console.log("save")} />
         <p>cell count</p>
         <input
           onChange={(e) => {
