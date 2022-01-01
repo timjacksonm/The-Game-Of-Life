@@ -67,9 +67,13 @@ const Grid = ({ start, rows, columns }) => {
 
   function countNeighbors(grid, x, y) {
     let sum = 0;
+    console.log(grid[x][y]);
     for (let i = -1; i < 2; i++) {
       for (let j = -1; j < 2; j++) {
-        sum += grid[x + i][y + j];
+        sum +=
+          grid[(x + i + Number(columns)) % Number(columns)][
+            (y + j + Number(rows)) % Number(rows)
+          ];
       }
     }
 
@@ -85,26 +89,16 @@ const Grid = ({ start, rows, columns }) => {
           // next var is a deep clone
           let next = JSON.parse(JSON.stringify(prevValue));
           for (let i = 0; i < prevValue.length; i++) {
-            console.log(i);
             for (let j = 0; j < prevValue[i].length; j++) {
-              console.log(j);
               let state = prevValue[i][j];
-              //EDGES
-              if (i == 0 || i == rows - 1 || j == 0 || j == columns - 1) {
-                next[i][j] = state;
+              // count live neighbors
+              let neighbors = countNeighbors(prevValue, i, j);
+              if (state == 0 && neighbors == 3) {
+                next[i][j] = 1;
+              } else if (state == 1 && (neighbors < 2 || neighbors > 3)) {
+                next[i][j] = 0;
               } else {
-                // count live neighbors
-                let sum = 0;
-                console.log(prevValue[i][j]);
-                let neighbors = countNeighbors(prevValue, i, j);
-
-                if (state == 0 && neighbors == 3) {
-                  next[i][j] = 1;
-                } else if (state == 1 && (neighbors < 2 || neighbors > 3)) {
-                  next[i][j] = 0;
-                } else {
-                  next[i][j] = state;
-                }
+                next[i][j] = state;
               }
             }
           }
