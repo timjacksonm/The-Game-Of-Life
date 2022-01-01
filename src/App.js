@@ -18,7 +18,7 @@ const App = () => {
         gridValue={gridValue}
         setGridValue={setGridValue}
       />
-      <Grid status={start} rows={gridValue} columns={gridValue} />
+      <Grid start={start} rows={gridValue} columns={gridValue} />
     </div>
   );
 };
