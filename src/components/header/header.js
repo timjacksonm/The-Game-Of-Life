@@ -1,13 +1,32 @@
-import React from "react";
-import "./styles.css";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import React, { useState } from 'react';
+import './styles.css';
+import Options from '../options/options';
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
-const Header = ({ showOptions, setShowOptions }) => {
+const Header = ({
+  start,
+  setStart,
+  gridValue,
+  setGridValue,
+  setWasRunning,
+}) => {
+  const [showOptions, setShowOptions] = useState(false);
   return (
     <div className="header">
-      <h1 className="title">The Game Of Life</h1>
+      {showOptions ? (
+        <Options
+          showOptions={showOptions}
+          start={start}
+          setStart={setStart}
+          gridValue={gridValue}
+          setGridValue={setGridValue}
+          setWasRunning={setWasRunning}
+        />
+      ) : (
+        <h1 className="title">The Game Of Life</h1>
+      )}
       <p className="flexColumnCenter noMargin">
-        {showOptions ? "Hide options" : "Show options"}
+        {showOptions ? 'Hide options' : 'Show options'}
         {showOptions ? (
           <FaAngleUp
             size="1.5em"

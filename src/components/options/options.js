@@ -30,7 +30,7 @@ const Options = ({
       <Button name="Load Template" action={() => console.log('load')} />
       <Button name="Save Template" action={() => console.log('save')} />
       <div className="label">
-        <p>cell count</p>
+        <p>grid size</p>
         <input
           onChange={(e) => {
             setGridValue(e.target.value);

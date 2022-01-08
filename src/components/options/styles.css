@@ -2,8 +2,8 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 1em;
   background-color: rgb(29, 28, 28);
+  width: 100%;
 }
 
 .label {
