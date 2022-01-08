@@ -3,7 +3,7 @@ import Grid from './components/grid/grid';
 import Header from './components/header/header';
 
 const App = () => {
-  const [gridValue, setGridValue] = useState(4);
+  const [gridValue, setGridValue] = useState(16);
   const [start, setStart] = useState(false);
   const [wasRunning, setWasRunning] = useState(false);
   const [speed, setSpeed] = useState(-600);

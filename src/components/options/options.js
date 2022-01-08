@@ -35,7 +35,13 @@ const Options = ({
         <p>grid size</p>
         <input
           onChange={(e) => {
-            setGridValue(e.target.value);
+            if (start) {
+              setStart(false);
+              setWasRunning(true);
+              setGridValue(e.target.value);
+            } else {
+              setGridValue(e.target.value);
+            }
           }}
           ref={slider}
           type="range"
@@ -52,7 +58,13 @@ const Options = ({
         <p>speed</p>
         <input
           onChange={(e) => {
-            setSpeed(e.target.value);
+            if (start) {
+              setStart(false);
+              setWasRunning(true);
+              setSpeed(e.target.value);
+            } else {
+              setSpeed(e.target.value);
+            }
           }}
           type="range"
           step="100"

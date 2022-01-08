@@ -42,7 +42,7 @@ const Grid = ({
 
   function decreaseSize(template) {
     setArray((prevValue) => {
-      const arrayCopy = prevValue;
+      const arrayCopy = JSON.parse(JSON.stringify(prevValue));
       while (arrayCopy.length > template.length) {
         arrayCopy.pop();
         arrayCopy.shift();
@@ -57,16 +57,54 @@ const Grid = ({
     });
   }
 
+  function countNeighbors(grid, x, y) {
+    let sum = 0;
+
+    for (let i = -1; i < 2; i++) {
+      for (let j = -1; j < 2; j++) {
+        const row = (x + i + Number(columns)) % Number(columns);
+        const column = (y + j + Number(rows)) % Number(rows);
+        sum += grid[row][column];
+      }
+    }
+
+    sum -= grid[x][y];
+    return sum;
+  }
+
+  function createNext2dArray() {
+    setArray((prevValue) => {
+      // next variable is a deep clone of current array
+      let next = JSON.parse(JSON.stringify(prevValue));
+
+      for (let i = 0; i < prevValue.length; i++) {
+        for (let j = 0; j < prevValue[i].length; j++) {
+          let state = prevValue[i][j];
+
+          // count live neighbors
+          let neighbors = countNeighbors(prevValue, i, j);
+
+          //apply game of life rules to deep clone array
+          if (state === 0 && neighbors === 3) {
+            next[i][j] = 1;
+          } else if (state === 1 && (neighbors < 2 || neighbors > 3)) {
+            next[i][j] = 0;
+          } else {
+            next[i][j] = state;
+          }
+        }
+      }
+      return next;
+    });
+  }
+
   useEffect(() => {
     //on mount fill default grid of rows and columns
     setArray(create2dArray(rows, columns));
   }, []);
 
   useEffect(() => {
-    if (start) {
-      setStart(false);
-      setWasRunning(true);
-    }
+    //if grid size slider is adjusted re-create 2dArray
     const template = create2dArray(rows, columns);
     //update 2dArray to larger size
     if (array.length < template.length) {
@@ -76,60 +114,32 @@ const Grid = ({
     if (array.length > template.length) {
       decreaseSize(template);
     }
+    if (wasRunning) {
+      setStart(true);
+      setWasRunning(false);
+    }
   }, [rows, columns]);
 
   useEffect(() => {
-    if (array && wasRunning) {
+    //if speed slider is adjusted and wasRunning is true. Start simulation again
+    if (wasRunning) {
       setStart(true);
+      setWasRunning(false);
     }
-  }, [array, wasRunning, setStart]);
-
-  function countNeighbors(grid, x, y) {
-    let sum = 0;
-    // console.log(grid[x][y]);
-    for (let i = -1; i < 2; i++) {
-      for (let j = -1; j < 2; j++) {
-        sum +=
-          grid[(x + i + Number(columns)) % Number(columns)][
-            (y + j + Number(rows)) % Number(rows)
-          ];
-      }
-    }
-
-    sum -= grid[x][y];
-    return sum;
-  }
+  }, [speed]);
 
   useEffect(() => {
-    //start simulation and apply game rules based on speed
+    //start simulation
+    //if start is true create next iteration of 2dArray based on rules. setInterval speed based on speed slider
     if (start) {
       clearInterval(intervalId);
       intervalId = setInterval(() => {
-        setArray((prevValue) => {
-          //compute next array based on current array
-          // next var is a deep clone
-          let next = JSON.parse(JSON.stringify(prevValue));
-          for (let i = 0; i < prevValue.length; i++) {
-            for (let j = 0; j < prevValue[i].length; j++) {
-              let state = prevValue[i][j];
-              // count live neighbors
-              let neighbors = countNeighbors(prevValue, i, j);
-              if (state == 0 && neighbors == 3) {
-                next[i][j] = 1;
-              } else if (state == 1 && (neighbors < 2 || neighbors > 3)) {
-                next[i][j] = 0;
-              } else {
-                next[i][j] = state;
-              }
-            }
-          }
-          return next;
-        });
+        createNext2dArray();
       }, Math.abs(speed));
     } else {
       clearInterval(intervalId);
     }
-  }, [start, speed]);
+  }, [start]);
 
   return (
     <div
