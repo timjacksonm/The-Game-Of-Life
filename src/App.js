@@ -70,6 +70,7 @@ const App = () => {
         speed={speed}
         setSpeed={setSpeed}
         clear={clear}
+        loadTemplate={loadTemplate}
       />
       <Grid
         array={array}

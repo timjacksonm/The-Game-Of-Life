@@ -9,14 +9,6 @@ export function useArray(defaultValue) {
     setArray(create2dArray(gridSize, gridSize));
   }
 
-  function saveTemplate(array) {
-    //save template to db
-  }
-
-  function loadTemplate(array) {
-    //setArray based on fetched template
-  }
-
   function modifyClickedCell(event) {
     const { row, column } = {
       row: event.target.id.split(' ')[0],
@@ -98,6 +90,14 @@ export function useArray(defaultValue) {
       }
       return next;
     });
+  }
+
+  function saveTemplate(array) {
+    //save template to db
+  }
+
+  function loadTemplate(array) {
+    setArray(array);
   }
 
   return {

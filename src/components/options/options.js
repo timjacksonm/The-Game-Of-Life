@@ -12,6 +12,7 @@ const Options = ({ props, showOptions }) => {
     speed,
     setSpeed,
     clear,
+    loadTemplate,
   } = props;
 
   function handleGridChange(event) {
@@ -40,6 +41,16 @@ const Options = ({ props, showOptions }) => {
     clear(gridSize);
   }
 
+  function handleLoadTemplate() {
+    if (start) {
+      setStart(false);
+      setWasRunning(true);
+    }
+    const templateArray = JSON.parse(require('../../template.json'));
+    setGridSize(templateArray.length);
+    loadTemplate(templateArray, gridSize);
+  }
+
   return (
     <div
       className={showOptions ? 'optionsContainer' : 'optionsContainer hidden'}
@@ -56,7 +67,7 @@ const Options = ({ props, showOptions }) => {
         />
       )}
       <Button name="Clear" action={handleClickToClear} />
-      <Button name="Load Template" action={() => console.log('load')} />
+      <Button name="Load Template" action={handleLoadTemplate} />
       <Button name="Save Template" action={() => console.log('save')} />
       <div className="label">
         <p>grid size</p>
