@@ -5,6 +5,10 @@ import { useImmer } from 'use-immer';
 export function useArray(defaultValue) {
   const [array, setArray] = useImmer(defaultValue);
 
+  function clear(gridSize) {
+    setArray(create2dArray(gridSize, gridSize));
+  }
+
   function saveTemplate(array) {
     //save template to db
   }
@@ -104,5 +108,6 @@ export function useArray(defaultValue) {
     increaseSize,
     decreaseSize,
     createNext2dArray,
+    clear,
   };
 }

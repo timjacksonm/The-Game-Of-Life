@@ -11,6 +11,7 @@ const Options = ({ props, showOptions }) => {
     setGridSize,
     speed,
     setSpeed,
+    clear,
   } = props;
 
   function handleGridChange(event) {
@@ -31,6 +32,14 @@ const Options = ({ props, showOptions }) => {
     setSpeed(inputValue);
   }
 
+  function handleClickToClear() {
+    if (start) {
+      setStart(false);
+      setWasRunning(false);
+    }
+    clear(gridSize);
+  }
+
   return (
     <div
       className={showOptions ? 'optionsContainer' : 'optionsContainer hidden'}
@@ -46,6 +55,7 @@ const Options = ({ props, showOptions }) => {
           }}
         />
       )}
+      <Button name="Clear" action={handleClickToClear} />
       <Button name="Load Template" action={() => console.log('load')} />
       <Button name="Save Template" action={() => console.log('save')} />
       <div className="label">

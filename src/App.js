@@ -21,6 +21,7 @@ const App = () => {
     increaseSize,
     decreaseSize,
     createNext2dArray,
+    clear,
   } = useArray(create2dArray(gridSize, gridSize));
 
   useEffect(() => {
@@ -68,6 +69,7 @@ const App = () => {
         setGridSize={setGridSize}
         speed={speed}
         setSpeed={setSpeed}
+        clear={clear}
       />
       <Grid
         array={array}
