@@ -1,21 +1,34 @@
-import React, { useRef } from "react";
-import Button from "../button/button";
-import "./styles.css";
+import React, { useRef } from 'react';
+import Button from '../button/button';
+import './styles.css';
 
-const Options = ({ start, setStart, gridValue, setGridValue, showOptions }) => {
+const Options = ({
+  start,
+  setStart,
+  setWasRunning,
+  gridValue,
+  setGridValue,
+  showOptions,
+}) => {
   const slider = useRef();
 
   return (
     <div
-      className={showOptions ? "optionsContainer" : "optionsContainer hidden"}
+      className={showOptions ? 'optionsContainer' : 'optionsContainer hidden'}
     >
       {!start ? (
         <Button name="Start" action={() => setStart(true)} />
       ) : (
-        <Button name="Pause" action={() => setStart(false)} />
+        <Button
+          name="Pause"
+          action={() => {
+            setStart(false);
+            setWasRunning(false);
+          }}
+        />
       )}
-      <Button name="Load Template" action={() => console.log("load")} />
-      <Button name="Save Template" action={() => console.log("save")} />
+      <Button name="Load Template" action={() => console.log('load')} />
+      <Button name="Save Template" action={() => console.log('save')} />
       <div className="label">
         <p>cell count</p>
         <input
