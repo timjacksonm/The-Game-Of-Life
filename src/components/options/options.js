@@ -1,18 +1,35 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import Button from '../button/button';
 import './styles.css';
 
-const Options = ({
-  start,
-  setStart,
-  setWasRunning,
-  gridValue,
-  setGridValue,
-  showOptions,
-  speed,
-  setSpeed,
-}) => {
-  const slider = useRef();
+const Options = ({ props, showOptions }) => {
+  const {
+    start,
+    setStart,
+    setWasRunning,
+    gridSize,
+    setGridSize,
+    speed,
+    setSpeed,
+  } = props;
+
+  function handleGridChange(event) {
+    const inputValue = Number(event.target.value);
+    if (start) {
+      setStart(false);
+      setWasRunning(true);
+    }
+    setGridSize(inputValue);
+  }
+
+  function handleSpeedChange(event) {
+    const inputValue = Number(event.target.value);
+    if (start) {
+      setStart(false);
+      setWasRunning(true);
+    }
+    setSpeed(inputValue);
+  }
 
   return (
     <div
@@ -34,21 +51,12 @@ const Options = ({
       <div className="label">
         <p>grid size</p>
         <input
-          onChange={(e) => {
-            if (start) {
-              setStart(false);
-              setWasRunning(true);
-              setGridValue(e.target.value);
-            } else {
-              setGridValue(e.target.value);
-            }
-          }}
-          ref={slider}
+          onChange={handleGridChange}
           type="range"
           min="4"
           max="80"
           step="4"
-          value={gridValue}
+          value={gridSize}
           className="slider"
           id="myRange"
         />
@@ -57,15 +65,7 @@ const Options = ({
       <div className="label">
         <p>speed</p>
         <input
-          onChange={(e) => {
-            if (start) {
-              setStart(false);
-              setWasRunning(true);
-              setSpeed(e.target.value);
-            } else {
-              setSpeed(e.target.value);
-            }
-          }}
+          onChange={handleSpeedChange}
           type="range"
           step="100"
           min="-1000"
