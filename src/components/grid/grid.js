@@ -13,6 +13,7 @@ const Grid = ({
   setWasRunning,
   rows,
   columns,
+  speed,
 }) => {
   const [array, setArray] = useImmer([]);
 
@@ -102,6 +103,7 @@ const Grid = ({
   useEffect(() => {
     //start simulation and apply game rules based on speed
     if (start) {
+      clearInterval(intervalId);
       intervalId = setInterval(() => {
         setArray((prevValue) => {
           //compute next array based on current array
@@ -123,11 +125,11 @@ const Grid = ({
           }
           return next;
         });
-      }, 500);
+      }, Math.abs(speed));
     } else {
       clearInterval(intervalId);
     }
-  }, [start]);
+  }, [start, speed]);
 
   return (
     <div

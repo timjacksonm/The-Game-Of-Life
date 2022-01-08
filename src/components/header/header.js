@@ -9,6 +9,8 @@ const Header = ({
   gridValue,
   setGridValue,
   setWasRunning,
+  speed,
+  setSpeed,
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   return (
@@ -21,6 +23,8 @@ const Header = ({
           gridValue={gridValue}
           setGridValue={setGridValue}
           setWasRunning={setWasRunning}
+          speed={speed}
+          setSpeed={setSpeed}
         />
       ) : (
         <h1 className="title">The Game Of Life</h1>

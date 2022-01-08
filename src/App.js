@@ -6,6 +6,7 @@ const App = () => {
   const [gridValue, setGridValue] = useState(4);
   const [start, setStart] = useState(false);
   const [wasRunning, setWasRunning] = useState(false);
+  const [speed, setSpeed] = useState(-600);
 
   return (
     <div>
@@ -15,6 +16,8 @@ const App = () => {
         gridValue={gridValue}
         setGridValue={setGridValue}
         setWasRunning={setWasRunning}
+        speed={speed}
+        setSpeed={setSpeed}
       />
       <Grid
         start={start}
@@ -23,6 +26,7 @@ const App = () => {
         setWasRunning={setWasRunning}
         rows={gridValue}
         columns={gridValue}
+        speed={speed}
       />
     </div>
   );

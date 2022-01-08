@@ -9,6 +9,8 @@ const Options = ({
   gridValue,
   setGridValue,
   showOptions,
+  speed,
+  setSpeed,
 }) => {
   const slider = useRef();
 
@@ -48,7 +50,16 @@ const Options = ({
 
       <div className="label">
         <p>speed</p>
-        <input type="range" min="1" max="10" />
+        <input
+          onChange={(e) => {
+            setSpeed(e.target.value);
+          }}
+          type="range"
+          step="100"
+          min="-1000"
+          max="-200"
+          value={speed}
+        />
       </div>
     </div>
   );
