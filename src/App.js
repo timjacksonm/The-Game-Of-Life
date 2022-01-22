@@ -1,83 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import Grid from './components/grid/grid';
-import Header from './components/header/header';
-import { useArray } from './components/hooks';
-
-import { create2dArray } from './helperFunctions';
-
-let intervalId;
+import React, { useEffect, useRef, useState } from 'react';
 
 const App = () => {
-  const [start, setStart] = useState(false);
-  const [wasRunning, setWasRunning] = useState(false);
-  const [gridSize, setGridSize] = useState(16);
-  const [speed, setSpeed] = useState(-600);
+  const canvasRef = useRef(null);
+  const cellSize = 16;
+  const gridGap = 1;
 
-  const {
-    array,
-    saveTemplate,
-    loadTemplate,
-    modifyClickedCell,
-    increaseSize,
-    decreaseSize,
-    createNext2dArray,
-    clear,
-  } = useArray(create2dArray(gridSize, gridSize));
+  const [rows, setRows] = useState(
+    Math.floor((window.innerWidth + gridGap) / (cellSize + gridGap))
+  );
+  const [cols, setCols] = useState(
+    Math.floor((window.innerHeight + gridGap) / (cellSize + gridGap))
+  );
 
-  useEffect(() => {
-    //if grid size slider is adjusted re-create 2dArray. Start simulation again
-    if (array.length < gridSize) {
-      increaseSize(gridSize);
-    }
-    if (array.length > gridSize) {
-      decreaseSize(gridSize);
-    }
-    if (wasRunning) {
-      setStart(true);
-      setWasRunning(false);
-    }
-  }, [gridSize]);
+  const defaultGrid = new Array(cols)
+    .fill(0)
+    .map(() => new Array(rows).fill(0));
+
+  const drawCell = (ctx, cell, index) => {
+    const x = index.row * cellSize + index.row;
+    const y = index.column * (cellSize + gridGap);
+    ctx.fillStyle = cell === 1 ? '#00adb5' : '#393e46';
+    ctx.fillRect(x, y, cellSize, cellSize);
+  };
 
   useEffect(() => {
-    //if speed slider is adjusted and wasRunning is true. Start simulation again
-    if (wasRunning) {
-      setStart(true);
-      setWasRunning(false);
-    }
-  }, [speed]);
+    const ctx = canvasRef.current.getContext('2d');
 
-  useEffect(() => {
-    //start simulation
-    //if start is true create next iteration of 2dArray based on rules. setInterval speed based on speed slider
-    if (start) {
-      clearInterval(intervalId);
-      intervalId = setInterval(() => {
-        createNext2dArray(gridSize, gridSize);
-      }, Math.abs(speed));
-    } else {
-      clearInterval(intervalId);
+    for (let i = 0; i < defaultGrid.length; i++) {
+      for (let k = 0; k < defaultGrid[i].length; k++) {
+        const cellValue = defaultGrid[i][k];
+        drawCell(ctx, cellValue, { column: i, row: k });
+      }
     }
-  }, [start]);
-
+  });
   return (
-    <div>
-      <Header
-        start={start}
-        setStart={setStart}
-        setWasRunning={setWasRunning}
-        gridSize={gridSize}
-        setGridSize={setGridSize}
-        speed={speed}
-        setSpeed={setSpeed}
-        clear={clear}
-        loadTemplate={loadTemplate}
+    <>
+      <canvas
+        ref={canvasRef}
+        width={window.innerWidth}
+        height={window.innerHeight}
       />
-      <Grid
-        array={array}
-        gridSize={gridSize}
-        modifyClickedCell={modifyClickedCell}
-      />
-    </div>
+    </>
   );
 };
 
