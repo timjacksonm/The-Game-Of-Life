@@ -17,46 +17,53 @@ const App = () => {
   );
 
   const [grid, setGrid] = useImmer(
-    new Array(cols)
-      .fill(0)
-      .map(() =>
-        new Array(rows).fill(null).map(() => Math.floor(Math.random() * 2))
-      )
+    new Array(cols).fill(0).map(
+      () => new Array(rows).fill(0)
+      // .map(() => Math.floor(Math.random() * 2))
+    )
   );
 
-  function nextGen(grid) {
-    const gridCopy = grid.map((arr) => [...arr]);
-
-    for (let col = 0; col < grid.length; col++) {
-      for (let row = 0; row < grid[col].length; row++) {
-        const cell = grid[col][row];
-        let numNeighbours = 0;
-        for (let i = -1; i < 2; i++) {
-          for (let j = -1; j < 2; j++) {
-            if (i === 0 && j === 0) {
-              continue;
-            }
-            const x_cell = col + i;
-            const y_cell = row + j;
-
-            if (x_cell >= 0 && y_cell >= 0 && x_cell < cols && y_cell < rows) {
-              const currentNeighbour = grid[col + i][row + j];
-              numNeighbours += currentNeighbour;
-            }
-          }
+  function countNeighbors(i, j) {
+    // starts on x in row -1,-1
+    // xoo
+    // oXo continue on x,y = 0
+    // ooo
+    let num = 0;
+    for (let x = -1; x < 2; x++) {
+      for (let y = -1; y < 2; y++) {
+        if (x === 0 && y === 0) {
+          continue;
         }
+        const column = (i + x + cols) % cols;
+        const row = (j + y + rows) % rows;
 
-        // rules
-        if (cell === 1 && numNeighbours < 2) {
-          gridCopy[col][row] = 0;
-        } else if (cell === 1 && numNeighbours > 3) {
-          gridCopy[col][row] = 0;
-        } else if (cell === 0 && numNeighbours === 3) {
-          gridCopy[col][row] = 1;
+        if (column >= 0 && row >= 0 && column < cols && row < rows) {
+          const currentNeighbour = grid[column][row];
+          num += currentNeighbour;
         }
       }
     }
-    setGrid(gridCopy);
+    return num;
+  }
+
+  function nextGen() {
+    setGrid((gridCopy) => {
+      for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[i].length; j++) {
+          const cell = grid[i][j];
+          const neighbors = countNeighbors(i, j);
+          // rules
+          if (cell === 1 && neighbors < 2) {
+            gridCopy[i][j] = 0;
+          } else if (cell === 1 && neighbors > 3) {
+            gridCopy[i][j] = 0;
+          } else if (cell === 0 && neighbors === 3) {
+            gridCopy[i][j] = 1;
+          }
+        }
+      }
+      return gridCopy;
+    });
   }
 
   function drawGrid(grid, ctx) {
@@ -70,12 +77,22 @@ const App = () => {
     }
   }
 
+  function handleClick(e) {
+    const x = Math.floor(e.pageX / (cellSize + gridGap));
+    const y = Math.floor(e.pageY / (cellSize + gridGap));
+    setGrid((gridCopy) => {
+      let status = gridCopy[y][x] ? 0 : 1;
+      gridCopy[y][x] = status;
+      return gridCopy;
+    });
+  }
+
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
     drawGrid(grid, ctx);
   }, [grid]);
 
-  useInterval(() => nextGen(grid), start ? 50 : null);
+  useInterval(() => nextGen(), start ? 20 : null);
 
   return (
     <>
@@ -86,9 +103,7 @@ const App = () => {
         ref={canvasRef}
         width={window.innerWidth}
         height={window.innerHeight}
-        onClick={(e) => {
-          console.log(e);
-        }}
+        onClick={handleClick}
       />
     </>
   );
