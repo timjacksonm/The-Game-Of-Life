@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Canvas from './components/canvas/canvas';
-import { useGetPatternNamesQuery } from './components/services/gameoflifeapi';
+import { useGetPatternNamesQuery } from './services/gameoflifeapi';
 
 const App = () => {
   const [cellSize, setCellSize] = useState(15);
@@ -8,9 +8,7 @@ const App = () => {
   const [start, setStart] = useState(false);
   const [speed, setSpeed] = useState(20);
 
-  const { data, isFetching } = useGetPatternNamesQuery();
-
-  console.log(data);
+  // const { data, isFetching } = useGetPatternNamesQuery();
 
   return (
     <>
