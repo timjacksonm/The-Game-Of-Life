@@ -4,20 +4,24 @@ import useInterval from '../../hooks/useInterval';
 
 const Canvas = ({ start, speed, cellSize, gridGap }) => {
   const canvasRef = useRef(null);
-  const [rows, setRows] = useState(
-    Math.floor((window.innerWidth + gridGap) / (cellSize + gridGap))
-  );
-  const [cols, setCols] = useState(
-    Math.floor((window.innerHeight + gridGap) / (cellSize + gridGap))
-  );
-  const [grid, setGrid] = useImmer(
-    new Array(cols).fill(0).map(
-      () => new Array(rows).fill(0)
-      // .map(() => Math.floor(Math.random() * 2))
-    )
-  );
 
-  function countNeighbors(i, j) {
+  //grid[x][y]
+  //x representing entire horizontal row. y representing vertical value in row
+  const [grid, setGrid] = useState(defaultGrid());
+
+  function defaultGrid() {
+    return new Array(
+      Math.floor((window.innerHeight + gridGap) / (cellSize + gridGap))
+    )
+      .fill(0)
+      .map(() =>
+        new Array(
+          Math.floor((window.innerWidth + gridGap) / (cellSize + gridGap))
+        ).fill(0)
+      );
+  }
+
+  function countNeighbors(indexX, indexY) {
     // starts on x in row -1,-1
     // xoo
     // oXo continue on x,y = 0
@@ -28,10 +32,15 @@ const Canvas = ({ start, speed, cellSize, gridGap }) => {
         if (x === 0 && y === 0) {
           continue;
         }
-        const column = (i + x + cols) % cols;
-        const row = (j + y + rows) % rows;
+        const column = (indexX + x + grid.length) % grid.length;
+        const row = (indexY + y + grid[0].length) % grid[0].length;
 
-        if (column >= 0 && row >= 0 && column < cols && row < rows) {
+        if (
+          column >= 0 &&
+          row >= 0 &&
+          column < grid.length &&
+          row < grid[0].length
+        ) {
           const currentNeighbour = grid[column][row];
           num += currentNeighbour;
         }
@@ -40,19 +49,29 @@ const Canvas = ({ start, speed, cellSize, gridGap }) => {
     return num;
   }
 
+  function updateCell(x, y, value) {
+    setGrid((gridCopy) =>
+      gridCopy.map((row, index) =>
+        index !== x
+          ? row
+          : row.map((cell, index) => (index !== y ? cell : value))
+      )
+    );
+  }
+
   function nextGen() {
     setGrid((gridCopy) => {
-      for (let i = 0; i < grid.length; i++) {
-        for (let j = 0; j < grid[i].length; j++) {
-          const cell = grid[i][j];
-          const neighbors = countNeighbors(i, j);
+      for (let x = 0; x < grid.length; x++) {
+        for (let y = 0; y < grid[x].length; y++) {
+          const cell = grid[x][y];
+          const neighbors = countNeighbors(x, y);
           // rules
           if (cell === 1 && neighbors < 2) {
-            gridCopy[i][j] = 0;
+            updateCell(x, y, 0);
           } else if (cell === 1 && neighbors > 3) {
-            gridCopy[i][j] = 0;
+            updateCell(x, y, 0);
           } else if (cell === 0 && neighbors === 3) {
-            gridCopy[i][j] = 1;
+            updateCell(x, y, 1);
           }
         }
       }
@@ -61,24 +80,21 @@ const Canvas = ({ start, speed, cellSize, gridGap }) => {
   }
 
   function drawGrid(grid, ctx) {
-    for (let i = 0; i < grid.length; i++) {
-      for (let k = 0; k < grid[i].length; k++) {
-        const x = k * cellSize + k;
-        const y = i * (cellSize + gridGap);
-        ctx.fillStyle = grid[i][k] === 1 ? '#61dafb' : '#393e46';
-        ctx.fillRect(x, y, cellSize, cellSize);
+    for (let x = 0; x < grid.length; x++) {
+      for (let y = 0; y < grid[x].length; y++) {
+        const coordX = y * cellSize + y;
+        const coordY = x * (cellSize + gridGap);
+        ctx.fillStyle = grid[x][y] === 1 ? '#61dafb' : '#393e46';
+        ctx.fillRect(coordX, coordY, cellSize, cellSize);
       }
     }
   }
 
   function handleClick(e) {
-    const x = Math.floor(e.pageX / (cellSize + gridGap));
-    const y = Math.floor(e.pageY / (cellSize + gridGap));
-    setGrid((gridCopy) => {
-      let status = gridCopy[y][x] ? 0 : 1;
-      gridCopy[y][x] = status;
-      return gridCopy;
-    });
+    const x = Math.floor(e.pageY / (cellSize + gridGap));
+    const y = Math.floor(e.pageX / (cellSize + gridGap));
+    const cellValue = grid[x][y] ? 0 : 1;
+    updateCell(x, y, cellValue);
   }
 
   useEffect(() => {
