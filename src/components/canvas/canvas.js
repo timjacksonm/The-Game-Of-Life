@@ -5,8 +5,8 @@ import useInterval from '../../hooks/useInterval';
 const Canvas = ({ start, speed, cellSize, gridGap }) => {
   const canvasRef = useRef(null);
 
-  //grid[x][y]
-  //x representing entire horizontal row. y representing vertical value in row
+  //standard throughout document = grid[x][y]
+  //x representing entire horizontal row. y representing vertical value in row.
   const [grid, setGrid] = useState(defaultGrid());
 
   function defaultGrid() {
