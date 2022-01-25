@@ -1,16 +1,16 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const apiHeaders = {
-  'x-rapidapi-host': 'the-game-of-life.p.rapidapi.com',
-  'x-rapidapi-key': 'Enter Key Here',
+  'x-rapidapi-host': process.env.REACT_APP_LIFE_API_HOST,
+  'x-rapidapi-key': process.env.REACT_APP_LIFE_API_KEY,
 };
 
-const baseUrl = 'https://the-game-of-life.p.rapidapi.com/';
+const baseUrl = process.env.REACT_APP_LIFE_BASE_URL;
 
 const createRequest = (url, params) => ({
   url,
   headers: apiHeaders,
-  params: params,
+  params: { select: params },
 });
 
 export const lifeApi = createApi({
@@ -18,7 +18,7 @@ export const lifeApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
     getPatternNames: builder.query({
-      query: () => createRequest('/wikicollection/patterns', '["title"]'),
+      query: () => createRequest('/wikicollection/patterns/', '["title"]'),
     }),
   }),
 });
