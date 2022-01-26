@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useImmer } from 'use-immer';
 import useInterval from '../../hooks/useInterval';
 
-const Canvas = ({ start, speed, cellSize, gridGap }) => {
+const Canvas = ({ start, speed, cellSize, gridGap, windowSize }) => {
   const canvasRef = useRef(null);
 
   //standard throughout document = grid[x][y]
@@ -11,12 +11,12 @@ const Canvas = ({ start, speed, cellSize, gridGap }) => {
 
   function defaultGrid() {
     return new Array(
-      Math.floor((window.innerHeight + gridGap) / (cellSize + gridGap))
+      Math.floor((windowSize.height + gridGap) / (cellSize + gridGap))
     )
       .fill(0)
       .map(() =>
         new Array(
-          Math.floor((window.innerWidth + gridGap) / (cellSize + gridGap))
+          Math.floor((windowSize.width + gridGap) / (cellSize + gridGap))
         ).fill(0)
       );
   }
@@ -97,10 +97,88 @@ const Canvas = ({ start, speed, cellSize, gridGap }) => {
     updateCell(x, y, cellValue);
   }
 
+  function decreaseGrid() {
+    const newGrid = defaultGrid();
+    setGrid((gridCopy) => {
+      let oldGrid = [...gridCopy];
+
+      //remove values from rows
+      oldGrid = oldGrid.map((x) => {
+        const newRow = [...x];
+        let rotate = true;
+        while (newRow.length !== newGrid[0].length) {
+          if (rotate) newRow.shift();
+          if (!rotate) newRow.pop();
+          rotate = !rotate;
+        }
+        return newRow;
+      });
+
+      //remove excess rows
+      let rotate = true;
+      while (oldGrid.length !== newGrid.length) {
+        if (rotate) oldGrid.shift();
+        if (!rotate) oldGrid.pop();
+        rotate = !rotate;
+      }
+      return oldGrid;
+    });
+  }
+
+  function increaseGrid() {
+    const newGrid = defaultGrid();
+    setGrid((gridCopy) => {
+      let oldGrid = [...gridCopy];
+
+      //add values to rows
+      oldGrid = oldGrid.map((x) => {
+        const newRow = [...x];
+        let rotate = true;
+        while (newRow.length !== newGrid[0].length) {
+          if (rotate) newRow.unshift(0);
+          if (!rotate) newRow.push(0);
+          rotate = !rotate;
+        }
+        return newRow;
+      });
+
+      //add entire rows
+      let rotate = true;
+      while (oldGrid.length !== newGrid.length) {
+        if (rotate) oldGrid.unshift(new Array(newGrid[0].length).fill(0));
+        if (!rotate) oldGrid.push(new Array(newGrid[0].length).fill(0));
+        rotate = !rotate;
+      }
+
+      return oldGrid;
+    });
+  }
+
+  function handleResize() {
+    const newGrid = defaultGrid();
+    if (grid.length < newGrid.length || grid[0].length < newGrid[0].length) {
+      increaseGrid();
+    }
+    if (grid.length > newGrid.length || grid[0].length > newGrid[0].length) {
+      decreaseGrid();
+    }
+  }
+
+  useEffect(() => {
+    const template = defaultGrid();
+    if (
+      grid.length !== template.length ||
+      grid[0].length !== template[0].length
+    ) {
+      handleResize();
+    }
+  });
+
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
+    ctx.clearRect(0, 0, windowSize.width, windowSize.height);
     drawGrid(grid, ctx);
-  }, [grid]);
+  });
 
   useInterval(() => nextGen(), start ? speed : null);
   return (
