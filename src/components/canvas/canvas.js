@@ -1,25 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useImmer } from 'use-immer';
 import useInterval from '../../hooks/useInterval';
+import defaultGrid from '../../utils';
 
-const Canvas = ({ start, speed, cellSize, gridGap, windowSize }) => {
+const Canvas = ({
+  grid,
+  setGrid,
+  setGenCount,
+  setAliveCount,
+  start,
+  speed,
+  cellSize,
+  gridGap,
+  windowSize,
+}) => {
   const canvasRef = useRef(null);
 
   //standard throughout document = grid[x][y]
   //x representing entire horizontal row. y representing vertical value in row.
-  const [grid, setGrid] = useState(defaultGrid());
-
-  function defaultGrid() {
-    return new Array(
-      Math.floor((windowSize.height + gridGap) / (cellSize + gridGap))
-    )
-      .fill(0)
-      .map(() =>
-        new Array(
-          Math.floor((windowSize.width + gridGap) / (cellSize + gridGap))
-        ).fill(0)
-      );
-  }
 
   function countNeighbors(indexX, indexY) {
     // starts on x in row -1,-1
@@ -77,6 +75,7 @@ const Canvas = ({ start, speed, cellSize, gridGap, windowSize }) => {
       }
       return gridCopy;
     });
+    setGenCount((prevValue) => prevValue + 1);
   }
 
   function drawGrid(grid, ctx) {
@@ -98,7 +97,7 @@ const Canvas = ({ start, speed, cellSize, gridGap, windowSize }) => {
   }
 
   function decreaseGrid() {
-    const newGrid = defaultGrid();
+    const newGrid = defaultGrid(windowSize, gridGap, cellSize);
     setGrid((gridCopy) => {
       let oldGrid = [...gridCopy];
 
@@ -126,7 +125,7 @@ const Canvas = ({ start, speed, cellSize, gridGap, windowSize }) => {
   }
 
   function increaseGrid() {
-    const newGrid = defaultGrid();
+    const newGrid = defaultGrid(windowSize, gridGap, cellSize);
     setGrid((gridCopy) => {
       let oldGrid = [...gridCopy];
 
@@ -155,7 +154,7 @@ const Canvas = ({ start, speed, cellSize, gridGap, windowSize }) => {
   }
 
   function handleResize() {
-    const newGrid = defaultGrid();
+    const newGrid = defaultGrid(windowSize, gridGap, cellSize);
     if (grid.length < newGrid.length || grid[0].length < newGrid[0].length) {
       increaseGrid();
     }
@@ -165,7 +164,7 @@ const Canvas = ({ start, speed, cellSize, gridGap, windowSize }) => {
   }
 
   useEffect(() => {
-    const template = defaultGrid();
+    const template = defaultGrid(windowSize, gridGap, cellSize);
     if (
       grid.length !== template.length ||
       grid[0].length !== template[0].length
@@ -179,6 +178,11 @@ const Canvas = ({ start, speed, cellSize, gridGap, windowSize }) => {
     ctx.clearRect(0, 0, windowSize.width, windowSize.height);
     drawGrid(grid, ctx);
   });
+
+  useEffect(() => {
+    const count = grid.flat().filter((num) => num === 1).length;
+    setAliveCount(count);
+  }, [grid, setAliveCount]);
 
   useInterval(() => nextGen(), start ? speed : null);
   return (
