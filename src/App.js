@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Canvas from './components/canvas/canvas';
 import useWindowSize from './hooks/useWindowSize';
-
-import { useGetPatternNamesQuery } from './services/gameoflifeapi';
+import Menu from './components/menu/menu';
+import Button from './components/button/button';
 
 const App = () => {
   const windowSize = useWindowSize();
@@ -11,13 +11,14 @@ const App = () => {
   const [start, setStart] = useState(false);
   const [speed, setSpeed] = useState(50);
 
-  // const { data, isFetching } = useGetPatternNamesQuery();
-
   return (
     <>
-      <button style={{ position: 'absolute' }} onClick={() => setStart(!start)}>
-        {start ? 'Stop' : 'Start'}
-      </button>
+      <Menu>
+        <Button clickHanlder={() => setStart(!start)}>
+          {start ? 'Stop' : 'Start'}
+        </Button>
+      </Menu>
+
       <Canvas
         cellSize={cellSize}
         gridGap={gridGap}
