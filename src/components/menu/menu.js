@@ -20,9 +20,9 @@ const TemplateList = () => {
 
 const Menu = ({ children }) => {
   return (
-    <div className="absolute w-1/2 m-auto bg-cyan-300 ml-auto mr-auto left-0 right-0 p-3">
+    <menu className="absolute min-w-fit w-1/5 flex justify-around bg-gray-800 ml-auto mr-auto left-0 right-0 p-3">
       {children}
-    </div>
+    </menu>
   );
 };
 
