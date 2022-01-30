@@ -1,10 +1,16 @@
 import React from 'react';
 import Loading from '../loading/loading';
-import { v4 as uuidv4 } from 'uuid';
 import { useGetPatternNamesQuery } from '../../services/gameoflifeapi';
 
-const List = () => {
+const List = ({ setSelected }) => {
   const { data, isFetching } = useGetPatternNamesQuery();
+
+  const handleSelectChange = (e) => {
+    const selection = Array.from(e.target).filter(
+      (option) => option.selected
+    )[0];
+    setSelected(selection);
+  };
 
   if (isFetching)
     return (
@@ -13,18 +19,11 @@ const List = () => {
       </div>
     );
 
-  function handleBrushChange(e) {
-    const selected = Array.from(e.target).filter(
-      (option) => option.selected
-    )[0];
-    console.log(selected.value, selected.id);
-  }
   return (
-    <div className="flex flex-col items-center p-3 flex-1 scroll">
+    <div className="flex flex-col h-2/5 items-center p-3 scroll">
       <h1 className="font-bold">Brush Patterns</h1>
       <select
-        onChange={(e) => handleBrushChange(e)}
-        id="dino-select"
+        onChange={(e) => handleSelectChange(e)}
         className="bg-gray-700 w-full"
         size="20"
       >
@@ -34,9 +33,9 @@ const List = () => {
         <optgroup label="customcollection">
           <option>not implemented</option>
         </optgroup>
-        <optgroup label="wikicollection">
+        <optgroup label={`wikicollection: ${data.length} patterns`}>
           {data.map((pattern) => (
-            <option key={uuidv4()} id={pattern._id}>
+            <option key={pattern._id} id={pattern._id}>
               {pattern.title}
             </option>
           ))}

@@ -81,6 +81,7 @@ const App = () => {
         setGenCount={setGenCount}
         speed={speed}
         setSpeed={setSpeed}
+        color={color}
         setColor={setColor}
       />
 

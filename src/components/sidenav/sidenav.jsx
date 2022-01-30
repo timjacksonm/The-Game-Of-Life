@@ -7,6 +7,7 @@ import List from '../list/list';
 const Sidenav = (props) => {
   const { isOpen, name } = props;
   const [selected, setSelected] = useState();
+
   if (name === 'Settings') {
     const translate = isOpen ? 'translate-x-0' : 'translate-x-full';
     const position = 'right-0';

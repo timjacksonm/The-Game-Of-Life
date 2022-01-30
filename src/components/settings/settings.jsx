@@ -13,6 +13,7 @@ const Settings = ({
   cellSize,
   speed,
   setSpeed,
+  color,
   setColor,
 }) => {
   const handleReset = () => {
@@ -24,7 +25,7 @@ const Settings = ({
   const handleColorChange = (e) => setColor(e.target.value);
 
   return (
-    <div className="h-1/3 flex flex-col items-center p-3">
+    <div className="flex flex-col items-center p-3 flex-1">
       <h1 className="font-bold">Settings</h1>
       <div className="bg-gray-600 w-full h-full p-3 flex flex-col">
         <div className="flex my-3">
@@ -39,6 +40,7 @@ const Settings = ({
           Theme Color:
           <input
             onChange={(e) => handleColorChange(e)}
+            value={color}
             className="mx-3"
             type="color"
           />

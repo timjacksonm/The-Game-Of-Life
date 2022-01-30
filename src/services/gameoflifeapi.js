@@ -7,10 +7,10 @@ const apiHeaders = {
 
 const baseUrl = process.env.REACT_APP_LIFE_BASE_URL;
 
-const createRequest = (url, params) => ({
+const createRequest = (url, options) => ({
   url,
   headers: apiHeaders,
-  params: { select: params, count: 35 },
+  params: options,
 });
 
 export const lifeApi = createApi({
@@ -18,9 +18,19 @@ export const lifeApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
     getPatternNames: builder.query({
-      query: () => createRequest('/wikicollection/patterns/', '["title"]'),
+      query: () =>
+        createRequest('/wikicollection/patterns/', {
+          select: '["title"]',
+          count: 35,
+        }),
+    }),
+    getPatternById: builder.query({
+      query: (id) =>
+        createRequest(`/wikicollection/patterns/${id}`, {
+          select: '["author","title","description","size","rleString","date"]',
+        }),
     }),
   }),
 });
 
-export const { useGetPatternNamesQuery } = lifeApi;
+export const { useGetPatternNamesQuery, useGetPatternByIdQuery } = lifeApi;
