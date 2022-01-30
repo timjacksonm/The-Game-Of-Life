@@ -5,8 +5,9 @@ import Button from '../button/button';
 import { GiPalette } from 'react-icons/gi';
 import { useGetPatternByIdQuery } from '../../services/gameoflifeapi';
 
-const PatternInfo = ({ id }) => {
-  const { data, isFetching } = useGetPatternByIdQuery(id);
+const PatternInfo = (props) => {
+  const { selected, setBrush, grid } = props;
+  const { data, isFetching } = useGetPatternByIdQuery(selected.id);
 
   if (isFetching)
     return (
@@ -17,6 +18,12 @@ const PatternInfo = ({ id }) => {
 
   return (
     <>
+      <Button
+        name="Apply Pattern"
+        clickHanlder={() => setBrush(data.rleString)}
+      >
+        <GiPalette title="Palette" size="2em" />
+      </Button>
       <h2>Title: {data.title}</h2>
       <h2>Author: {data.author}</h2>
       <h3>
@@ -29,22 +36,15 @@ const PatternInfo = ({ id }) => {
   );
 };
 
-const Details = ({ selected }) => {
+const Details = (props) => {
+  const { selected } = props;
   return (
     <div className="h-2/5 flex flex-col items-center p-3">
       <h1 className="font-bold">Details</h1>
       <div className="bg-gray-600 w-full h-full p-3 overflow-y-auto">
         <div className="flex flex-col py-3">
           {selected ? (
-            <>
-              <Button
-                name="Apply Pattern"
-                clickHanlder={() => console.log(selected.id)}
-              >
-                <GiPalette title="Palette" size="2em" />
-              </Button>
-              <PatternInfo id={selected.id} />
-            </>
+            <PatternInfo {...props} />
           ) : (
             <>
               <h2>Title: </h2>

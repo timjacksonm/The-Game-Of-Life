@@ -13,9 +13,11 @@ const Canvas = ({
   cellSize,
   gridGap,
   windowSize,
+  brush,
   color,
 }) => {
   const canvasRef = useRef(null);
+  const [mousePos, setMousePos] = useState();
 
   //standard throughout document = grid[x][y]
   //x representing entire horizontal row. y representing vertical value in row.
@@ -97,6 +99,12 @@ const Canvas = ({
     updateCell(x, y, cellValue);
   }
 
+  function handleMouseMove(e) {
+    const x = Math.floor(e.pageY / (cellSize + gridGap));
+    const y = Math.floor(e.pageX / (cellSize + gridGap));
+    setMousePos({ posX: x, posY: y });
+  }
+
   function decreaseGrid() {
     const newGrid = defaultGrid(windowSize, gridGap, cellSize);
     setGrid((gridCopy) => {
@@ -164,6 +172,16 @@ const Canvas = ({
     }
   }
 
+  function drawHover(ctx) {
+    if (mousePos) {
+      const { posX, posY } = mousePos;
+      const coordX = posY * cellSize + posY;
+      const coordY = posX * (cellSize + gridGap);
+      ctx.fillStyle = color;
+      ctx.fillRect(coordX, coordY, cellSize, cellSize);
+    }
+  }
+
   useEffect(() => {
     const template = defaultGrid(windowSize, gridGap, cellSize);
     if (
@@ -178,6 +196,7 @@ const Canvas = ({
     const ctx = canvasRef.current.getContext('2d');
     ctx.clearRect(0, 0, windowSize.width, windowSize.height);
     drawGrid(grid, ctx);
+    drawHover(ctx);
   });
 
   useEffect(() => {
@@ -193,6 +212,7 @@ const Canvas = ({
         width={window.innerWidth}
         height={window.innerHeight}
         onClick={handleClick}
+        onMouseEnter={handleMouseMove}
       />
     </>
   );

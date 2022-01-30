@@ -21,6 +21,9 @@ const App = () => {
   const [grid, setGrid] = useState(defaultGrid(windowSize, gridGap, cellSize));
   const [navOpen, setNavOpen] = useState(false);
   const [rulesOpen, setRulesOpen] = useState(false);
+  const [brush, setBrush] = useState();
+
+  console.log(brush);
 
   return (
     <>
@@ -74,6 +77,7 @@ const App = () => {
       <Sidenav
         name="Settings"
         isOpen={navOpen}
+        grid={grid}
         setGrid={setGrid}
         gridGap={gridGap}
         cellSize={cellSize}
@@ -83,6 +87,7 @@ const App = () => {
         setSpeed={setSpeed}
         color={color}
         setColor={setColor}
+        setBrush={setBrush}
       />
 
       <Canvas
@@ -96,6 +101,7 @@ const App = () => {
         speed={speed}
         windowSize={windowSize}
         color={color}
+        brush={brush}
       />
     </>
   );
