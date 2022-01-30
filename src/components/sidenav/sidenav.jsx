@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Settings from '../settings/settings';
 import Details from '../details/details';
+import Rules from '../rules/rules';
 import List from '../list/list';
 
 const Sidenav = ({ isOpen, name }) => {
+  const [selected, setSelected] = useState();
   if (name === 'Settings') {
     const translate = isOpen ? 'translate-x-0' : 'translate-x-full';
     const position = 'right-0';
@@ -12,8 +14,8 @@ const Sidenav = ({ isOpen, name }) => {
         className={`absolute ${position} flex flex-col w-1/3 bg-gray-800 transition-transform transform ${translate} duration-500 ease-in-out h-full`}
       >
         <Settings />
-        <Details />
-        {isOpen && <List />}
+        <Details selected={selected} />
+        {isOpen && <List setSelected={setSelected} />}
       </div>
     );
   }
@@ -25,7 +27,7 @@ const Sidenav = ({ isOpen, name }) => {
       <div
         className={`absolute ${position} flex flex-col w-1/3 bg-gray-800 transition-transform transform ${translate} duration-500 ease-in-out h-full`}
       >
-        <Details />
+        <Rules />
       </div>
     );
   }

@@ -16,12 +16,12 @@ const List = () => {
   }
   return (
     <div className="flex flex-col items-center p-3 flex-1 scroll">
-      <h1>Brush Patterns</h1>
+      <h1 className="font-bold">Brush Patterns</h1>
       <select
         onChange={(e) => handleBrushChange(e)}
         id="dino-select"
         className="bg-gray-700 w-full"
-        size="30"
+        size="20"
       >
         <optgroup label="Default">
           <option>Single Cell</option>

@@ -10,7 +10,7 @@ const baseUrl = process.env.REACT_APP_LIFE_BASE_URL;
 const createRequest = (url, params) => ({
   url,
   headers: apiHeaders,
-  params: { select: params, count: 5 },
+  params: { select: params, count: 35 },
 });
 
 export const lifeApi = createApi({
