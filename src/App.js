@@ -15,6 +15,7 @@ const App = () => {
   const [gridGap, setGridGap] = useState(1);
   const [start, setStart] = useState(false);
   const [speed, setSpeed] = useState(-50);
+  const [color, setColor] = useState('#61dafb');
   const [genCount, setGenCount] = useState(0);
   const [aliveCount, setAliveCount] = useState(0);
   const [grid, setGrid] = useState(defaultGrid(windowSize, gridGap, cellSize));
@@ -35,11 +36,7 @@ const App = () => {
             setRulesOpen(!rulesOpen);
           }}
         >
-          <FaBook
-            color={rulesOpen ? '#61dafb' : '#fff'}
-            size="2em"
-            title="Rules"
-          />
+          <FaBook color={rulesOpen ? color : '#fff'} size="2em" title="Rules" />
         </Button>
         <Button
           name={start ? 'Pause' : 'Start'}
@@ -51,7 +48,7 @@ const App = () => {
           }}
         >
           {start ? (
-            <FiPause color="#61dafb" title="Pause" size="2em" />
+            <FiPause color={color} title="Pause" size="2em" />
           ) : (
             <FiPlay title="Play" size="2em" />
           )}
@@ -66,7 +63,7 @@ const App = () => {
           }}
         >
           <FiSettings
-            color={navOpen ? '#61dafb' : '#fff'}
+            color={navOpen ? color : '#fff'}
             title="Brushes"
             size="2em"
           />
@@ -84,6 +81,7 @@ const App = () => {
         setGenCount={setGenCount}
         speed={speed}
         setSpeed={setSpeed}
+        setColor={setColor}
       />
 
       <Canvas
@@ -96,6 +94,7 @@ const App = () => {
         start={start}
         speed={speed}
         windowSize={windowSize}
+        color={color}
       />
     </>
   );

@@ -13,6 +13,7 @@ const Settings = ({
   cellSize,
   speed,
   setSpeed,
+  setColor,
 }) => {
   const handleReset = () => {
     setGenCount(0);
@@ -20,6 +21,7 @@ const Settings = ({
   };
   const handleRandom = () => setGrid(randomGrid(windowSize, gridGap, cellSize));
   const handleSpeedChange = (e) => setSpeed(Number(e.target.value));
+  const handleColorChange = (e) => setColor(e.target.value);
 
   return (
     <div className="h-1/3 flex flex-col items-center p-3">
@@ -35,7 +37,11 @@ const Settings = ({
         </div>
         <h2 className="my-3 flex">
           Theme Color:
-          <input className="mx-3" type="color" />
+          <input
+            onChange={(e) => handleColorChange(e)}
+            className="mx-3"
+            type="color"
+          />
         </h2>
         <h2 className="my-3 flex">
           Speed:

@@ -13,6 +13,7 @@ const Canvas = ({
   cellSize,
   gridGap,
   windowSize,
+  color,
 }) => {
   const canvasRef = useRef(null);
 
@@ -83,7 +84,7 @@ const Canvas = ({
       for (let y = 0; y < grid[x].length; y++) {
         const coordX = y * cellSize + y;
         const coordY = x * (cellSize + gridGap);
-        ctx.fillStyle = grid[x][y] === 1 ? '#61dafb' : '#393e46';
+        ctx.fillStyle = grid[x][y] === 1 ? color : '#393e46';
         ctx.fillRect(coordX, coordY, cellSize, cellSize);
       }
     }
