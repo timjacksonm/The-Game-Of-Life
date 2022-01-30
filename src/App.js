@@ -23,8 +23,6 @@ const App = () => {
   const [rulesOpen, setRulesOpen] = useState(false);
   const [brush, setBrush] = useState();
 
-  console.log(brush);
-
   return (
     <>
       <Menu>

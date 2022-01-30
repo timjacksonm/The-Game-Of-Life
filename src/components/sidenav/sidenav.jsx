@@ -13,7 +13,7 @@ const Sidenav = (props) => {
     const position = 'right-0';
     return (
       <div
-        className={`absolute ${position} flex flex-col w-1/3 bg-gray-800 transition-transform transform ${translate} duration-500 ease-in-out h-full`}
+        className={`z-20 absolute ${position} flex flex-col w-1/3 bg-gray-800 transition-transform transform ${translate} duration-500 ease-in-out h-full`}
       >
         <Settings {...props} />
         <Details selected={selected} {...props} />
@@ -27,7 +27,7 @@ const Sidenav = (props) => {
     const position = 'left-0';
     return (
       <div
-        className={`absolute ${position} flex flex-col w-1/3 bg-gray-800 transition-transform transform ${translate} duration-500 ease-in-out h-full`}
+        className={`z-20 absolute ${position} flex flex-col w-1/3 bg-gray-800 transition-transform transform ${translate} duration-500 ease-in-out h-full`}
       >
         <Rules />
       </div>

@@ -17,6 +17,7 @@ const Canvas = ({
   color,
 }) => {
   const canvasRef = useRef(null);
+  const brushRef = useRef(null);
   const [mousePos, setMousePos] = useState();
 
   //standard throughout document = grid[x][y]
@@ -99,12 +100,6 @@ const Canvas = ({
     updateCell(x, y, cellValue);
   }
 
-  function handleMouseMove(e) {
-    const x = Math.floor(e.pageY / (cellSize + gridGap));
-    const y = Math.floor(e.pageX / (cellSize + gridGap));
-    setMousePos({ posX: x, posY: y });
-  }
-
   function decreaseGrid() {
     const newGrid = defaultGrid(windowSize, gridGap, cellSize);
     setGrid((gridCopy) => {
@@ -172,16 +167,6 @@ const Canvas = ({
     }
   }
 
-  function drawHover(ctx) {
-    if (mousePos) {
-      const { posX, posY } = mousePos;
-      const coordX = posY * cellSize + posY;
-      const coordY = posX * (cellSize + gridGap);
-      ctx.fillStyle = color;
-      ctx.fillRect(coordX, coordY, cellSize, cellSize);
-    }
-  }
-
   useEffect(() => {
     const template = defaultGrid(windowSize, gridGap, cellSize);
     if (
@@ -192,11 +177,25 @@ const Canvas = ({
     }
   });
 
+  function drawHover(x, y, cmx) {
+    const coordX = y * cellSize + y;
+    const coordY = x * (cellSize + gridGap);
+    cmx.fillStyle = color;
+    cmx.fillRect(coordX, coordY, cellSize, cellSize);
+  }
+
+  function handleMouseMove(e) {
+    const x = Math.floor(e.pageY / (cellSize + gridGap));
+    const y = Math.floor(e.pageX / (cellSize + gridGap));
+    const cmx = brushRef.current.getContext('2d');
+    cmx.clearRect(0, 0, windowSize.width, windowSize.height);
+    drawHover(x, y, cmx);
+  }
+
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
     ctx.clearRect(0, 0, windowSize.width, windowSize.height);
     drawGrid(grid, ctx);
-    drawHover(ctx);
   });
 
   useEffect(() => {
@@ -208,11 +207,19 @@ const Canvas = ({
   return (
     <>
       <canvas
+        id="board"
         ref={canvasRef}
         width={window.innerWidth}
         height={window.innerHeight}
+      />
+      <canvas
+        id="mousebrush"
+        ref={brushRef}
+        width={window.innerWidth}
+        height={window.innerHeight}
+        style={{ position: 'absolute', top: 0, margin: '0 auto' }}
         onClick={handleClick}
-        onMouseEnter={handleMouseMove}
+        onMouseMove={handleMouseMove}
       />
     </>
   );
