@@ -6,9 +6,8 @@ import Button from './components/button/button';
 import Counter from './components/counter/counter';
 import Sidenav from './components/sidenav/sidenav';
 import defaultGrid from './utils';
-import { FiPlay, FiPause } from 'react-icons/fi';
+import { FiPlay, FiPause, FiSettings } from 'react-icons/fi';
 import { FaBook } from 'react-icons/fa';
-import { GiPalette } from 'react-icons/gi';
 
 const App = () => {
   const windowSize = useWindowSize();
@@ -31,6 +30,7 @@ const App = () => {
           name="Rules"
           color=""
           clickHanlder={() => {
+            setStart(false);
             setNavOpen(false);
             setRulesOpen(!rulesOpen);
           }}
@@ -44,7 +44,11 @@ const App = () => {
         <Button
           name={start ? 'Pause' : 'Start'}
           color=""
-          clickHanlder={() => setStart(!start)}
+          clickHanlder={() => {
+            setNavOpen(false);
+            setRulesOpen(false);
+            setStart(!start);
+          }}
         >
           {start ? (
             <FiPause color="#61dafb" title="Pause" size="2em" />
@@ -56,11 +60,12 @@ const App = () => {
           name="Settings"
           color=""
           clickHanlder={() => {
+            setStart(false);
             setRulesOpen(false);
             setNavOpen(!navOpen);
           }}
         >
-          <GiPalette
+          <FiSettings
             color={navOpen ? '#61dafb' : '#fff'}
             title="Brushes"
             size="2em"
