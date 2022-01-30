@@ -5,9 +5,21 @@ import { randomGrid } from '../../utils';
 import { FaRandom } from 'react-icons/fa';
 import { BsGrid3X3 } from 'react-icons/bs';
 
-const Settings = ({ setGrid, windowSize, gridGap, cellSize }) => {
-  const handleReset = () => setGrid(defaultGrid(windowSize, gridGap, cellSize));
+const Settings = ({
+  setGrid,
+  setGenCount,
+  windowSize,
+  gridGap,
+  cellSize,
+  speed,
+  setSpeed,
+}) => {
+  const handleReset = () => {
+    setGenCount(0);
+    setGrid(defaultGrid(windowSize, gridGap, cellSize));
+  };
   const handleRandom = () => setGrid(randomGrid(windowSize, gridGap, cellSize));
+  const handleSpeedChange = (e) => setSpeed(Number(e.target.value));
 
   return (
     <div className="h-1/3 flex flex-col items-center p-3">
@@ -29,11 +41,12 @@ const Settings = ({ setGrid, windowSize, gridGap, cellSize }) => {
           Speed:
           <input
             className="mx-3"
-            onChange={() => ''}
+            onChange={(e) => handleSpeedChange(e)}
             type="range"
-            step="100"
+            step="50"
             min="-1000"
-            max="-200"
+            max="-50"
+            value={speed}
           />
         </h2>
       </div>

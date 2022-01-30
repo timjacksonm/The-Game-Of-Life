@@ -1,4 +1,4 @@
-function defaultGrid(windowSize, gridGap, cellSize) {
+export default function defaultGrid(windowSize, gridGap, cellSize) {
   return new Array(
     Math.floor((windowSize.height + gridGap) / (cellSize + gridGap))
   )
@@ -21,5 +21,3 @@ export function randomGrid(windowSize, gridGap, cellSize) {
         .map(() => Math.floor(Math.random() * 2))
     );
 }
-
-export default defaultGrid;

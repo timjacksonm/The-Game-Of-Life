@@ -6,7 +6,12 @@ import { useGetPatternNamesQuery } from '../../services/gameoflifeapi';
 const List = () => {
   const { data, isFetching } = useGetPatternNamesQuery();
 
-  if (isFetching) return <Loading />;
+  if (isFetching)
+    return (
+      <div className="flex flex-col items-center p-3 flex-1 scroll">
+        <Loading />
+      </div>
+    );
 
   function handleBrushChange(e) {
     const selected = Array.from(e.target).filter(

@@ -184,7 +184,7 @@ const Canvas = ({
     setAliveCount(count);
   }, [grid, setAliveCount]);
 
-  useInterval(() => nextGen(), start ? speed : null);
+  useInterval(() => nextGen(), start ? Math.abs(speed) : null);
   return (
     <>
       <canvas

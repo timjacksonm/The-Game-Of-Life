@@ -14,7 +14,7 @@ const App = () => {
   const [cellSize, setCellSize] = useState(16);
   const [gridGap, setGridGap] = useState(1);
   const [start, setStart] = useState(false);
-  const [speed, setSpeed] = useState(50);
+  const [speed, setSpeed] = useState(-50);
   const [genCount, setGenCount] = useState(0);
   const [aliveCount, setAliveCount] = useState(0);
   const [grid, setGrid] = useState(defaultGrid(windowSize, gridGap, cellSize));
@@ -81,6 +81,9 @@ const App = () => {
         gridGap={gridGap}
         cellSize={cellSize}
         windowSize={windowSize}
+        setGenCount={setGenCount}
+        speed={speed}
+        setSpeed={setSpeed}
       />
 
       <Canvas
