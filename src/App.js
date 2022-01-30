@@ -74,7 +74,14 @@ const App = () => {
       </Menu>
 
       <Sidenav name="Rules" isOpen={rulesOpen} />
-      <Sidenav name="Settings" isOpen={navOpen} />
+      <Sidenav
+        name="Settings"
+        isOpen={navOpen}
+        setGrid={setGrid}
+        gridGap={gridGap}
+        cellSize={cellSize}
+        windowSize={windowSize}
+      />
 
       <Canvas
         grid={grid}
