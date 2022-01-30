@@ -4,6 +4,7 @@ import useWindowSize from './hooks/useWindowSize';
 import Menu from './components/menu/menu';
 import Button from './components/button/button';
 import Counter from './components/counter/counter';
+import Sidenav from './components/sidenav/sidenav';
 import defaultGrid from './utils';
 import { FiPlay, FiPause } from 'react-icons/fi';
 import { FaBook } from 'react-icons/fa';
@@ -18,30 +19,57 @@ const App = () => {
   const [genCount, setGenCount] = useState(0);
   const [aliveCount, setAliveCount] = useState(0);
   const [grid, setGrid] = useState(defaultGrid(windowSize, gridGap, cellSize));
+  const [navOpen, setNavOpen] = useState(false);
+  const [rulesOpen, setRulesOpen] = useState(false);
 
   return (
     <>
       <Menu>
         <Counter title="Generation" state={genCount} />
         <Counter title="Alive" state={aliveCount} />
-        <Button name="Rules" color="" clickHanlder={() => ''}>
-          <FaBook size="2em" title="Rules" />
+        <Button
+          name="Rules"
+          color=""
+          clickHanlder={() => {
+            setNavOpen(false);
+            setRulesOpen(!rulesOpen);
+          }}
+        >
+          <FaBook
+            color={rulesOpen ? '#61dafb' : '#fff'}
+            size="2em"
+            title="Rules"
+          />
         </Button>
         <Button
-          name={start ? 'Start' : 'Pause'}
+          name={start ? 'Pause' : 'Start'}
           color=""
           clickHanlder={() => setStart(!start)}
         >
           {start ? (
-            <FiPause fill="green" title="Pause" size="2em" />
+            <FiPause color="#61dafb" title="Pause" size="2em" />
           ) : (
             <FiPlay title="Play" size="2em" />
           )}
         </Button>
-        <Button name="Brushes" color="" clickHanlder={() => ''}>
-          <GiPalette title="Brushes" size="2em" />
+        <Button
+          name="Settings"
+          color=""
+          clickHanlder={() => {
+            setRulesOpen(false);
+            setNavOpen(!navOpen);
+          }}
+        >
+          <GiPalette
+            color={navOpen ? '#61dafb' : '#fff'}
+            title="Brushes"
+            size="2em"
+          />
         </Button>
       </Menu>
+
+      <Sidenav name="Rules" isOpen={rulesOpen} />
+      <Sidenav name="Settings" isOpen={navOpen} />
 
       <Canvas
         grid={grid}
