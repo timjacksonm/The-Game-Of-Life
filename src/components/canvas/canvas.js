@@ -184,12 +184,6 @@ const Canvas = ({
     }
   });
 
-  function getCenter(array) {
-    const brushX = Math.floor(array.length / 2);
-    const brushY = Math.floor(array[brushX].length / 2);
-    return [brushX, brushY];
-  }
-
   function getCoords(array, center) {
     const coordArray = [];
     for (let x = 0; x < array.length; x++) {
@@ -206,7 +200,8 @@ const Canvas = ({
 
   function drawHover(x, y, cmx) {
     if (brush) {
-      const [brushX, brushY] = getCenter(brush);
+      const brushX = Math.floor(brush.length / 2);
+      const brushY = Math.floor(brush[brushX].length / 2);
       const coords = getCoords(brush, [brushX, brushY]);
       let coordX;
       let coordY;
@@ -262,15 +257,17 @@ const Canvas = ({
         width={window.innerWidth}
         height={window.innerHeight}
       />
-      <canvas
-        id="mousebrush"
-        ref={brushRef}
-        width={window.innerWidth}
-        height={window.innerHeight}
-        style={{ position: 'absolute', top: 0, margin: '0 auto' }}
-        onClick={handleClick}
-        onMouseMove={handleMouseMove}
-      />
+      {!start && (
+        <canvas
+          id="mousebrush"
+          ref={brushRef}
+          width={window.innerWidth}
+          height={window.innerHeight}
+          style={{ position: 'absolute', top: 0, margin: '0 auto' }}
+          onClick={handleClick}
+          onMouseMove={handleMouseMove}
+        />
+      )}
     </>
   );
 };
