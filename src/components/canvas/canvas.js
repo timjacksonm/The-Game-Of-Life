@@ -18,7 +18,7 @@ const Canvas = ({
 }) => {
   const canvasRef = useRef(null);
   const brushRef = useRef(null);
-  const [mousePos, setMousePos] = useState();
+  const [brushCoords, setBrushCoords] = useState();
 
   //standard throughout document = grid[x][y]
   //x representing entire horizontal row. y representing vertical value in row.
@@ -94,10 +94,17 @@ const Canvas = ({
   }
 
   function handleClick(e) {
-    const x = Math.floor(e.pageY / (cellSize + gridGap));
-    const y = Math.floor(e.pageX / (cellSize + gridGap));
-    const cellValue = grid[x][y] ? 0 : 1;
-    updateCell(x, y, cellValue);
+    if (brushCoords) {
+      JSON.parse(brushCoords).forEach((pair) => {
+        const cellValue = grid[pair[0]][pair[1]] ? 0 : 1;
+        updateCell(pair[0], pair[1], cellValue);
+      });
+    } else {
+      const x = Math.floor(e.pageY / (cellSize + gridGap));
+      const y = Math.floor(e.pageX / (cellSize + gridGap));
+      const cellValue = grid[x][y] ? 0 : 1;
+      updateCell(x, y, cellValue);
+    }
   }
 
   function decreaseGrid() {
@@ -178,9 +185,9 @@ const Canvas = ({
   });
 
   function getCenter(array) {
-    const row = Math.floor(array.length / 2);
-    const col = Math.floor(array[row].length / 2);
-    return [row, col];
+    const brushX = Math.floor(array.length / 2);
+    const brushY = Math.floor(array[brushX].length / 2);
+    return [brushX, brushY];
   }
 
   function getCoords(array, center) {
@@ -199,17 +206,18 @@ const Canvas = ({
 
   function drawHover(x, y, cmx) {
     if (brush) {
-      console.log(brush);
-      const center = getCenter(brush);
-      const coords = getCoords(brush, center);
+      const [brushX, brushY] = getCenter(brush);
+      const coords = getCoords(brush, [brushX, brushY]);
       let coordX;
       let coordY;
 
       //fill center based on brush status
-      coordX = y * cellSize + y;
-      coordY = x * (cellSize + gridGap);
-      cmx.fillStyle = brush[center[0]][[center[1]]] ? color : 'transparent';
-      cmx.fillRect(coordX, coordY, cellSize, cellSize);
+      if (brush[brushX][brushY]) {
+        coordX = y * cellSize + y;
+        coordY = x * (cellSize + gridGap);
+        cmx.fillStyle = color;
+        cmx.fillRect(coordX, coordY, cellSize, cellSize);
+      }
 
       //fill alive neighbor cells
       coords.forEach((pair) => {
@@ -220,6 +228,9 @@ const Canvas = ({
         cmx.fillStyle = color;
         cmx.fillRect(coordX, coordY, cellSize, cellSize);
       });
+      const array = coords.map((pair) => [x + pair[0], y + pair[1]]);
+      if (brush[brushX][brushY]) array.push([x, y]);
+      setBrushCoords(JSON.stringify(array));
     }
   }
 
