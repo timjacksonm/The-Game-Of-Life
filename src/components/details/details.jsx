@@ -11,27 +11,34 @@ const PatternInfo = (props) => {
 
   if (isFetching)
     return (
-      <div className="h-1/3 flex flex-col items-center p-3 min-h-full">
+      <div className="h-1/3 flex p-3 min-h-full">
         <Loading />
       </div>
     );
 
   return (
     <>
-      <Button
-        name="Apply Pattern"
-        clickHanlder={() => setBrush(data.rleString)}
-      >
-        <GiPalette title="Palette" size="2em" />
-      </Button>
-      <h2>Title: {data.title}</h2>
-      <h2>Author: {data.author}</h2>
-      <h3>
-        Description:{' '}
-        {data.description.map((string) => (
-          <p key={uuidv4()}>{string}</p>
-        ))}
-      </h3>
+      <div className="flex">
+        <Button
+          name="Apply Pattern"
+          clickHanlder={() => setBrush(data.rleString)}
+        >
+          <GiPalette title="Palette" size="2em" />
+        </Button>
+        <Button name="Remove Pattern" clickHanlder={() => setBrush()}>
+          <GiPalette title="Palette" size="2em" />
+        </Button>
+      </div>
+      <div className="py-3">
+        <h2>Title: {data.title}</h2>
+        <h2>Author: {data.author}</h2>
+        <h3>
+          Description:{' '}
+          {data.description.map((string) => (
+            <p key={uuidv4()}>{string}</p>
+          ))}
+        </h3>
+      </div>
     </>
   );
 };

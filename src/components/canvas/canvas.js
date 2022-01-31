@@ -226,6 +226,8 @@ const Canvas = ({
       const array = coords.map((pair) => [x + pair[0], y + pair[1]]);
       if (brush[brushX][brushY]) array.push([x, y]);
       setBrushCoords(JSON.stringify(array));
+    } else {
+      setBrushCoords();
     }
   }
 
