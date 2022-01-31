@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useImmer } from 'use-immer';
 import useInterval from '../../hooks/useInterval';
 import defaultGrid from '../../utils';
 
@@ -17,8 +16,8 @@ const Canvas = ({
   color,
 }) => {
   const canvasRef = useRef(null);
-  const brushRef = useRef(null);
-  const [brushCoords, setBrushCoords] = useState();
+  const [mouseCoords, setMouseCoords] = useState();
+  const [liveCoords, setLiveCoords] = useState();
 
   //standard throughout document = grid[x][y]
   //x representing entire horizontal row. y representing vertical value in row.
@@ -94,8 +93,8 @@ const Canvas = ({
   }
 
   function handleClick(e) {
-    if (brushCoords) {
-      JSON.parse(brushCoords).forEach((pair) => {
+    if (liveCoords) {
+      liveCoords.forEach((pair) => {
         const cellValue = grid[pair[0]][pair[1]] ? 0 : 1;
         updateCell(pair[0], pair[1], cellValue);
       });
@@ -188,61 +187,65 @@ const Canvas = ({
     const coordArray = [];
     for (let x = 0; x < array.length; x++) {
       for (let y = 0; y < array[x].length; y++) {
-        if (x === center[0] && y === center[1]) {
+        if ([x, y] === center && array[x][y]) {
+          coordArray.push([x, y]);
           continue;
         }
 
-        if (array[x][y] === 1) coordArray.push([x - center[0], y - center[1]]);
+        if ([x, y] !== center && array[x][y] === 1)
+          coordArray.push([x - center[0], y - center[1]]);
       }
     }
     return coordArray;
   }
 
-  function drawHover(x, y, cmx) {
-    if (brush) {
-      const brushX = Math.floor(brush.length / 2);
-      const brushY = Math.floor(brush[brushX].length / 2);
-      const coords = getCoords(brush, [brushX, brushY]);
-      let coordX;
-      let coordY;
-
-      //fill center based on brush status
-      if (brush[brushX][brushY]) {
-        coordX = y * cellSize + y;
-        coordY = x * (cellSize + gridGap);
-        cmx.fillStyle = color;
-        cmx.fillRect(coordX, coordY, cellSize, cellSize);
-      }
-
-      //fill alive neighbor cells
-      coords.forEach((pair) => {
-        let alivex = x + pair[0];
-        let alivey = y + pair[1];
-        coordX = alivey * cellSize + alivey;
-        coordY = alivex * (cellSize + gridGap);
+  function drawHover(cmx) {
+    if (liveCoords) {
+      liveCoords.forEach((pair) => {
+        const coordX = pair[1] * cellSize + pair[1];
+        const coordY = pair[0] * (cellSize + gridGap);
         cmx.fillStyle = color;
         cmx.fillRect(coordX, coordY, cellSize, cellSize);
       });
-      const array = coords.map((pair) => [x + pair[0], y + pair[1]]);
-      if (brush[brushX][brushY]) array.push([x, y]);
-      setBrushCoords(JSON.stringify(array));
-    } else {
-      setBrushCoords();
+    }
+  }
+
+  function getAlivePairs(mouseX, mouseY) {
+    if (brush) {
+      const x = Math.floor(mouseY / (cellSize + gridGap));
+      const y = Math.floor(mouseX / (cellSize + gridGap));
+      const brushX = Math.floor(brush.length / 2);
+      const brushY = Math.floor(brush[brushX].length / 2);
+      const coords = getCoords(brush, [brushX, brushY]);
+
+      return coords.map((pair) => [x + pair[0], y + pair[1]]);
     }
   }
 
   function handleMouseMove(e) {
-    const x = Math.floor(e.pageY / (cellSize + gridGap));
-    const y = Math.floor(e.pageX / (cellSize + gridGap));
-    const cmx = brushRef.current.getContext('2d');
-    cmx.clearRect(0, 0, windowSize.width, windowSize.height);
-    drawHover(x, y, cmx);
+    if (!start) {
+      if (!mouseCoords) {
+        setMouseCoords([e.pageX, e.pageY]);
+      } else {
+        if (
+          mouseCoords[0] >= e.pageX + gridGap + cellSize ||
+          e.pageX - (gridGap + cellSize) >= mouseCoords[0] ||
+          mouseCoords[1] >= e.pageY + gridGap + cellSize ||
+          e.pageY - (gridGap + cellSize) >= mouseCoords[1]
+        ) {
+          setMouseCoords([e.pageX, e.pageY]);
+          const pairs = getAlivePairs(e.pageX, e.pageY);
+          setLiveCoords(pairs);
+        }
+      }
+    }
   }
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
     ctx.clearRect(0, 0, windowSize.width, windowSize.height);
     drawGrid(grid, ctx);
+    if (!start) drawHover(ctx);
   });
 
   useEffect(() => {
@@ -258,18 +261,9 @@ const Canvas = ({
         ref={canvasRef}
         width={window.innerWidth}
         height={window.innerHeight}
+        onClick={handleClick}
+        onMouseMove={handleMouseMove}
       />
-      {!start && (
-        <canvas
-          id="mousebrush"
-          ref={brushRef}
-          width={window.innerWidth}
-          height={window.innerHeight}
-          style={{ position: 'absolute', top: 0, margin: '0 auto' }}
-          onClick={handleClick}
-          onMouseMove={handleMouseMove}
-        />
-      )}
     </>
   );
 };
