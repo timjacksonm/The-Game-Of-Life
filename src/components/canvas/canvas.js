@@ -177,11 +177,50 @@ const Canvas = ({
     }
   });
 
+  function getCenter(array) {
+    const row = Math.floor(array.length / 2);
+    const col = Math.floor(array[row].length / 2);
+    return [row, col];
+  }
+
+  function getCoords(array, center) {
+    const coordArray = [];
+    for (let x = 0; x < array.length; x++) {
+      for (let y = 0; y < array[x].length; y++) {
+        if (x === center[0] && y === center[1]) {
+          continue;
+        }
+
+        if (array[x][y] === 1) coordArray.push([x - center[0], y - center[1]]);
+      }
+    }
+    return coordArray;
+  }
+
   function drawHover(x, y, cmx) {
-    const coordX = y * cellSize + y;
-    const coordY = x * (cellSize + gridGap);
-    cmx.fillStyle = color;
-    cmx.fillRect(coordX, coordY, cellSize, cellSize);
+    if (brush) {
+      console.log(brush);
+      const center = getCenter(brush);
+      const coords = getCoords(brush, center);
+      let coordX;
+      let coordY;
+
+      //fill center based on brush status
+      coordX = y * cellSize + y;
+      coordY = x * (cellSize + gridGap);
+      cmx.fillStyle = brush[center[0]][[center[1]]] ? color : 'transparent';
+      cmx.fillRect(coordX, coordY, cellSize, cellSize);
+
+      //fill alive neighbor cells
+      coords.forEach((pair) => {
+        let alivex = x + pair[0];
+        let alivey = y + pair[1];
+        coordX = alivey * cellSize + alivey;
+        coordY = alivex * (cellSize + gridGap);
+        cmx.fillStyle = color;
+        cmx.fillRect(coordX, coordY, cellSize, cellSize);
+      });
+    }
   }
 
   function handleMouseMove(e) {
