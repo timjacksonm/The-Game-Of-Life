@@ -50,6 +50,16 @@ const Canvas = ({
     return num;
   }
 
+  function updateCell(x, y, value) {
+    setGrid((gridCopy) =>
+      gridCopy.map((row, index) =>
+        index !== x
+          ? row
+          : row.map((cell, index) => (index !== y ? cell : value))
+      )
+    );
+  }
+
   function nextGen() {
     setGrid((gridCopy) => {
       for (let x = 0; x < grid.length; x++) {
@@ -216,31 +226,24 @@ const Canvas = ({
   //   }
   // }
 
-  function updateCell(x, y, value) {
-    setGrid((gridCopy) =>
-      gridCopy.map((row, index) =>
-        index !== x
-          ? row
-          : row.map((cell, index) => (index !== y ? cell : value))
-      )
-    );
-  }
+  // function drawHoverCell(ctx, x, y) {}
 
-  function drawGrid(grid, ctx) {
-    for (let x = 0; x < grid.length; x++) {
-      for (let y = 0; y < grid[x].length; y++) {
-        const coordX = y * cellSize + y;
-        const coordY = x * (cellSize + gridGap);
-        ctx.fillStyle = grid[x][y] === 1 ? color : '#393e46';
-        ctx.fillRect(coordX, coordY, cellSize, cellSize);
-      }
-    }
+  function drawCell(ctx, x, y) {
+    const coordX = y * cellSize + y;
+    const coordY = x * (cellSize + gridGap);
+    ctx.fillStyle = grid[x][y] === 1 ? color : '#393e46';
+    ctx.fillRect(coordX, coordY, cellSize, cellSize);
   }
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
     ctx.clearRect(0, 0, windowSize.width, windowSize.height);
-    drawGrid(grid, ctx);
+    for (let x = 0; x < grid.length; x++) {
+      for (let y = 0; y < grid[x].length; y++) {
+        drawCell(ctx, x, y);
+        // drawHoverCell(ctx, x, y)
+      }
+    }
   });
 
   // useEffect(() => {
