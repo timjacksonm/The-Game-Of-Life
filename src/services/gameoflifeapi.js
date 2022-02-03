@@ -17,14 +17,14 @@ export const lifeApi = createApi({
   reducerPath: 'lifeApi',
   baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
-    getPatternNames: builder.query({
+    getWikiPatternNames: builder.query({
       query: () =>
         createRequest('/wikicollection/patterns/', {
           select: '["title"]',
           count: 2339,
         }),
     }),
-    getPatternById: builder.query({
+    getWikiPatternById: builder.query({
       query: (id) =>
         createRequest(`/wikicollection/patterns/${id}`, {
           select: '["author","title","description","size","rleString","date"]',
@@ -33,4 +33,5 @@ export const lifeApi = createApi({
   }),
 });
 
-export const { useGetPatternNamesQuery, useGetPatternByIdQuery } = lifeApi;
+export const { useGetWikiPatternNamesQuery, useGetWikiPatternByIdQuery } =
+  lifeApi;

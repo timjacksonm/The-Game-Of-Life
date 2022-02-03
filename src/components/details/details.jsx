@@ -3,11 +3,11 @@ import { v4 as uuidv4 } from 'uuid';
 import Loading from '../loading/loading';
 import Button from '../button/button';
 import { GiPalette } from 'react-icons/gi';
-import { useGetPatternByIdQuery } from '../../services/gameoflifeapi';
+import { useGetWikiPatternByIdQuery } from '../../services/gameoflifeapi';
 
 const PatternInfo = (props) => {
   const { selected, setBrush, grid, setLiveCoords } = props;
-  const { data, isFetching } = useGetPatternByIdQuery(selected.id);
+  const { data, isFetching } = useGetWikiPatternByIdQuery(selected.id);
 
   function applyBrushHandler() {
     setBrush(data.rleString);
@@ -20,7 +20,7 @@ const PatternInfo = (props) => {
 
   if (isFetching)
     return (
-      <div className="h-1/3 flex p-3 min-h-full">
+      <div className="h-1/3 flex p-3 min-h-full justify-center">
         <Loading />
       </div>
     );
@@ -38,6 +38,9 @@ const PatternInfo = (props) => {
       <div className="py-3">
         <h2>Title: {data.title}</h2>
         <h2>Author: {data.author}</h2>
+        <h2>
+          size: x: {data.size.x} y: {data.size.y}
+        </h2>
         <h3>
           Description:{' '}
           {data.description.map((string) => (

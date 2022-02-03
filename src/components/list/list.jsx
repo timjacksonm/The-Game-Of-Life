@@ -1,9 +1,9 @@
 import React from 'react';
 import Loading from '../loading/loading';
-import { useGetPatternNamesQuery } from '../../services/gameoflifeapi';
+import { useGetWikiPatternNamesQuery } from '../../services/gameoflifeapi';
 
 const List = ({ setSelected }) => {
-  const { data, isFetching } = useGetPatternNamesQuery();
+  const { data, isFetching } = useGetWikiPatternNamesQuery();
 
   const handleSelectChange = (e) => {
     const selection = Array.from(e.target).filter(
