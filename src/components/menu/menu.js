@@ -1,22 +1,4 @@
-import React, { useState } from 'react';
-import { useGetPatternNamesQuery } from '../../services/gameoflifeapi';
-import { v4 as uuidv4 } from 'uuid';
-
-const TemplateList = () => {
-  const { data, isFetching } = useGetPatternNamesQuery();
-  console.log(data);
-  if (isFetching) return 'Loading...';
-  return (
-    <div>
-      {data.map((template) => (
-        <div key={uuidv4()}>
-          <div>{template._id}</div>
-          <div>{template.title}</div>
-        </div>
-      ))}
-    </div>
-  );
-};
+import React from 'react';
 
 const Menu = ({ children }) => {
   const [generationCount, alive, ...rest] = children;
