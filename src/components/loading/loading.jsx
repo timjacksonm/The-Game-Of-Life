@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Loading = ({ borderColor }) => {
+const Loading = () => {
   return (
     <div>
       <div
         style={{ borderTopColor: 'transparent' }}
-        className={`animate-spin w-8 h-8 rounded-full border-solid border-4 ${borderColor}  `}
+        className={`animate-spin w-8 h-8 rounded-full border-solid border-4 border-current`}
       ></div>
     </div>
   );
