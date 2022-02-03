@@ -22,6 +22,7 @@ const App = () => {
   const [navOpen, setNavOpen] = useState(false);
   const [rulesOpen, setRulesOpen] = useState(false);
   const [brush, setBrush] = useState();
+  const [liveCoords, setLiveCoords] = useState(() => new Set());
 
   return (
     <>
@@ -86,6 +87,7 @@ const App = () => {
         color={color}
         setColor={setColor}
         setBrush={setBrush}
+        setLiveCoords={setLiveCoords}
       />
 
       <Canvas
@@ -100,6 +102,8 @@ const App = () => {
         windowSize={windowSize}
         color={color}
         brush={brush}
+        liveCoords={liveCoords}
+        setLiveCoords={setLiveCoords}
       />
     </>
   );

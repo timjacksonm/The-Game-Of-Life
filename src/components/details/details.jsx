@@ -6,8 +6,17 @@ import { GiPalette } from 'react-icons/gi';
 import { useGetPatternByIdQuery } from '../../services/gameoflifeapi';
 
 const PatternInfo = (props) => {
-  const { selected, setBrush, grid } = props;
+  const { selected, setBrush, grid, setLiveCoords } = props;
   const { data, isFetching } = useGetPatternByIdQuery(selected.id);
+
+  function applyBrushHandler() {
+    setBrush(data.rleString);
+  }
+
+  function removeBrushHandler() {
+    setBrush();
+    setLiveCoords(() => new Set());
+  }
 
   if (isFetching)
     return (
@@ -19,13 +28,10 @@ const PatternInfo = (props) => {
   return (
     <>
       <div className="flex">
-        <Button
-          name="Apply Pattern"
-          clickHanlder={() => setBrush(data.rleString)}
-        >
+        <Button name="Apply Pattern" clickHanlder={applyBrushHandler}>
           <GiPalette title="Palette" size="2em" />
         </Button>
-        <Button name="Remove Pattern" clickHanlder={() => setBrush()}>
+        <Button name="Remove Pattern" clickHanlder={removeBrushHandler}>
           <GiPalette title="Palette" size="2em" />
         </Button>
       </div>

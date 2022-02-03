@@ -14,11 +14,12 @@ const Canvas = ({
   windowSize,
   brush,
   color,
+  liveCoords,
+  setLiveCoords,
 }) => {
   const canvasRef = useRef(null);
   const hoverRef = useRef(null);
   const [mouseCoords, setMouseCoords] = useState();
-  const [liveCoords, setLiveCoords] = useState(() => new Set());
 
   //standard throughout document = grid[x][y]
   //x representing entire horizontal row. y representing vertical value in row.
