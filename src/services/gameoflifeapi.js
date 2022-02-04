@@ -21,7 +21,6 @@ export const lifeApi = createApi({
       query: () =>
         createRequest('/wikicollection/patterns/', {
           select: '["title"]',
-          count: 2339,
         }),
     }),
     getWikiPatternById: builder.query({
