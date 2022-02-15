@@ -95,7 +95,7 @@ const Canvas = ({
   }
 
   function handleClick(e) {
-    if (liveCoords) {
+    if (liveCoords.size) {
       liveCoords.forEach((pair) => {
         const cellValue = grid[pair[0]][pair[1]] ? 0 : 1;
         updateCell(pair[0], pair[1], cellValue);

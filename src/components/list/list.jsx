@@ -42,9 +42,6 @@ const List = ({ setSelected }) => {
         className="bg-gray-700 w-full"
         size="20"
       >
-        <optgroup label="Default">
-          <option>Single Cell</option>
-        </optgroup>
         <optgroup label="customcollection">
           <option>not implemented</option>
         </optgroup>

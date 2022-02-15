@@ -38,14 +38,27 @@ const PatternInfo = (props) => {
       <div className="py-3">
         <h2>Title: {data.title}</h2>
         <h2>Author: {data.author}</h2>
-        <h2>
-          size: x: {data.size.x} y: {data.size.y}
-        </h2>
+        <h2>Width: {data.size.x}</h2>
+        <h2>Height: {data.size.y}</h2>
         <h3>
           Description:{' '}
-          {data.description.map((string) => (
-            <p key={uuidv4()}>{string}</p>
-          ))}
+          {data.description.map((string) => {
+            if (string.substring(0, 4) === 'http') {
+              return (
+                <a
+                  key={uuidv4()}
+                  href={string}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline text-blue-400 hover:text-blue-800"
+                >
+                  <p>{string}</p>
+                </a>
+              );
+            } else {
+              return <p key={uuidv4()}>{string}</p>;
+            }
+          })}
         </h3>
       </div>
     </>
