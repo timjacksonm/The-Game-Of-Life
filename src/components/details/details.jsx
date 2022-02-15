@@ -43,7 +43,10 @@ const PatternInfo = (props) => {
         <h3>
           Description:{' '}
           {data.description.map((string) => {
-            if (string.substring(0, 4) === 'http') {
+            if (
+              string.substring(0, 4) === 'http' ||
+              string.substring(0, 4) === 'www.'
+            ) {
               return (
                 <a
                   key={uuidv4()}
