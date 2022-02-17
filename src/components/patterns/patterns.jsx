@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Loading from '../loading/loading';
-import { useGetWikiPatternNamesQuery } from '../../services/gameoflifeapi';
+import {
+  useGetWikiPatternNamesQuery,
+  useGetCustomPatternNamesQuery,
+} from '../../services/gameoflifeapi';
 
 const WikiList = ({ searchTerm, setSelected }) => {
   const { data: patternList, isFetching } = useGetWikiPatternNamesQuery();
@@ -44,11 +47,47 @@ const WikiList = ({ searchTerm, setSelected }) => {
   }
 };
 
-// const CustomList = () => {
-//   return (
+const CustomList = ({ searchTerm, setSelected }) => {
+  const { data: patternList, isFetching } = useGetCustomPatternNamesQuery();
+  const [patterns, setPatterns] = useState(patternList);
 
-//   )
-// }
+  const handleSelectChange = (e) => {
+    const selection = Array.from(e.target).filter(
+      (option) => option.selected
+    )[0];
+    setSelected(selection);
+  };
+
+  useEffect(() => {
+    const filterData = patternList?.filter((pattern) =>
+      pattern.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    setPatterns(filterData);
+  }, [patternList, searchTerm]);
+
+  if (isFetching) {
+    return <Loading className="" />;
+  } else {
+    return (
+      <select
+        onChange={(e) => handleSelectChange(e)}
+        className="bg-gray-500 mx-3"
+        size="20"
+      >
+        <optgroup
+          label={`Currently showing ${patterns?.length} available patterns in collection!`}
+        >
+          {patterns?.map((pattern) => (
+            <option key={pattern._id} id={pattern._id}>
+              {pattern.title}
+            </option>
+          ))}
+        </optgroup>
+      </select>
+    );
+  }
+};
 
 const Patterns = (props) => {
   const { setSelected, color } = props;
@@ -98,6 +137,9 @@ const Patterns = (props) => {
         />
         {selectedList.wikiCollection && (
           <WikiList setSelected={setSelected} searchTerm={searchTerm} />
+        )}
+        {selectedList.customCollection && (
+          <CustomList setSelected={setSelected} searchTerm={searchTerm} />
         )}
       </div>
     </div>

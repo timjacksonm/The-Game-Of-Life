@@ -29,8 +29,17 @@ export const lifeApi = createApi({
           select: '["author","title","description","size","rleString","date"]',
         }),
     }),
+    getCustomPatternNames: builder.query({
+      query: () =>
+        createRequest('/customcollection/patterns/', {
+          select: '["title"]',
+        }),
+    }),
   }),
 });
 
-export const { useGetWikiPatternNamesQuery, useGetWikiPatternByIdQuery } =
-  lifeApi;
+export const {
+  useGetWikiPatternNamesQuery,
+  useGetWikiPatternByIdQuery,
+  useGetCustomPatternNamesQuery,
+} = lifeApi;
