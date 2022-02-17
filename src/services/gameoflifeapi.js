@@ -35,6 +35,12 @@ export const lifeApi = createApi({
           select: '["title"]',
         }),
     }),
+    getCustomPatternById: builder.query({
+      query: (id) =>
+        createRequest(`/customcollection/patterns/${id}`, {
+          select: '["author","title","description","size","rleString","date"]',
+        }),
+    }),
   }),
 });
 
@@ -42,4 +48,5 @@ export const {
   useGetWikiPatternNamesQuery,
   useGetWikiPatternByIdQuery,
   useGetCustomPatternNamesQuery,
+  useGetCustomPatternByIdQuery,
 } = lifeApi;

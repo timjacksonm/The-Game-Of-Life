@@ -13,7 +13,7 @@ const WikiList = ({ searchTerm, setSelected }) => {
     const selection = Array.from(e.target).filter(
       (option) => option.selected
     )[0];
-    setSelected(selection);
+    setSelected({ wikiCollection: selection, customCollection: null });
   };
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const CustomList = ({ searchTerm, setSelected }) => {
     const selection = Array.from(e.target).filter(
       (option) => option.selected
     )[0];
-    setSelected(selection);
+    setSelected({ wikiCollection: null, customCollection: selection });
   };
 
   useEffect(() => {

@@ -6,7 +6,10 @@ import Patterns from '../patterns/patterns';
 
 const Sidenav = (props) => {
   const { isOpen, name } = props;
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState({
+    wikiCollection: null,
+    customCollection: null,
+  });
 
   if (name === 'Settings') {
     const translate = isOpen ? 'translate-x-0' : 'translate-x-full';
