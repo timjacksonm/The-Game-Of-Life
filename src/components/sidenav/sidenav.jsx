@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Settings from '../settings/settings';
 import Details from '../details/details';
 import Rules from '../rules/rules';
-import List from '../list/list';
+import Patterns from '../patterns/patterns';
 
 const Sidenav = (props) => {
   const { isOpen, name } = props;
@@ -17,7 +17,7 @@ const Sidenav = (props) => {
       >
         <Settings {...props} />
         <Details selected={selected} {...props} />
-        {isOpen && <List setSelected={setSelected} />}
+        {isOpen && <Patterns {...props} setSelected={setSelected} />}
       </div>
     );
   }

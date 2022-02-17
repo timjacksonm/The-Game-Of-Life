@@ -28,10 +28,10 @@ const PatternInfo = (props) => {
   return (
     <>
       <div className="flex">
-        <Button name="Apply Pattern" clickHanlder={applyBrushHandler}>
+        <Button name="Remove Pattern" clickHanlder={removeBrushHandler}>
           <GiPalette title="Palette" size="2em" />
         </Button>
-        <Button name="Remove Pattern" clickHanlder={removeBrushHandler}>
+        <Button name="Apply Pattern" clickHanlder={applyBrushHandler}>
           <GiPalette title="Palette" size="2em" />
         </Button>
       </div>
