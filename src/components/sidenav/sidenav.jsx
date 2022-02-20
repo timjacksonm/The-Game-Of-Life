@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Settings from '../settings/settings';
 import Details from '../details/details';
-import Rules from '../rules/rules';
+import Guide from '../guide/guide';
 import Patterns from '../patterns/patterns';
 
 const Sidenav = (props) => {
@@ -25,14 +25,14 @@ const Sidenav = (props) => {
     );
   }
 
-  if (name === 'Rules') {
+  if (name === 'Guide') {
     const translate = isOpen ? 'translate-x-0' : '-translate-x-full';
     const position = 'left-0';
     return (
       <div
         className={`z-20 absolute ${position} flex flex-col w-1/3 bg-gray-800 transition-transform transform ${translate} duration-500 ease-in-out h-full`}
       >
-        <Rules />
+        <Guide />
       </div>
     );
   }

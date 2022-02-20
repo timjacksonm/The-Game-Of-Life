@@ -4,7 +4,7 @@ import example2 from '../../assets/examplegif2.gif';
 import example3 from '../../assets/examplegif3.gif';
 import example4 from '../../assets/examplegif4.gif';
 
-const Rules = () => {
+const Guide = () => {
   return (
     <div className="bg-gray-600 p-3 m-3">
       <h1>Rules:</h1>
@@ -32,4 +32,4 @@ const Rules = () => {
   );
 };
 
-export default Rules;
+export default Guide;

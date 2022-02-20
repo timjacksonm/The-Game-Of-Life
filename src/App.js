@@ -20,7 +20,7 @@ const App = () => {
   const [aliveCount, setAliveCount] = useState(0);
   const [grid, setGrid] = useState(defaultGrid(windowSize, gridGap, cellSize));
   const [navOpen, setNavOpen] = useState(false);
-  const [rulesOpen, setRulesOpen] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
   const [brush, setBrush] = useState();
   const [liveCoords, setLiveCoords] = useState(() => new Set());
 
@@ -30,22 +30,22 @@ const App = () => {
         <Counter title="Generation" state={genCount} />
         <Counter title="Alive" state={aliveCount} />
         <Button
-          name="Rules"
+          name="Guide"
           color=""
           clickHanlder={() => {
             setStart(false);
             setNavOpen(false);
-            setRulesOpen(!rulesOpen);
+            setGuideOpen(!guideOpen);
           }}
         >
-          <FaBook color={rulesOpen ? color : '#fff'} size="2em" title="Rules" />
+          <FaBook color={guideOpen ? color : '#fff'} size="2em" title="Guide" />
         </Button>
         <Button
           name={start ? 'Pause' : 'Start'}
           color=""
           clickHanlder={() => {
             setNavOpen(false);
-            setRulesOpen(false);
+            setGuideOpen(false);
             setStart(!start);
           }}
         >
@@ -60,7 +60,7 @@ const App = () => {
           color=""
           clickHanlder={() => {
             setStart(false);
-            setRulesOpen(false);
+            setGuideOpen(false);
             setNavOpen(!navOpen);
           }}
         >
@@ -72,7 +72,7 @@ const App = () => {
         </Button>
       </Menu>
 
-      <Sidenav name="Rules" isOpen={rulesOpen} />
+      <Sidenav name="Guide" isOpen={guideOpen} />
       <Sidenav
         name="Settings"
         isOpen={navOpen}
