@@ -4,6 +4,7 @@ import {
   useGetWikiPatternNamesQuery,
   useGetCustomPatternNamesQuery,
 } from '../../services/gameoflifeapi';
+import { Folders } from '../folders/folders';
 
 const WikiList = ({ searchTerm, setSelected }) => {
   const { data: patternList, isFetching } = useGetWikiPatternNamesQuery();
@@ -92,56 +93,41 @@ const CustomList = ({ searchTerm, setSelected }) => {
 const Patterns = (props) => {
   const { setSelected, color } = props;
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedList, setSelectedList] = useState({
-    wikiCollection: true,
-    customCollection: false,
+  const [selectedFolder, setSelectedFolder] = useState({
+    folder1: true,
+    folder2: false,
   });
 
-  const handleListChange = () => {
-    setSelectedList({
-      wikiCollection: !selectedList.wikiCollection,
-      customCollection: !selectedList.customCollection,
+  const handleFolderChange = () => {
+    setSelectedFolder({
+      folder1: !selectedFolder.folder1,
+      folder2: !selectedFolder.folder2,
     });
     setSearchTerm('');
   };
 
-  const wikiStyle = selectedList.wikiCollection ? { color: color } : null;
-  const customStyle = selectedList.customCollection ? { color: color } : null;
-  const wikiBg = !selectedList.wikiCollection ? 'bg-gray-700' : null;
-  const customBg = !selectedList.customCollection ? 'bg-gray-700' : null;
-
   return (
     <div className="flex flex-col h-2/5 items-center p-3 overflow-hidden">
       <h1 className="font-bold">Brush Patterns</h1>
-      <div className="flex flex-col bg-gray-600 w-full h-full overflow-hidden">
-        <div className="flex w-full justify-around">
-          <button
-            onClick={handleListChange}
-            className={`${wikiBg} w-full p-3 font-bold`}
-            style={wikiStyle}
-          >
-            WikiCollection
-          </button>
-          <button
-            onClick={handleListChange}
-            className={`${customBg} w-full p-3 font-bold`}
-            style={customStyle}
-          >
-            CustomCollection
-          </button>
-        </div>
+      <Folders
+        state={selectedFolder}
+        color={color}
+        folderName1="WikiCollection"
+        folderName2="CustomCollection"
+        clickHandler={handleFolderChange}
+      >
         <input
           className="text-black p-1 m-3"
           placeholder="Search Patterns"
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        {selectedList.wikiCollection && (
+        {selectedFolder.folder1 && (
           <WikiList setSelected={setSelected} searchTerm={searchTerm} />
         )}
-        {selectedList.customCollection && (
+        {selectedFolder.folder2 && (
           <CustomList setSelected={setSelected} searchTerm={searchTerm} />
         )}
-      </div>
+      </Folders>
     </div>
   );
 };
