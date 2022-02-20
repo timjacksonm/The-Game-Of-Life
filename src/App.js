@@ -72,7 +72,7 @@ const App = () => {
         </Button>
       </Menu>
 
-      <Sidenav name="Guide" isOpen={guideOpen} />
+      <Sidenav name="Guide" isOpen={guideOpen} color={color} />
       <Sidenav
         name="Settings"
         isOpen={navOpen}

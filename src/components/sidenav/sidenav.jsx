@@ -32,7 +32,7 @@ const Sidenav = (props) => {
       <div
         className={`z-20 absolute ${position} flex flex-col w-1/3 bg-gray-800 transition-transform transform ${translate} duration-500 ease-in-out h-full`}
       >
-        <Guide />
+        <Guide {...props} />
       </div>
     );
   }

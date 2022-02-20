@@ -3,9 +3,9 @@ import React from 'react';
 export const Folders = ({
   children,
   state,
+  color,
   folderName1,
   folderName2,
-  color,
   clickHandler,
 }) => {
   const folder1Style = state.folder1 ? { color: color } : null;
