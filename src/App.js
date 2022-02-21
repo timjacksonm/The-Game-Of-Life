@@ -11,8 +11,8 @@ import { FaBook } from 'react-icons/fa';
 
 const App = () => {
   const windowSize = useWindowSize();
-  const [cellSize, setCellSize] = useState(16);
-  const [gridGap, setGridGap] = useState(1);
+  const cellSize = 16;
+  const gridGap = 1;
   const [start, setStart] = useState(false);
   const [speed, setSpeed] = useState(-50);
   const [color, setColor] = useState('#61dafb');

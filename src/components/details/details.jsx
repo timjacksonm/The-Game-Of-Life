@@ -9,7 +9,7 @@ import {
 } from '../../services/gameoflifeapi';
 
 const WikiPatternInfo = (props) => {
-  const { selected, setBrush, grid, setLiveCoords } = props;
+  const { selected, setBrush, setLiveCoords } = props;
   const { data, isFetching } = useGetWikiPatternByIdQuery(
     selected.wikiCollection.id
   );
@@ -74,7 +74,7 @@ const WikiPatternInfo = (props) => {
 };
 
 const CustomPatternInfo = (props) => {
-  const { selected, setBrush, grid, setLiveCoords } = props;
+  const { selected, setBrush, setLiveCoords } = props;
   const { data, isFetching } = useGetCustomPatternByIdQuery(
     selected.customCollection.id
   );
