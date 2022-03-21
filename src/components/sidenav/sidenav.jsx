@@ -30,7 +30,7 @@ const Sidenav = (props) => {
     const position = 'left-0';
     return (
       <div
-        className={`z-20 absolute ${position} flex flex-col w-1/3 bg-gray-800 transition-transform transform ${translate} duration-500 ease-in-out h-full`}
+        className={`z-20 absolute ${position} flex flex-col w-1/3 bg-gray-800 transition-transform transform ${translate} duration-500 ease-in-out h-full zoom90:text-xl zoom80:text-2xl zoom67:text-3xl zoom50:text-4xl zoom33:text-5xl zoom25:text-7xl`}
       >
         <Guide {...props} />
       </div>

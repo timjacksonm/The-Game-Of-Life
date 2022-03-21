@@ -16,7 +16,7 @@ const Guide = ({ color }) => {
   };
 
   return (
-    <div className="bg-gray-600 m-3">
+    <div className="bg-gray-600 m-3 zoom50:m-6 zoom25:m-9">
       <Folders
         state={selectedFolder}
         color={color}

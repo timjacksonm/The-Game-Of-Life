@@ -18,14 +18,14 @@ export const Folders = ({
       <div className="flex w-full justify-around">
         <button
           onClick={clickHandler}
-          className={`${folder1Background} w-full p-3 font-bold`}
+          className={`${folder1Background} w-full font-bold p-3 zoom75:p-4 zoom50:p-10 zoom33:p-16 zoom25:p-20`}
           style={folder1Style}
         >
           {folderName1}
         </button>
         <button
           onClick={clickHandler}
-          className={`${folder2Background} w-full p-3 font-bold`}
+          className={`${folder2Background} w-full font-bold p-3 zoom75:p-4 zoom50:p-10 zoom33:p-16 zoom25:p-20`}
           style={folder2Style}
         >
           {folderName2}
