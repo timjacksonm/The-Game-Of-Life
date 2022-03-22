@@ -19,8 +19,13 @@ function Tips() {
     },
     {
       description:
-        '3.) Fun Fact: The simplest still lifes and oscillators were discovered while tracking the fates of various small starting configurations using graph paper, blackboards, and physical game boards.',
+        '3.) Patterns in collections are shown from smallest to largest. So scroll down to view larger patterns!',
       key: 2,
+    },
+    {
+      description:
+        '4.) Fun Fact: The simplest still lifes and oscillators were discovered while tracking the fates of various small starting configurations using graph paper, blackboards, and physical game boards.',
+      key: 3,
     },
   ];
   return (
