@@ -141,7 +141,7 @@ const CustomPatternInfo = (props) => {
 const Details = (props) => {
   const { selected } = props;
   return (
-    <div className="h-2/5 flex flex-col items-center p-3">
+    <div className="h-2/5 flex flex-col items-center p-3 zoom50:p-6 zoom25:p-9">
       <h1 className="font-bold">Details</h1>
       <div className="bg-gray-600 w-full h-full overflow-y-auto">
         <div className="flex flex-col h-full">

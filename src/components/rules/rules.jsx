@@ -43,7 +43,7 @@ const Rules = () => {
               <p className="my-3 zoom75:my-6 zoom50:my-9 zoom25:my-12">
                 {rule.description}
               </p>
-              <img className="w-2/5" src={rule.gif} alt="test" />
+              <img className="w-2/6" src={rule.gif} alt="test" />
             </li>
           );
         })}

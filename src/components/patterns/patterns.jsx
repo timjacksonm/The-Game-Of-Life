@@ -75,7 +75,7 @@ const CustomList = ({ searchTerm, setSelected }) => {
     return (
       <select
         onChange={(e) => handleSelectChange(e)}
-        className="bg-gray-500 mx-3 h-1/2"
+        className="bg-gray-500 mx-3 h-1/2 zoom75:mx-6 zoom50:mx-9 zoom33:mx-12"
         size="20"
       >
         <optgroup
@@ -109,7 +109,7 @@ const Patterns = (props) => {
   };
 
   return (
-    <div className="flex flex-col h-2/5 items-center p-3 overflow-hidden">
+    <div className="flex flex-col h-2/5 items-center p-3 overflow-hidden zoom50:p-6 zoom25:p-9">
       <h1 className="font-bold">Brush Patterns</h1>
       <Folders
         state={selectedFolder}
@@ -119,7 +119,7 @@ const Patterns = (props) => {
         clickHandler={handleFolderChange}
       >
         {selectedFolder.folder2 && (
-          <div className="flex h-1/4 font border-y-2 border-gray-400">
+          <div className="flex h-1/5 font border-y-2 border-gray-400">
             <Button name="Delete Pattern">
               <MdDeleteForever size="2em" />
             </Button>
@@ -129,7 +129,7 @@ const Patterns = (props) => {
           </div>
         )}
         <input
-          className="text-black p-1 m-3"
+          className="text-black p-1 m-3 zoom75:m-6 zoom50:m-9 zoom33:m-12"
           placeholder="Search Patterns"
           onChange={(e) => setSearchTerm(e.target.value)}
         />

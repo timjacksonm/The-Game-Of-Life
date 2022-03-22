@@ -25,7 +25,7 @@ const Settings = ({
   const handleColorChange = (e) => setColor(e.target.value);
 
   return (
-    <div className="flex flex-col items-center p-3 flex-1">
+    <div className="flex flex-col items-center p-3 flex-1 zoom50:p-6 zoom25:p-9">
       <h1 className="font-bold">Settings</h1>
       <div className="bg-gray-600 w-full h-full flex flex-col">
         <div className="flex h-1/2 border-y-2 border-gray-400">
