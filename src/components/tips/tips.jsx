@@ -19,7 +19,7 @@ function Tips() {
     },
     {
       description:
-        '3.) Patterns in collections are shown from smallest to largest. So scroll down to view larger patterns!',
+        '3.) Patterns in collections are listed from smallest size to the largest. So scroll down to view larger patterns!',
       key: 2,
     },
     {
