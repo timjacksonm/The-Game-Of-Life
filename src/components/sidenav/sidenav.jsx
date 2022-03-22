@@ -20,7 +20,9 @@ const Sidenav = (props) => {
       >
         <Settings {...props} />
         <Details selected={selected} {...props} />
-        {isOpen && <Patterns {...props} setSelected={setSelected} />}
+        {isOpen && (
+          <Patterns {...props} setSelected={setSelected} selected={selected} />
+        )}
       </div>
     );
   }

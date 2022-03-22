@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Loading from '../loading/loading';
 import {
   useGetWikiPatternNamesQuery,
@@ -93,7 +93,7 @@ const CustomList = ({ searchTerm, setSelected }) => {
 };
 
 const Patterns = (props) => {
-  const { setSelected, color } = props;
+  const { setSelected, color, selected } = props;
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFolder, setSelectedFolder] = useState({
     folder1: true,
@@ -104,6 +104,10 @@ const Patterns = (props) => {
     setSelectedFolder({
       folder1: !selectedFolder.folder1,
       folder2: !selectedFolder.folder2,
+    });
+    setSelected({
+      wikiCollection: null,
+      customCollection: null,
     });
     setSearchTerm('');
   };
@@ -120,7 +124,10 @@ const Patterns = (props) => {
       >
         {selectedFolder.folder2 && (
           <div className="flex h-1/5 font border-y-2 border-gray-400">
-            <Button name="Delete Pattern">
+            <Button
+              name="Delete Pattern"
+              disabled={selected.customCollection ? false : true}
+            >
               <MdDeleteForever size="2em" />
             </Button>
             <Button name="Save New Pattern">
