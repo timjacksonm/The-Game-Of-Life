@@ -38,7 +38,7 @@ const App = () => {
             setGuideOpen(!guideOpen);
           }}
         >
-          <FaBook color={guideOpen ? color : '#fff'} size="2em" title="Guide" />
+          <FaBook color={guideOpen ? color : '#fff'} size="2em" />
         </Button>
         <Button
           name={start ? 'Pause' : 'Start'}
@@ -49,11 +49,7 @@ const App = () => {
             setStart(!start);
           }}
         >
-          {start ? (
-            <FiPause color={color} title="Pause" size="2em" />
-          ) : (
-            <FiPlay title="Play" size="2em" />
-          )}
+          {start ? <FiPause color={color} size="2em" /> : <FiPlay size="2em" />}
         </Button>
         <Button
           name="Settings"
@@ -64,11 +60,7 @@ const App = () => {
             setNavOpen(!navOpen);
           }}
         >
-          <FiSettings
-            color={navOpen ? color : '#fff'}
-            title="Brushes"
-            size="2em"
-          />
+          <FiSettings color={navOpen ? color : '#fff'} size="2em" />
         </Button>
       </Menu>
 

@@ -25,7 +25,7 @@ function Tips() {
   ];
   return (
     <div className="p-3 flex flex-col h-screen">
-      <ol className="divide-y divide-gray-400 h-full p-5">
+      <ol className="divide-y divide-gray-400 h-full py-5">
         {tipList.map((data) => (
           <div className="p-3 zoom80:m-6 zoom50:m-12 zoom33:m-16 zoom25:m-20 zoom75:p-6 zoom50:p-9 zoom25:p-12">
             {data.description}

@@ -32,7 +32,7 @@ const WikiPatternInfo = (props) => {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex h-1/5">
         <Button name="Remove Pattern" clickHanlder={removeBrushHandler}>
           <GiPalette title="Palette" size="2em" />
         </Button>
@@ -40,7 +40,7 @@ const WikiPatternInfo = (props) => {
           <GiPalette title="Palette" size="2em" />
         </Button>
       </div>
-      <div className="py-3">
+      <div className="px-3 py-3 zoom75:py-6 zoom50:py-9 zoom25:py-12">
         <h2>Title: {data.title}</h2>
         <h2>Author: {data.author}</h2>
         <h2>Width: {data.size.x}</h2>
@@ -97,7 +97,7 @@ const CustomPatternInfo = (props) => {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex h-1/5">
         <Button name="Remove Pattern" clickHanlder={removeBrushHandler}>
           <GiPalette title="Palette" size="2em" />
         </Button>
@@ -105,7 +105,7 @@ const CustomPatternInfo = (props) => {
           <GiPalette title="Palette" size="2em" />
         </Button>
       </div>
-      <div className="py-3">
+      <div className="px-3 py-3 zoom75:py-6 zoom50:py-9 zoom25:py-12">
         <h2>Title: {data.title}</h2>
         <h2>Author: {data.author}</h2>
         <h2>Width: {data.size.x}</h2>
@@ -143,16 +143,16 @@ const Details = (props) => {
   return (
     <div className="h-2/5 flex flex-col items-center p-3">
       <h1 className="font-bold">Details</h1>
-      <div className="bg-gray-600 w-full h-full p-3 overflow-y-auto">
-        <div className="flex flex-col py-3">
+      <div className="bg-gray-600 w-full h-full overflow-y-auto">
+        <div className="flex flex-col h-full">
           {selected.wikiCollection && <WikiPatternInfo {...props} />}
           {selected.customCollection && <CustomPatternInfo {...props} />}
           {!selected.wikiCollection && !selected.customCollection && (
-            <>
+            <div className="px-3 py-3 zoom75:py-6 zoom50:py-9 zoom25:py-12">
               <h2>Title: </h2>
               <h2>Author: </h2>
               <h3>Description: </h3>
-            </>
+            </div>
           )}
         </div>
       </div>

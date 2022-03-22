@@ -7,7 +7,7 @@ const Button = ({ children, name, color, clickHanlder }) => {
       onClick={clickHanlder}
     >
       {children}
-      <p className="ml-2">{name}</p>
+      <p className="ml-2 zoom50:ml-4">{name}</p>
     </button>
   );
 };

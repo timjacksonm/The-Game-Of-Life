@@ -27,35 +27,37 @@ const Settings = ({
   return (
     <div className="flex flex-col items-center p-3 flex-1">
       <h1 className="font-bold">Settings</h1>
-      <div className="bg-gray-600 w-full h-full p-3 flex flex-col">
-        <div className="flex my-3">
+      <div className="bg-gray-600 w-full h-full flex flex-col">
+        <div className="flex h-1/2">
           <Button name="Reset" clickHanlder={() => handleReset()}>
-            <BsGrid3X3 size="2em" title="Reset" />
+            <BsGrid3X3 size="1.75em" />
           </Button>
           <Button name="Random" clickHanlder={() => handleRandom()}>
-            <FaRandom size="2em" title="Random" />
+            <FaRandom size="1.75em" />
           </Button>
         </div>
-        <h2 className="my-3 flex">
-          Theme Color:
-          <input
-            onChange={(e) => handleColorChange(e)}
-            value={color}
-            className="mx-3"
-            type="color"
-          />
-        </h2>
-        <h2 className="my-3 flex">
-          Speed:
-          <input
-            className="mx-3"
-            onChange={(e) => handleSpeedChange(e)}
-            type="range"
-            step="50"
-            min="-1000"
-            max="-50"
-            value={speed}
-          />
+        <h2 className="my-3 h-1/2 flex justify-around items-center">
+          <div>
+            Theme Color:
+            <input
+              onChange={(e) => handleColorChange(e)}
+              value={color}
+              className="mx-3"
+              type="color"
+            />
+          </div>
+          <div>
+            Speed:
+            <input
+              className="mx-3"
+              onChange={(e) => handleSpeedChange(e)}
+              type="range"
+              step="50"
+              min="-1000"
+              max="-50"
+              value={speed}
+            />
+          </div>
         </h2>
       </div>
     </div>
