@@ -28,7 +28,7 @@ const Settings = ({
     <div className="flex flex-col items-center p-3 flex-1">
       <h1 className="font-bold">Settings</h1>
       <div className="bg-gray-600 w-full h-full flex flex-col">
-        <div className="flex h-1/2">
+        <div className="flex h-1/2 border-y-2 border-gray-400">
           <Button name="Reset" clickHanlder={() => handleReset()}>
             <BsGrid3X3 size="1.75em" />
           </Button>

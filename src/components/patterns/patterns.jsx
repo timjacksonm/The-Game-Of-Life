@@ -5,6 +5,8 @@ import {
   useGetCustomPatternNamesQuery,
 } from '../../services/gameoflifeapi';
 import { Folders } from '../folders/folders';
+import { MdDeleteForever, MdSave } from 'react-icons/md';
+import Button from '../button/button';
 
 const WikiList = ({ searchTerm, setSelected }) => {
   const { data: patternList, isFetching } = useGetWikiPatternNamesQuery();
@@ -68,12 +70,12 @@ const CustomList = ({ searchTerm, setSelected }) => {
   }, [patternList, searchTerm]);
 
   if (isFetching) {
-    return <Loading className="" />;
+    return <Loading className="flex-1" />;
   } else {
     return (
       <select
         onChange={(e) => handleSelectChange(e)}
-        className="bg-gray-500 mx-3"
+        className="bg-gray-500 mx-3 h-1/2"
         size="20"
       >
         <optgroup
@@ -116,6 +118,16 @@ const Patterns = (props) => {
         folderName2="CustomCollection"
         clickHandler={handleFolderChange}
       >
+        {selectedFolder.folder2 && (
+          <div className="flex h-1/4 font border-y-2 border-gray-400">
+            <Button name="Delete Pattern">
+              <MdDeleteForever size="2em" />
+            </Button>
+            <Button name="Save New Pattern">
+              <MdSave size="2em" />
+            </Button>
+          </div>
+        )}
         <input
           className="text-black p-1 m-3"
           placeholder="Search Patterns"

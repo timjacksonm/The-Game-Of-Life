@@ -32,7 +32,7 @@ const WikiPatternInfo = (props) => {
 
   return (
     <>
-      <div className="flex h-1/5">
+      <div className="flex h-1/5 border-y-2 border-gray-400">
         <Button name="Remove Pattern" clickHanlder={removeBrushHandler}>
           <GiPalette title="Palette" size="2em" />
         </Button>
@@ -97,7 +97,7 @@ const CustomPatternInfo = (props) => {
 
   return (
     <>
-      <div className="flex h-1/5">
+      <div className="flex h-1/5 border-y-2 border-gray-400">
         <Button name="Remove Pattern" clickHanlder={removeBrushHandler}>
           <GiPalette title="Palette" size="2em" />
         </Button>
