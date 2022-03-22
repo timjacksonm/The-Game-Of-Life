@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Folders } from '../folders/folders';
 import Rules from '../rules/rules';
+import Tips from '../tips/tips';
 
 const Guide = ({ color }) => {
   const [selectedFolder, setSelectedFolder] = useState({
@@ -25,7 +26,7 @@ const Guide = ({ color }) => {
         clickHandler={handleFolderChange}
       >
         {selectedFolder.folder1 && <Rules />}
-        {selectedFolder.folder2 && <div className="h-screen">test</div>}
+        {selectedFolder.folder2 && <Tips />}
       </Folders>
     </div>
   );
