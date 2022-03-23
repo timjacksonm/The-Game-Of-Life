@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Loading from '../loading/loading';
 import {
   useGetWikiPatternNamesQuery,
@@ -8,8 +8,9 @@ import {
 import { Folders } from '../folders/folders';
 import { MdDeleteForever, MdSave } from 'react-icons/md';
 import Button from '../button/button';
+import Form from '../form/form';
 
-const WikiList = ({ searchTerm, setSelected }) => {
+const WikiList = ({ searchTerm, setSearchTerm, setSelected }) => {
   const { data: patternList, isFetching } = useGetWikiPatternNamesQuery();
   const [patterns, setPatterns] = useState(patternList);
 
@@ -32,26 +33,33 @@ const WikiList = ({ searchTerm, setSelected }) => {
     return <Loading className="" />;
   } else {
     return (
-      <select
-        onChange={(e) => handleSelectChange(e)}
-        className="bg-gray-500 mx-3"
-        size="20"
-      >
-        <optgroup
-          label={`Currently showing ${patterns?.length} available patterns in collection!`}
+      <>
+        <input
+          className="text-black p-1 m-3 zoom75:m-6 zoom50:m-9 zoom33:m-12"
+          placeholder="Search Patterns"
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select
+          onChange={(e) => handleSelectChange(e)}
+          className="bg-gray-500 mx-3"
+          size="20"
         >
-          {patterns?.map((pattern) => (
-            <option key={pattern._id} id={pattern._id}>
-              {pattern.title}
-            </option>
-          ))}
-        </optgroup>
-      </select>
+          <optgroup
+            label={`Currently showing ${patterns?.length} available patterns in collection!`}
+          >
+            {patterns?.map((pattern) => (
+              <option key={pattern._id} id={pattern._id}>
+                {pattern.title}
+              </option>
+            ))}
+          </optgroup>
+        </select>
+      </>
     );
   }
 };
 
-const CustomList = ({ searchTerm, setSelected }) => {
+const CustomList = ({ searchTerm, setSearchTerm, setSelected }) => {
   const { data: patternList, isFetching } = useGetCustomPatternNamesQuery();
   const [patterns, setPatterns] = useState(patternList);
 
@@ -74,21 +82,28 @@ const CustomList = ({ searchTerm, setSelected }) => {
     return <Loading className="flex-1" />;
   } else {
     return (
-      <select
-        onChange={(e) => handleSelectChange(e)}
-        className="bg-gray-500 mx-3 h-1/2 zoom75:mx-6 zoom50:mx-9 zoom33:mx-12"
-        size="20"
-      >
-        <optgroup
-          label={`Currently showing ${patterns?.length} available patterns in collection!`}
+      <>
+        <input
+          className="text-black p-1 m-3 zoom75:m-6 zoom50:m-9 zoom33:m-12"
+          placeholder="Search Patterns"
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select
+          onChange={(e) => handleSelectChange(e)}
+          className="bg-gray-500 mx-3 h-1/2 zoom75:mx-6 zoom50:mx-9 zoom33:mx-12"
+          size="20"
         >
-          {patterns?.map((pattern) => (
-            <option key={pattern._id} id={pattern._id}>
-              {pattern.title}
-            </option>
-          ))}
-        </optgroup>
-      </select>
+          <optgroup
+            label={`Currently showing ${patterns?.length} available patterns in collection!`}
+          >
+            {patterns?.map((pattern) => (
+              <option key={pattern._id} id={pattern._id}>
+                {pattern.title}
+              </option>
+            ))}
+          </optgroup>
+        </select>
+      </>
     );
   }
 };
@@ -102,11 +117,6 @@ const Patterns = (props) => {
   });
   const [formOpen, setFormOpen] = useState(false);
   const [addPattern, data] = useAddCustomPatternMutation();
-  const [state, setState] = useState({
-    author: '',
-    title: '',
-    description: '',
-  });
 
   const handleFolderChange = () => {
     setSelectedFolder({
@@ -119,23 +129,6 @@ const Patterns = (props) => {
     });
     setSearchTerm('');
     setFormOpen(false);
-  };
-
-  const handleInputChange = (e) => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
-
-  const handleDeletePattern = () => {
-    //not implemented
-  };
-
-  const handleSavePattern = () => {
-    setFormOpen(!formOpen);
-  };
-
-  const saveNewPattern = (e) => {
-    e.preventDefault();
-    addPattern(state);
   };
 
   return (
@@ -151,53 +144,36 @@ const Patterns = (props) => {
         {selectedFolder.folder2 && (
           <div className="flex h-1/5 font border-y-2 border-gray-400">
             <Button
-              clickHanlder={handleDeletePattern}
+              clickHanlder={() => console.log('test')}
               name="Delete Pattern"
               disabled={selected.customCollection ? false : true}
             >
               <MdDeleteForever size="2em" />
             </Button>
-            <Button name="Save New Pattern" clickHanlder={handleSavePattern}>
+            <Button
+              name="Save New Pattern"
+              clickHanlder={() => setFormOpen(!formOpen)}
+            >
               <MdSave size="2em" />
             </Button>
           </div>
         )}
         {formOpen && selectedFolder.folder2 && (
-          <form onSubmit={saveNewPattern}>
-            <p>Author:</p>
-            <input
-              onChange={handleInputChange}
-              type="text"
-              className="text-black"
-              name="author"
-            />
-            <p>Pattern Title:</p>
-            <input
-              onChange={handleInputChange}
-              type="text"
-              className="text-black"
-              name="title"
-            />
-            <p>Description:</p>
-            <input
-              onChange={handleInputChange}
-              type="text"
-              className="text-black"
-              name="description"
-            />
-            <button type="Submit">Submit</button>
-          </form>
+          <Form setFormOpen={setFormOpen} addPattern={addPattern} />
         )}
-        <input
-          className="text-black p-1 m-3 zoom75:m-6 zoom50:m-9 zoom33:m-12"
-          placeholder="Search Patterns"
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
         {selectedFolder.folder1 && (
-          <WikiList setSelected={setSelected} searchTerm={searchTerm} />
+          <WikiList
+            setSelected={setSelected}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+          />
         )}
-        {selectedFolder.folder2 && (
-          <CustomList setSelected={setSelected} searchTerm={searchTerm} />
+        {selectedFolder.folder2 && !formOpen && (
+          <CustomList
+            setSelected={setSelected}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+          />
         )}
       </Folders>
     </div>

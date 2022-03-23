@@ -16,6 +16,7 @@ const createRequest = (url, options) => ({
 export const lifeApi = createApi({
   reducerPath: 'lifeApi',
   baseQuery: fetchBaseQuery({ baseUrl }),
+  tagTypes: ['Custom'],
   endpoints: (builder) => ({
     getWikiPatternNames: builder.query({
       query: () =>
@@ -34,6 +35,7 @@ export const lifeApi = createApi({
         createRequest('/customcollection/patterns/', {
           select: '["title"]',
         }),
+      providesTags: ['Custom'],
     }),
     getCustomPatternById: builder.query({
       query: (id) =>
@@ -53,6 +55,7 @@ export const lifeApi = createApi({
           rleString: 'bo$2bo$3o!',
         },
       }),
+      invalidatesTags: ['Custom'],
     }),
   }),
 });
