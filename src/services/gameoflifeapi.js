@@ -41,6 +41,19 @@ export const lifeApi = createApi({
           select: '["author","title","description","size","rleString","date"]',
         }),
     }),
+    addCustomPattern: builder.mutation({
+      query: ({ description, ...formData }) => ({
+        headers: { ...apiHeaders, 'Content-Type': 'application/json' },
+        url: '/customcollection/patterns/',
+        method: 'POST',
+        body: {
+          ...formData,
+          description: [description],
+          size: { x: 1, y: 1 },
+          rleString: 'bo$2bo$3o!',
+        },
+      }),
+    }),
   }),
 });
 
@@ -49,4 +62,5 @@ export const {
   useGetWikiPatternByIdQuery,
   useGetCustomPatternNamesQuery,
   useGetCustomPatternByIdQuery,
+  useAddCustomPatternMutation,
 } = lifeApi;

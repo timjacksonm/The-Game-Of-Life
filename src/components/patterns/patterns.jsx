@@ -3,6 +3,7 @@ import Loading from '../loading/loading';
 import {
   useGetWikiPatternNamesQuery,
   useGetCustomPatternNamesQuery,
+  useAddCustomPatternMutation,
 } from '../../services/gameoflifeapi';
 import { Folders } from '../folders/folders';
 import { MdDeleteForever, MdSave } from 'react-icons/md';
@@ -99,6 +100,13 @@ const Patterns = (props) => {
     folder1: true,
     folder2: false,
   });
+  const [formOpen, setFormOpen] = useState(false);
+  const [addPattern, data] = useAddCustomPatternMutation();
+  const [state, setState] = useState({
+    author: '',
+    title: '',
+    description: '',
+  });
 
   const handleFolderChange = () => {
     setSelectedFolder({
@@ -110,6 +118,24 @@ const Patterns = (props) => {
       customCollection: null,
     });
     setSearchTerm('');
+    setFormOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    setState({ ...state, [e.target.name]: e.target.value });
+  };
+
+  const handleDeletePattern = () => {
+    //not implemented
+  };
+
+  const handleSavePattern = () => {
+    setFormOpen(!formOpen);
+  };
+
+  const saveNewPattern = (e) => {
+    e.preventDefault();
+    addPattern(state);
   };
 
   return (
@@ -125,15 +151,42 @@ const Patterns = (props) => {
         {selectedFolder.folder2 && (
           <div className="flex h-1/5 font border-y-2 border-gray-400">
             <Button
+              clickHanlder={handleDeletePattern}
               name="Delete Pattern"
               disabled={selected.customCollection ? false : true}
             >
               <MdDeleteForever size="2em" />
             </Button>
-            <Button name="Save New Pattern">
+            <Button name="Save New Pattern" clickHanlder={handleSavePattern}>
               <MdSave size="2em" />
             </Button>
           </div>
+        )}
+        {formOpen && selectedFolder.folder2 && (
+          <form onSubmit={saveNewPattern}>
+            <p>Author:</p>
+            <input
+              onChange={handleInputChange}
+              type="text"
+              className="text-black"
+              name="author"
+            />
+            <p>Pattern Title:</p>
+            <input
+              onChange={handleInputChange}
+              type="text"
+              className="text-black"
+              name="title"
+            />
+            <p>Description:</p>
+            <input
+              onChange={handleInputChange}
+              type="text"
+              className="text-black"
+              name="description"
+            />
+            <button type="Submit">Submit</button>
+          </form>
         )}
         <input
           className="text-black p-1 m-3 zoom75:m-6 zoom50:m-9 zoom33:m-12"
