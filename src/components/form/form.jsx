@@ -46,15 +46,11 @@ function Form({ setFormOpen }) {
 
   return (
     <form onSubmit={saveNewPattern} className="overflow-auto flex flex-col">
+      {errors.title && (
+        <Errormsg id="title" clickHandler={removeMsg} message={errors.title} />
+      )}
       <div className="flex justify-center w-4/5">
         <p className="m-3 font-bold flex-1 text-right">Title:</p>
-        {errors.title && (
-          <Errormsg
-            id="title"
-            clickHandler={removeMsg}
-            message={errors.title}
-          />
-        )}
         <input
           onChange={handleInputChange}
           type="text"
@@ -80,15 +76,15 @@ function Form({ setFormOpen }) {
           autocomplete="off"
         />
       </div>
+      {errors.description && (
+        <Errormsg
+          id="description"
+          clickHandler={removeMsg}
+          message={errors.description}
+        />
+      )}
       <div className="flex justify-center w-4/5 mb-3">
         <p className="m-3 font-bold flex-1 text-right">Description:</p>
-        {errors.description && (
-          <Errormsg
-            id="description"
-            clickHandler={removeMsg}
-            message={errors.description}
-          />
-        )}
         <input
           onChange={handleInputChange}
           type="text"
