@@ -44,16 +44,11 @@ export const lifeApi = createApi({
         }),
     }),
     addCustomPattern: builder.mutation({
-      query: ({ description, ...formData }) => ({
+      query: (formData) => ({
         headers: { ...apiHeaders, 'Content-Type': 'application/json' },
         url: '/customcollection/patterns/',
         method: 'POST',
-        body: {
-          ...formData,
-          description: [description],
-          size: { x: 1, y: 1 },
-          rleString: 'bo$2bo$3o!',
-        },
+        body: formData,
       }),
       invalidatesTags: ['Custom'],
     }),

@@ -80,6 +80,7 @@ const CustomPatternInfo = (props) => {
   );
 
   function applyBrushHandler() {
+    console.log(data.rleString);
     setBrush(data.rleString);
   }
 

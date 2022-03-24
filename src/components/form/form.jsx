@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useAddCustomPatternMutation } from '../../services/gameoflifeapi';
-import Button from '../button/button';
 import Errormsg from '../errormsg/errormsg';
 
-function Form({ setFormOpen }) {
+function Form({ setFormOpen, grid }) {
   const [state, setState] = useState({
     author: '',
     title: '',
@@ -13,6 +12,7 @@ function Form({ setFormOpen }) {
     author: null,
     title: null,
     desription: null,
+    rleString: null,
   });
 
   const [addPattern] = useAddCustomPatternMutation();
@@ -21,9 +21,97 @@ function Form({ setFormOpen }) {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
+  function encodeRow(arr) {
+    let encoding = [],
+      i,
+      previous,
+      count;
+
+    if (arr.length === 1) {
+      arr[0] ? encoding.push('o$') : encoding.push('b$');
+      return encoding;
+    }
+
+    for (count = 1, previous = arr[0], i = 1; i <= arr.length; i++) {
+      if (arr[i] !== previous) {
+        if (count === 1) {
+          if (previous) {
+            encoding.push('o');
+          } else {
+            encoding.push('b');
+          }
+        } else {
+          if (previous) {
+            encoding.push(count, 'o');
+          } else {
+            encoding.push(count, 'b');
+          }
+        }
+        count = 1;
+        previous = arr[i];
+      } else {
+        count++;
+      }
+    }
+
+    //finish row
+    encoding.push('$');
+    return encoding.join('');
+  }
+
   const saveNewPattern = async (e) => {
     e.preventDefault();
-    const response = await addPattern(state);
+    const minY = grid
+      .map((row, index) => row.findIndex((value) => value))
+      .filter((value) => value > 0)
+      .sort()[0];
+    const gridCopy = [...grid];
+    //remove empty rows until a row contains alive cells.
+    while (gridCopy[0].every((value) => !value)) {
+      gridCopy.shift();
+    }
+    gridCopy.reverse();
+    while (gridCopy[0].every((value) => !value)) {
+      gridCopy.shift();
+    }
+    gridCopy.reverse();
+
+    let newGrid = gridCopy.map((row, index, array) => {
+      if (row.every((value) => !value)) {
+        //inbetween row
+        return row.slice(minY);
+      }
+      let start = minY;
+      row.reverse();
+      let end = row.length - row.findIndex((value) => value);
+      row.reverse();
+      const rowToConvert = row.slice(start, end);
+      return rowToConvert;
+    });
+    let rleString = newGrid.map((row) => {
+      const result = encodeRow(row);
+      return result;
+    });
+    rleString.push('!');
+    rleString = rleString.join('');
+
+    if (!rleString) {
+      setErrors({
+        author: null,
+        title: null,
+        desription: null,
+        rleString: 'There are no alive cells on screen to save',
+      });
+      return;
+    }
+
+    const formData = {
+      ...state,
+      description: [state.description],
+      size: { x: 1, y: 1 },
+      rleString: rleString,
+    };
+    const response = await addPattern(formData);
     if (response.error) {
       const errorList = response.error.data.message.errors;
       setErrors(
@@ -46,6 +134,13 @@ function Form({ setFormOpen }) {
 
   return (
     <form onSubmit={saveNewPattern} className="overflow-auto flex flex-col">
+      {errors.rleString && (
+        <Errormsg
+          id="rleString"
+          clickHandler={removeMsg}
+          message={errors.rleString}
+        />
+      )}
       {errors.title && (
         <Errormsg id="title" clickHandler={removeMsg} message={errors.title} />
       )}
@@ -56,7 +151,7 @@ function Form({ setFormOpen }) {
           type="text"
           className="text-black m-2"
           name="title"
-          autocomplete="off"
+          autoComplete="off"
         />
       </div>
       {errors.author && (
@@ -73,7 +168,7 @@ function Form({ setFormOpen }) {
           type="text"
           className="text-black m-2"
           name="author"
-          autocomplete="off"
+          autoComplete="off"
         />
       </div>
       {errors.description && (
@@ -90,7 +185,7 @@ function Form({ setFormOpen }) {
           type="text"
           className="text-black m-2"
           name="description"
-          autocomplete="off"
+          autoComplete="off"
         />
       </div>
       <button

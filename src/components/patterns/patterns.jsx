@@ -157,7 +157,7 @@ const Patterns = (props) => {
           </div>
         )}
         {formOpen && selectedFolder.folder2 && (
-          <Form setFormOpen={setFormOpen} />
+          <Form setFormOpen={setFormOpen} grid={props.grid} />
         )}
         {selectedFolder.folder1 && (
           <WikiList
