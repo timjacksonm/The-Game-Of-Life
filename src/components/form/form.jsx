@@ -61,10 +61,10 @@ function Form({ setFormOpen, grid }) {
 
   const saveNewPattern = async (e) => {
     e.preventDefault();
-    const minY = grid
-      .map((row, index) => row.findIndex((value) => value))
+    let minY = grid
+      .map((row) => row.findIndex((value) => value))
       .filter((value) => value > 0)
-      .sort()[0];
+      .sort((a, b) => a - b)[0];
     const gridCopy = [...grid];
     //remove empty rows until a row contains alive cells.
     while (gridCopy[0].every((value) => !value)) {
