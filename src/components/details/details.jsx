@@ -8,8 +8,7 @@ import {
   useGetCustomPatternByIdQuery,
 } from '../../services/gameoflifeapi';
 
-const WikiPatternInfo = (props) => {
-  const { selected, setBrush, setLiveCoords } = props;
+const WikiPatternInfo = ({ selected, setBrush, removeBrushHandler, brush }) => {
   const { data, isFetching } = useGetWikiPatternByIdQuery(
     selected.wikiCollection.id
   );
@@ -18,14 +17,9 @@ const WikiPatternInfo = (props) => {
     setBrush(data.rleString);
   }
 
-  function removeBrushHandler() {
-    setBrush();
-    setLiveCoords(() => new Set());
-  }
-
   if (isFetching)
     return (
-      <div className="h-1/3 flex p-3 min-h-full justify-center">
+      <div className="mx-auto">
         <Loading />
       </div>
     );
@@ -33,7 +27,11 @@ const WikiPatternInfo = (props) => {
   return (
     <>
       <div className="flex h-1/5 border-y-2 border-gray-400">
-        <Button name="Remove Pattern" clickHanlder={removeBrushHandler}>
+        <Button
+          name="Remove Pattern"
+          clickHanlder={removeBrushHandler}
+          disabled={brush ? false : true}
+        >
           <GiPalette title="Palette" size="2em" />
         </Button>
         <Button name="Apply Pattern" clickHanlder={applyBrushHandler}>
@@ -73,25 +71,23 @@ const WikiPatternInfo = (props) => {
   );
 };
 
-const CustomPatternInfo = (props) => {
-  const { selected, setBrush, setLiveCoords } = props;
+const CustomPatternInfo = ({
+  selected,
+  setBrush,
+  removeBrushHandler,
+  brush,
+}) => {
   const { data, isFetching } = useGetCustomPatternByIdQuery(
     selected.customCollection.id
   );
 
   function applyBrushHandler() {
-    console.log(data.rleString);
     setBrush(data.rleString);
-  }
-
-  function removeBrushHandler() {
-    setBrush();
-    setLiveCoords(() => new Set());
   }
 
   if (isFetching)
     return (
-      <div className="h-1/3 flex p-3 min-h-full justify-center">
+      <div className="mx-auto">
         <Loading />
       </div>
     );
@@ -99,7 +95,11 @@ const CustomPatternInfo = (props) => {
   return (
     <>
       <div className="flex h-1/5 border-y-2 border-gray-400">
-        <Button name="Remove Pattern" clickHanlder={removeBrushHandler}>
+        <Button
+          name="Remove Pattern"
+          clickHanlder={removeBrushHandler}
+          disabled={brush ? false : true}
+        >
           <GiPalette title="Palette" size="2em" />
         </Button>
         <Button name="Apply Pattern" clickHanlder={applyBrushHandler}>
@@ -140,20 +140,49 @@ const CustomPatternInfo = (props) => {
 };
 
 const Details = (props) => {
-  const { selected } = props;
+  const { selected, setBrush, setLiveCoords, brush } = props;
+  function removeBrushHandler() {
+    setBrush();
+    setLiveCoords(() => new Set());
+  }
+
   return (
     <div className="h-2/5 flex flex-col items-center p-3 zoom50:p-6 zoom25:p-9">
       <h1 className="font-bold">Details</h1>
       <div className="bg-gray-600 w-full h-full overflow-y-auto">
         <div className="flex flex-col h-full">
-          {selected.wikiCollection && <WikiPatternInfo {...props} />}
-          {selected.customCollection && <CustomPatternInfo {...props} />}
+          {selected.wikiCollection && (
+            <WikiPatternInfo
+              {...props}
+              removeBrushHandler={removeBrushHandler}
+            />
+          )}
+          {selected.customCollection && (
+            <CustomPatternInfo
+              {...props}
+              removeBrushHandler={removeBrushHandler}
+            />
+          )}
           {!selected.wikiCollection && !selected.customCollection && (
-            <div className="px-3 py-3 zoom75:py-6 zoom50:py-9 zoom25:py-12">
-              <h2>Title: </h2>
-              <h2>Author: </h2>
-              <h3>Description: </h3>
-            </div>
+            <>
+              <div className="flex h-1/5 border-y-2 border-gray-400">
+                <Button
+                  name="Remove Pattern"
+                  clickHanlder={removeBrushHandler}
+                  disabled={brush ? false : true}
+                >
+                  <GiPalette title="Palette" size="2em" />
+                </Button>
+                <Button name="Apply Pattern" disabled>
+                  <GiPalette title="Palette" size="2em" />
+                </Button>
+              </div>
+              <div className="px-3 py-3 zoom75:py-6 zoom50:py-9 zoom25:py-12">
+                <h2>Title: </h2>
+                <h2>Author: </h2>
+                <h3>Description: </h3>
+              </div>
+            </>
           )}
         </div>
       </div>

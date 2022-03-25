@@ -29,7 +29,7 @@ const WikiList = ({ searchTerm, setSearchTerm, setSelected }) => {
   }, [patternList, searchTerm]);
 
   if (isFetching) {
-    return <Loading className="" />;
+    return <Loading />;
   } else {
     return (
       <>
@@ -78,7 +78,7 @@ const CustomList = ({ searchTerm, setSearchTerm, setSelected }) => {
   }, [patternList, searchTerm]);
 
   if (isFetching) {
-    return <Loading className="flex-1" />;
+    return <Loading />;
   } else {
     return (
       <>

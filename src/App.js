@@ -78,6 +78,7 @@ const App = () => {
         setSpeed={setSpeed}
         color={color}
         setColor={setColor}
+        brush={brush}
         setBrush={setBrush}
         setLiveCoords={setLiveCoords}
       />
