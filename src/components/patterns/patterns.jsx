@@ -3,6 +3,7 @@ import Loading from '../loading/loading';
 import {
   useGetWikiPatternNamesQuery,
   useGetCustomPatternNamesQuery,
+  useDeletePatternMutation,
 } from '../../services/gameoflifeapi';
 import { Folders } from '../folders/folders';
 import { MdDeleteForever, MdSave } from 'react-icons/md';
@@ -115,7 +116,7 @@ const Patterns = (props) => {
     folder2: false,
   });
   const [formOpen, setFormOpen] = useState(false);
-
+  const [deletePattern, { isLoading: isDeleting }] = useDeletePatternMutation();
   const handleFolderChange = () => {
     setSelectedFolder({
       folder1: !selectedFolder.folder1,
@@ -142,7 +143,7 @@ const Patterns = (props) => {
         {selectedFolder.folder2 && (
           <div className="flex h-1/5 border-y-2 border-gray-400">
             <Button
-              clickHanlder={() => console.log('test')}
+              clickHanlder={() => deletePattern(selected.customCollection.id)}
               name="Delete Pattern"
               disabled={selected.customCollection ? false : true}
             >

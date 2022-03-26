@@ -52,6 +52,16 @@ export const lifeApi = createApi({
       }),
       invalidatesTags: ['Custom'],
     }),
+    deletePattern: builder.mutation({
+      query(id) {
+        return {
+          headers: { ...apiHeaders },
+          url: `/customcollection/patterns/${id}`,
+          method: 'DELETE',
+        };
+      },
+      invalidatesTags: ['Custom'],
+    }),
   }),
 });
 
@@ -61,4 +71,5 @@ export const {
   useGetCustomPatternNamesQuery,
   useGetCustomPatternByIdQuery,
   useAddCustomPatternMutation,
+  useDeletePatternMutation,
 } = lifeApi;
