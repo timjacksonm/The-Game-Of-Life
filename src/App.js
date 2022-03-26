@@ -95,6 +95,7 @@ const App = () => {
         color={color}
         setColor={setColor}
         brush={brush}
+        aliveCount={aliveCount}
         setBrush={setBrush}
         setLiveCoords={setLiveCoords}
       />

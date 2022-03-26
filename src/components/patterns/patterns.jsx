@@ -109,14 +109,14 @@ const CustomList = ({ searchTerm, setSearchTerm, setSelected }) => {
 };
 
 const Patterns = (props) => {
-  const { setSelected, color, selected } = props;
+  const { setSelected, color, selected, aliveCount } = props;
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFolder, setSelectedFolder] = useState({
     folder1: true,
     folder2: false,
   });
   const [formOpen, setFormOpen] = useState(false);
-  const [deletePattern, { isLoading: isDeleting }] = useDeletePatternMutation();
+  const [deletePattern] = useDeletePatternMutation();
   const handleFolderChange = () => {
     setSelectedFolder({
       folder1: !selectedFolder.folder1,
@@ -128,6 +128,14 @@ const Patterns = (props) => {
     });
     setSearchTerm('');
     setFormOpen(false);
+  };
+
+  const handleDeletePattern = () => {
+    deletePattern(selected.customCollection.id);
+    setSelected({
+      wikiCollection: null,
+      customCollection: null,
+    });
   };
 
   return (
@@ -143,7 +151,7 @@ const Patterns = (props) => {
         {selectedFolder.folder2 && (
           <div className="flex h-1/5 border-y-2 border-gray-400">
             <Button
-              clickHanlder={() => deletePattern(selected.customCollection.id)}
+              clickHanlder={handleDeletePattern}
               name="Delete Pattern"
               disabled={selected.customCollection ? false : true}
             >
@@ -152,6 +160,7 @@ const Patterns = (props) => {
             <Button
               name="Save New Pattern"
               clickHanlder={() => setFormOpen(!formOpen)}
+              disabled={aliveCount ? false : true}
             >
               <MdSave size="2em" />
             </Button>
