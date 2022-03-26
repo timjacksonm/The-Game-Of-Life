@@ -88,6 +88,24 @@ function Form({ setFormOpen, grid }) {
       const rowToConvert = row.slice(start, end);
       return rowToConvert;
     });
+    const maxLengths = newGrid
+      .filter((array) => array.find((value) => value))
+      .sort((a, b) => b.length - a.length);
+    const x = maxLengths[0].length;
+    const y = newGrid.length;
+    newGrid = newGrid.map((array) => {
+      if (array.length !== x) {
+        if (array.every((value) => !value)) {
+          array.length = x;
+          return array;
+        } else {
+          return array.concat(new Array(Math.abs(array.length - x)).fill(0));
+        }
+      } else {
+        return array;
+      }
+    });
+
     let rleString = newGrid.map((row) => {
       const result = encodeRow(row);
       return result;
@@ -108,7 +126,7 @@ function Form({ setFormOpen, grid }) {
     const formData = {
       ...state,
       description: [state.description],
-      size: { x: 1, y: 1 },
+      size: { x: x, y: y },
       rleString: rleString,
     };
     const response = await addPattern(formData);
