@@ -30,7 +30,7 @@ const WikiPatternInfo = ({ selected, setBrush, removeBrushHandler, brush }) => {
         <Button
           name="Remove Pattern"
           clickHanlder={removeBrushHandler}
-          disabled={brush ? false : true}
+          disabled={brush.length ? false : true}
         >
           <GiPalette title="Palette" size="2em" />
         </Button>
@@ -142,7 +142,7 @@ const CustomPatternInfo = ({
 const Details = (props) => {
   const { selected, setBrush, setLiveCoords, brush } = props;
   function removeBrushHandler() {
-    setBrush();
+    setBrush([]);
     setLiveCoords(() => new Set());
   }
 
@@ -169,7 +169,7 @@ const Details = (props) => {
                 <Button
                   name="Remove Pattern"
                   clickHanlder={removeBrushHandler}
-                  disabled={brush ? false : true}
+                  disabled={brush.length ? false : true}
                 >
                   <GiPalette title="Palette" size="2em" />
                 </Button>

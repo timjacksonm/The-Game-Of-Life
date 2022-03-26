@@ -202,7 +202,7 @@ const Canvas = ({
   }
 
   function drawHover(cmx) {
-    if (liveCoords) {
+    if (liveCoords.size) {
       liveCoords.forEach((pair) => {
         const coordX = pair[1] * cellSize + pair[1];
         const coordY = pair[0] * (cellSize + gridGap);

@@ -14,7 +14,7 @@ function Tips() {
     },
     {
       description:
-        '3.) There are three pattern types that show up frequently in the game of life.',
+        '3.) There are three types of patterns that show up frequently in the game of life.',
       list: [
         '- Still life: A pattern that does not change from one generation to the next.',
         '- Oscilator: A pattern that returns to its original state, in the same orientation and position, after a finite number of generations.',
