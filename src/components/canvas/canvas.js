@@ -213,7 +213,7 @@ const Canvas = ({
   }
 
   function getAlivePairs(mouseX, mouseY) {
-    if (brush) {
+    if (brush.length) {
       const x = Math.floor(mouseY / (cellSize + gridGap));
       const y = Math.floor(mouseX / (cellSize + gridGap));
       const brushX = Math.floor(brush.length / 2);

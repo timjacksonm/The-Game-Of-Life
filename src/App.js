@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Canvas from './components/canvas/canvas';
 import useWindowSize from './hooks/useWindowSize';
 import Menu from './components/menu/menu';
@@ -21,8 +21,24 @@ const App = () => {
   const [grid, setGrid] = useState(defaultGrid(windowSize, gridGap, cellSize));
   const [navOpen, setNavOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
-  const [brush, setBrush] = useState();
+  const [brush, setBrush] = useState([]);
   const [liveCoords, setLiveCoords] = useState(() => new Set());
+
+  useEffect(() => {
+    const removeBrush = (e) => {
+      e.preventDefault();
+      setBrush([]);
+    };
+    if (brush.length) {
+      window.addEventListener('contextmenu', removeBrush);
+    }
+
+    return () => {
+      if (brush.length) {
+        window.removeEventListener('contextmenu', removeBrush);
+      }
+    };
+  }, [brush]);
 
   return (
     <>
