@@ -98,7 +98,7 @@ const CustomPatternInfo = ({
         <Button
           name="Remove Pattern"
           clickHanlder={removeBrushHandler}
-          disabled={brush ? false : true}
+          disabled={brush.length ? false : true}
         >
           <GiPalette title="Palette" size="2em" />
         </Button>
