@@ -35,7 +35,7 @@ function Tips() {
   ];
   return (
     <div>
-      <ol>
+      <ul>
         {tipList.map((data) => (
           <div
             key={data.key}
@@ -51,7 +51,7 @@ function Tips() {
             )}
           </div>
         ))}
-      </ol>
+      </ul>
     </div>
   );
 }

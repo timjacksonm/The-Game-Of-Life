@@ -24,6 +24,50 @@ function Favorites() {
       text: 'Spacefiller 2',
       key: 4,
     },
+    {
+      text: 'Ship maker',
+      key: 5,
+    },
+    {
+      text: 'Pufferfish',
+      key: 6,
+    },
+    {
+      text: 'Pufferfish spaceship',
+      key: 7,
+    },
+    {
+      text: 'Frothing puffer',
+      key: 8,
+    },
+    {
+      text: 'Star',
+      key: 9,
+    },
+    {
+      text: 'Electric fence',
+      key: 10,
+    },
+    {
+      text: 'Hammerhead',
+      key: 11,
+    },
+    {
+      text: 'Alternate pi orbital',
+      key: 12,
+    },
+    {
+      text: '56P27',
+      key: 13,
+    },
+    {
+      text: '132P37',
+      key: 14,
+    },
+    {
+      text: '124P37',
+      key: 15,
+    },
   ];
   return (
     <div className="p-3">
@@ -35,17 +79,17 @@ function Favorites() {
       <p>
         Just click the name to copy the text. Than paste in the search field.
       </p>
-      <ul className="flex flex-col">
+      <ol className="flex flex-col list-decimal p-3">
         {favoriteList.map(({ text, key }) => (
-          <div key={key}>
+          <li key={key}>
             <Copytext
               text={text}
               clipboard={clipboard}
               setClipboard={setClipboard}
             />
-          </div>
+          </li>
         ))}
-      </ul>
+      </ol>
     </div>
   );
 }

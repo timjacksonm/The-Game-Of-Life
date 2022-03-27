@@ -11,9 +11,8 @@ function Copytext({ text, clipboard, setClipboard }) {
     setCopied(true);
     setClipboard(text);
   };
-  console.log(copied, clipboard);
   return (
-    <div className="flex items-center">
+    <div className="flex items-center px-3">
       <CopyToClipboard text={text} onCopy={handleCopy}>
         <input
           defaultValue={text}
