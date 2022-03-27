@@ -5,23 +5,28 @@ import {
   HiOutlineClipboardCheck,
 } from 'react-icons/hi';
 
-function Copytext({ text }) {
+function Copytext({ text, clipboard, setClipboard }) {
   const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    setCopied(true);
+    setClipboard(text);
+  };
+  console.log(copied, clipboard);
   return (
     <div className="flex items-center">
-      <CopyToClipboard text={text} onCopy={() => setCopied(true)}>
+      <CopyToClipboard text={text} onCopy={handleCopy}>
         <input
           defaultValue={text}
           className="text-black p-1 my-3 cursor-pointer"
           readOnly
         />
       </CopyToClipboard>
-      {copied ? (
+      {copied && clipboard === text ? (
         <HiOutlineClipboardCheck size="2em" color="limegreen" />
       ) : (
         <HiOutlineClipboardCopy size="2em" />
       )}
-      {copied && <p>Copied!</p>}
+      {copied && clipboard === text && <p>Copied!</p>}
     </div>
   );
 }

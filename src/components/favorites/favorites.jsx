@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Copytext from '../copytext/copytext';
 
 function Favorites() {
+  const [clipboard, setClipboard] = useState(null);
   const favoriteList = [
     {
       text: 'oscillator no name',
@@ -37,7 +38,11 @@ function Favorites() {
       <ul className="flex flex-col">
         {favoriteList.map(({ text, key }) => (
           <div key={key}>
-            <Copytext text={text} />
+            <Copytext
+              text={text}
+              clipboard={clipboard}
+              setClipboard={setClipboard}
+            />
           </div>
         ))}
       </ul>
