@@ -1,6 +1,7 @@
 import React from 'react';
+import Favorites from '../favorites/favorites';
 
-function Tips() {
+function Info() {
   const tipList = [
     {
       description:
@@ -34,8 +35,11 @@ function Tips() {
     },
   ];
   return (
-    <div className="p-3 flex flex-col h-screen">
-      <ol className="divide-y divide-gray-400 h-full py-5">
+    <div className="p-3 flex flex-col h-full overflow-y-auto">
+      <h1 className="w-full text-center font-bold border-gray-400 border-t-2 border-b-2 p-3">
+        Tips
+      </h1>
+      <ol>
         {tipList.map((data) => (
           <div
             key={data.key}
@@ -52,8 +56,12 @@ function Tips() {
           </div>
         ))}
       </ol>
+      <h1 className="w-full text-center font-bold border-gray-400 border-t-2 border-b-2 p-3">
+        Favorites
+      </h1>
+      <Favorites />
     </div>
   );
 }
 
-export default Tips;
+export default Info;

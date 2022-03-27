@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Folders } from '../folders/folders';
 import Rules from '../rules/rules';
-import Tips from '../tips/tips';
+import Info from '../info/info';
 
 const Guide = ({ color }) => {
   const [selectedFolder, setSelectedFolder] = useState({
@@ -17,16 +17,16 @@ const Guide = ({ color }) => {
   };
 
   return (
-    <div className="bg-gray-600 m-3 zoom50:m-6 zoom25:m-9">
+    <div className="bg-gray-600 m-3 overflow-hidden zoom50:m-6 zoom25:m-9">
       <Folders
         state={selectedFolder}
         color={color}
         folderName1="Rules"
-        folderName2="Tips"
+        folderName2="Info"
         clickHandler={handleFolderChange}
       >
         {selectedFolder.folder1 && <Rules />}
-        {selectedFolder.folder2 && <Tips />}
+        {selectedFolder.folder2 && <Info />}
       </Folders>
     </div>
   );
