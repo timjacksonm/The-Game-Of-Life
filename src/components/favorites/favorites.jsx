@@ -70,7 +70,7 @@ function Favorites() {
     },
   ];
   return (
-    <div className="p-3">
+    <div className="p-3 zoom80:m-6 zoom50:m-12 zoom33:m-16 zoom25:m-20 zoom75:p-6 zoom50:p-9 zoom25:p-12">
       <p>
         WikiCollection has over 2,000 patterns. In the settings navigation you
         can search for a pattern. To highlight some of my favorites here is a
