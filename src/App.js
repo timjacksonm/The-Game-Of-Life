@@ -8,6 +8,7 @@ import Sidenav from './components/sidenav/sidenav';
 import defaultGrid from './utils';
 import { FiPlay, FiPause, FiSettings } from 'react-icons/fi';
 import { FaBook } from 'react-icons/fa';
+import { demo } from './demo';
 
 const App = () => {
   const windowSize = useWindowSize();
@@ -18,7 +19,7 @@ const App = () => {
   const [color, setColor] = useState('#61dafb');
   const [genCount, setGenCount] = useState(0);
   const [aliveCount, setAliveCount] = useState(0);
-  const [grid, setGrid] = useState(defaultGrid(windowSize, gridGap, cellSize));
+  const [grid, setGrid] = useState(demo);
   const [navOpen, setNavOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
   const [brush, setBrush] = useState([]);

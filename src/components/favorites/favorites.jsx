@@ -68,6 +68,14 @@ function Favorites() {
       text: '124P37',
       key: 15,
     },
+    {
+      text: 'Onion rings',
+      key: 16,
+    },
+    {
+      text: 'Squaredance',
+      key: 17,
+    },
   ];
   return (
     <div className="p-3 zoom80:m-6 zoom50:m-12 zoom33:m-16 zoom25:m-20 zoom75:p-6 zoom50:p-9 zoom25:p-12">
