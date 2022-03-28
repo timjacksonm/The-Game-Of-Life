@@ -5,7 +5,6 @@ import Menu from './components/menu/menu';
 import Button from './components/button/button';
 import Counter from './components/counter/counter';
 import Sidenav from './components/sidenav/sidenav';
-import defaultGrid from './utils';
 import { FiPlay, FiPause, FiSettings } from 'react-icons/fi';
 import { FaBook } from 'react-icons/fa';
 import { demo } from './demo';
