@@ -1,8 +1,19 @@
-<h1 align="center">
-   <image src="/src/assets/" width="50%"> 
-</h1>
+<h4 align="center">The-Game-Of-Life</h4>
 
-<h4 align="center">Title</h4>
+<div align="center">
+
+![MongoDB](https://img.shields.io/badge/-MongoDB-000?&logo=MongoDB&style=for-the-badge)
+![Express](https://img.shields.io/badge/-Express-000?&logo=Express&style=for-the-badge)
+![React](https://img.shields.io/badge/-React-000?&logo=React&style=for-the-badge)
+![Node.js](https://img.shields.io/badge/-Node.js-000?&logo=node.js&style=for-the-badge)
+![Javascript](https://img.shields.io/badge/-JavaScript-000?&logo=javascript&style=for-the-badge)
+![TailwindCSS](https://img.shields.io/badge/-TailwindCSS-000?&logo=tailwindcss&style=for-the-badge)
+![RTKQuery](https://img.shields.io/badge/-RTKQuery-000?&logo=Redux&style=for-the-badge)
+![Jest](https://img.shields.io/badge/-Jest-000?&logo=jest&style=for-the-badge)
+![Git](https://img.shields.io/badge/-Git-000?&logo=git&style=for-the-badge)
+
+</div>
+
 <p align="center">
   <a href="#guide">Guide</a> •
   <a href="#summary">Summary</a> •
@@ -18,7 +29,7 @@
 
 <p>The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970.</p>
 <p>The universe of the Game of Life is an infinite, a two-dimensional orthogonal grid of square cells, each of which is in one of two possible states, live or dead.</p>
-<p>Every cell interacts with its eight neighbours and follows a set of 4 rules to determine the cells status, live or dead.</p>
+<p>Every cell interacts with its eight neighbours and follows a set of four rules to determine the cells status, live or dead.</p>
 
 <details>
     <summary><strong>Show Rules</strong></summary>
@@ -45,7 +56,7 @@
 #### Getting started
 
 <p>By default a pattern named <strong>Squaredance</strong> will be displayed on screen. Go ahead, click the <strong>start</strong> button!</p>
-<p>What happened? If you haven't familiarized yourself with the rules above go ahead and take a moment to digest. Now with the wisdom of the 4 rules here are some additional things to know.</p>
+<p>What happened? If you haven't familiarized yourself with the rules above go ahead and take a moment to digest. Now with the wisdom of the four rules here are some additional things to know.</p>
 
 - <p>Essentially, your mouse pointer acts as a paint brush. Without a loaded pattern you can click any single cell within the grid and change its status from alive or dead.</p>
 - <p>To remove a loaded pattern you can right click with your mouse or go into settings -> details and click the remove pattern button.</p>
@@ -98,12 +109,12 @@
 
 ## Summary
 
-<p>The game of life project idea came from two videos I saw back in July 2021, <a href="https://www.youtube.com/watch?v=xP5-iIeKXE8">Here</a> & <a href="https://www.youtube.com/watch?v=C2vgICfQawE">Here</a>. For anyone that knows me, I love a challenge and complexity. I made this my goal to replicate in React once I learned enough JavaScript to make it a reality. Over Christmas break at an Airbnb I was able to create a rough front end version that used divs as the grid. You can view the initial version in my first tweet <a href="https://twitter.com/timjacksonm/status/1477358126517129216?s=20&t=Kcd0aGp8mYR2XxYXRO9jyg">Here</a> This version was not very performant and as you can tell with the speed set to max it was pretty slow. At this point I was uncertain if I would progress the app further. I came across the <a href="https://conwaylife.com/wiki/Main_Page">Life Wiki</a> and learned they had an entire collection of patterns with RLE (Run Length Encoding) compression you could download. 5,200+ Patterns according to their wiki.</p>
+<p>The game of life project idea came from two videos I saw back in July 2021, <a href="https://www.youtube.com/watch?v=xP5-iIeKXE8">Here</a> & <a href="https://www.youtube.com/watch?v=C2vgICfQawE">Here</a>. For anyone that knows me, I love a challenge and complexity. I made this my goal to replicate in React once I learned enough JavaScript to make it a reality. Over Christmas break at an Airbnb I was able to create a rough front end version that used divs as the grid. You can view the initial version in my first tweet <a href="https://twitter.com/timjacksonm/status/1477358126517129216?s=20&t=Kcd0aGp8mYR2XxYXRO9jyg">Here.</a> This version was not very performant and as you can tell with the speed set to max it was pretty slow. At this point I was uncertain if I would progress the app further. I came across the <a href="https://conwaylife.com/wiki/Main_Page">Life Wiki</a> and learned they had an entire collection of patterns with RLE (Run Length Encoding) compression you could download. 5,200+ Patterns according to their wiki.</p>
 <p>I was intrigued by such a huge collection and decided to research how I could use these patterns in my own project. I ended up creating my own NPM package <a href="https://www.npmjs.com/package/rle-decoder">rle-decoder.</a> This helped me convert the rle string within a file into a two-dimensional array. I also parsed the rest of the data from the file into a JavaScript object using the Node File System API. I quickly realized the collection of 5,200 patterns included extremely large arrays, over half of the files were more than 40,000 single cells. I decided I wanted the project to be BIG but not that big. So I wrote some code to filter the files and move the files that were less than 200x200 cells (40,000) into another folder. After sorting the files I also realized that about 200 of the files had no title so I wrote more code to sort those out and I added names manually by looking up the authors on the life wiki website.</p>
 <p>After a small test to ensure I could save a JavaScript object with the data to my database, I pushed the entire filtered collection! My <a href="https://twitter.com/timjacksonm/status/1481135061101694979?s=20&t=Kcd0aGp8mYR2XxYXRO9jyg">Terminal</a> screen made me feel like an elite coder from a 90s action movie. Once it was finished, I had 2,288 patterns in my database!</p>
 <p>Next I created a <a href="https://github.com/timjacksonm/The-Game-Of-Life-API">REST API</a> using Node & Express. I put my api on <a href="https://rapidapi.com/timjacksonm-1jw8F2hFW3d/api/the-game-of-life">RapidAPI</a> so other developers can use it. The API consists of seven endpoints with data from two different folders.</p>
 <p>Lastly, because my first version of the game of life was slow and not performant enough to run bigger patterns. I scrapped it and re-did my front end completely. I opted to use html canvas instead. I connected my front end to my back end using Redux Toolkit Query and created my own UI that wasn't too intrusive to the board itself.</p>
-<p>Finishing touches included a hover effect that acted like a paint brush, a guide and tips which includes a favorite list and a way to search through the large amount of available patterns.</p>
+<p>Finishing touches included a hover effect that acts like a paint brush, a guide and tips which includes a favorite list and a way to search through the large amount of available patterns.</p>
 <p>A technical coincidence that I built upon was the ability to zoom out to make the grid larger so you can use the larger patterns. I ended up making the UI responsive zooming out.</p>
 
 ### Challenges
