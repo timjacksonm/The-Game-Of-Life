@@ -1,4 +1,4 @@
-<h4 align="center">The-Game-Of-Life</h4>
+<h1 align="center">The-Game-Of-Life</h1>
 
 <div align="center">
 
