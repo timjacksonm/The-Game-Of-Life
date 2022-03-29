@@ -46,10 +46,11 @@
 
 <p>By default a pattern named <strong>Squaredance</strong> will be displayed on screen. Go ahead, click the <strong>start</strong> button!</p>
 <p>What happened? If you haven't familiarized yourself with the rules above go ahead and take a moment to digest. Now with the wisdom of the 4 rules here are some additional things to know.</p>
-<p>Essentially, your mouse pointer acts as a paint brush. Without a loaded pattern you can click any single cell within the grid and change its status from alive or dead.</p>
-<p>To remove a loaded pattern you can right click with your mouse or go into settings -> details and click the remove pattern button.</p>
-<p>Some patterns may be too big for your current grid size. Try zooming out! Hold Ctrl+MINUS or Ctrl+MouseScrollDown.</p>
-<p>Patterns within the two folders <strong>WikiCollection & CustomCollection</strong> are sorted by size from smallest to largest.</p>
+
+- <p>Essentially, your mouse pointer acts as a paint brush. Without a loaded pattern you can click any single cell within the grid and change its status from alive or dead.</p>
+- <p>To remove a loaded pattern you can right click with your mouse or go into settings -> details and click the remove pattern button.</p>
+- <p>Some patterns may be too big for your current grid size. Try zooming out! Hold Ctrl+MINUS or Ctrl+MouseScrollDown.</p>
+- <p>Patterns within the two folders <strong>WikiCollection & CustomCollection</strong> are sorted by size from smallest to largest.</p>
 
 <details>
 <summary>Show Common Interactions</summary>
