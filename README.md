@@ -69,42 +69,38 @@
 ---
 
 <p>Fill Grid Randomly And Reset Grid</p>
-<image src="/src/assets/">
+<image src="/src/assets/fillgridreset.gif">
 
 ---
 
 <p>Load A Pattern</p>
-<image src="/src/assets/">
-
----
-
-<p>Save A Pattern</p>
-<image src="/src/assets/">
-
----
-
-<p>Delete A Pattern</p>
-<image src="/src/assets/">
-
----
-
-<p>Search A Pattern</p>
-<image src="/src/assets/">
+<image src="/src/assets/loadpattern.gif">
 
 ---
 
 <p>Combine Multiple Patterns</p>
-<image src="/src/assets/">
+<image src="/src/assets/combine.gif">
+
+---
+
+<p>Save A Pattern</p>
+<image src="/src/assets/savepattern.gif">
+
+---
+
+<p>Delete A Pattern</p>
+<image src="/src/assets/deletepattern.gif">
+
+---
+
+<p>Search A Favorite Pattern</p>
+<image src="/src/assets/searchfavorite.gif">
 
 ---
 
 <p>Adjust Speed And Color</p>
-<image src="/src/assets/">
+<image src="/src/assets/adjustspeedcolor.gif">
 
----
-
-<p>Use A Favorite Pattern</p>
-<image src="/src/assets/">
 </details>
 
 ## Summary
