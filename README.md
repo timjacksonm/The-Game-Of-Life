@@ -101,6 +101,11 @@
 <p>Adjust Speed And Color</p>
 <image src="/src/assets/adjustspeedcolor.gif">
 
+---
+
+<p>Apply a large pattern</p>
+<image src="/src/assets/largepattern.gif">
+
 </details>
 
 ## Summary
@@ -131,6 +136,7 @@
 <li>Implement the ability to sort patterns by an author's name or by size.</li>
 <li>Add authentication, so a user would have to log in to delete patterns from the CustomCollection. Allow admins to edit WikiCollection patterns.</li>
 <li>More performance improvements. One known bug is if you resize the screen in quick succession the browser will crash and freeze completely.</li>
+<li>Make menu navigation moveable or an option to minimize so it doesn't block the top middle portion of the grid.</li>
 </ol>
 
 ## Resources
