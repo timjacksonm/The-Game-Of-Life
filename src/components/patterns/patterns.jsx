@@ -7,11 +7,16 @@ import {
 } from '../../services/gameoflifeapi';
 import { Folders } from '../folders/folders';
 import { MdDeleteForever, MdSave } from 'react-icons/md';
+import { SiHeroku } from 'react-icons/si';
 import Button from '../button/button';
 import Form from '../form/form';
 
 const WikiList = ({ searchTerm, setSearchTerm, setSelected }) => {
-  const { data: patternList, isFetching } = useGetWikiPatternNamesQuery();
+  const {
+    data: patternList,
+    isFetching,
+    isLoading,
+  } = useGetWikiPatternNamesQuery();
   const [patterns, setPatterns] = useState(patternList);
 
   const handleSelectChange = (e) => {
@@ -28,6 +33,18 @@ const WikiList = ({ searchTerm, setSearchTerm, setSelected }) => {
 
     setPatterns(filterData);
   }, [patternList, searchTerm]);
+
+  if (isLoading && !patternList) {
+    return (
+      <div className="p-3 flex flex-col items-center">
+        <p className="flex items-end">
+          <SiHeroku color="#c9c3e6" size="2em" className="mx-2" /> Heroku web
+          dyno waking up. One moment please.
+        </p>
+        <Loading />
+      </div>
+    );
+  }
 
   if (isFetching) {
     return <Loading />;
@@ -60,7 +77,11 @@ const WikiList = ({ searchTerm, setSearchTerm, setSelected }) => {
 };
 
 const CustomList = ({ searchTerm, setSearchTerm, setSelected }) => {
-  const { data: patternList, isFetching } = useGetCustomPatternNamesQuery();
+  const {
+    data: patternList,
+    isFetching,
+    isLoading,
+  } = useGetCustomPatternNamesQuery();
   const [patterns, setPatterns] = useState(patternList);
 
   const handleSelectChange = (e) => {
@@ -77,6 +98,18 @@ const CustomList = ({ searchTerm, setSearchTerm, setSelected }) => {
 
     setPatterns(filterData);
   }, [patternList, searchTerm]);
+
+  if (isLoading && !patternList) {
+    return (
+      <div className="p-3 flex flex-col items-center">
+        <p className="flex items-end">
+          <SiHeroku color="#c9c3e6" size="2em" className="mx-2" /> Heroku web
+          dyno waking up. One moment please.
+        </p>
+        <Loading />
+      </div>
+    );
+  }
 
   if (isFetching) {
     return <Loading />;
