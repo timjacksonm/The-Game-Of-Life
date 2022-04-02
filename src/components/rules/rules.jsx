@@ -33,19 +33,21 @@ const Rules = () => {
   ];
   return (
     <div className="p-3 flex flex-col h-screen">
-      <p className="p-3">
-        The Game of Life, also known simply as Life, is a cellular automaton
-        devised by the British mathematician John Horton Conway in 1970.
-      </p>
-      <p className="p-3">
-        The universe of the Game of Life is an infinite, two-dimensional
-        orthogonal grid of square cells, each of which is in one of two possible
-        states, live or dead.
-      </p>
-      <p className="p-3">
-        Every cell interacts with its eight neighbours and follows a set of 4
-        rules to determine the cells status, live or dead.
-      </p>
+      <div className="m-3 zoom80:m-6 zoom50:m-12 zoom33:m-16 zoom25:m-20">
+        <p className="py-1 zoom75:py-3">
+          The Game of Life, also known simply as Life, is a cellular automaton
+          devised by the British mathematician John Horton Conway in 1970.
+        </p>
+        <p className="py-1 zoom75:py-3">
+          The universe of the Game of Life is an infinite, two-dimensional
+          orthogonal grid of square cells, each of which is in one of two
+          possible states, live or dead.
+        </p>
+        <p className="py-1 zoom75:py-3">
+          Every cell interacts with its eight neighbours and follows a set of 4
+          rules to determine the cells status, live or dead.
+        </p>
+      </div>
       <ol className="divide-y divide-gray-400 h-full overflow-y-scroll p-5">
         {rulesList.map((rule) => {
           return (
