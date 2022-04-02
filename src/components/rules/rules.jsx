@@ -51,12 +51,16 @@ const Rules = () => {
           return (
             <li
               key={rule.key}
-              className="flex flex-col items-center justify-around last:mb-16 h-2/5 zoom80:m-6 zoom50:m-12 zoom33:m-16 zoom25:m-20"
+              className="flex flex-col items-center justify-around last:mb-16 zoom80:m-6 zoom50:m-12 zoom33:m-16 zoom25:m-20"
             >
               <p className="my-3 zoom75:my-6 zoom50:my-9 zoom25:my-12">
                 {rule.description}
               </p>
-              <img className="w-2/6" src={rule.gif} alt="test" />
+              <img
+                className="w-2/6 p-3"
+                src={rule.gif}
+                alt="gif showcasing this rule being applied to a cell"
+              />
             </li>
           );
         })}
