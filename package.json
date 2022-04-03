@@ -20,6 +20,11 @@
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.2"
   },
+  "devDependencies": {
+    "autoprefixer": "^10.4.2",
+    "postcss": "^8.4.5",
+    "tailwindcss": "^3.0.17"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -43,10 +48,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.4.2",
-    "postcss": "^8.4.5",
-    "tailwindcss": "^3.0.17"
   }
 }
