@@ -47,7 +47,6 @@ const App = () => {
         <Counter title="Alive" state={aliveCount} />
         <Button
           name="Guide"
-          color=""
           clickHanlder={() => {
             setStart(false);
             setNavOpen(false);
@@ -58,7 +57,6 @@ const App = () => {
         </Button>
         <Button
           name={start ? 'Pause' : 'Start'}
-          color=""
           clickHanlder={() => {
             setNavOpen(false);
             setGuideOpen(false);
@@ -69,7 +67,6 @@ const App = () => {
         </Button>
         <Button
           name="Settings"
-          color=""
           clickHanlder={() => {
             setStart(false);
             setGuideOpen(false);
