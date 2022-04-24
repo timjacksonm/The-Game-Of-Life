@@ -59,23 +59,25 @@ function Form({ setFormOpen, grid }) {
     return encoding.join('');
   }
 
-  const saveNewPattern = async (e) => {
-    e.preventDefault();
-    let minY = grid
-      .map((row) => row.findIndex((value) => value))
-      .filter((value) => value > 0)
-      .sort((a, b) => a - b)[0];
+  const trimCurrentGrid = () => {
     const gridCopy = [...grid];
-    //remove empty rows until a row contains alive cells.
+
+    //remove first element of row until first alive cell is found. repeat til no rows remaning.
     while (gridCopy[0].every((value) => !value)) {
       gridCopy.shift();
     }
     gridCopy.reverse();
+    //repeat above steps but with each row reversed. result should be similar to trim() on a string but instead of white space removing dead cells.
     while (gridCopy[0].every((value) => !value)) {
       gridCopy.shift();
     }
     gridCopy.reverse();
 
+    // the below code removes columns with no alive cells.
+    let minY = grid
+      .map((row) => row.findIndex((value) => value))
+      .filter((value) => value > 0)
+      .sort((a, b) => a - b)[0];
     let newGrid = gridCopy.map((row, index, array) => {
       if (row.every((value) => !value)) {
         //inbetween row
@@ -106,7 +108,15 @@ function Form({ setFormOpen, grid }) {
       }
     });
 
-    let rleString = newGrid.map((row) => {
+    return { trimmedGrid: newGrid, size: { x: x, y: y } };
+  };
+
+  const saveNewPattern = async (e) => {
+    e.preventDefault();
+
+    const { trimmedGrid, size } = trimCurrentGrid(grid);
+
+    let rleString = trimmedGrid.map((row) => {
       const result = encodeRow(row);
       return result;
     });
@@ -126,7 +136,7 @@ function Form({ setFormOpen, grid }) {
     const formData = {
       ...state,
       description: [state.description],
-      size: { x: x, y: y },
+      size,
       rleString: rleString,
     };
     const response = await addPattern(formData);
