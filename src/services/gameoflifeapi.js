@@ -22,6 +22,7 @@ export const lifeApi = createApi({
       query: () =>
         createRequest('/wikicollection/patterns/', {
           select: '["title"]',
+          limit: 2339,
         }),
     }),
     getWikiPatternById: builder.query({
@@ -34,6 +35,7 @@ export const lifeApi = createApi({
       query: () =>
         createRequest('/customcollection/patterns/', {
           select: '["title"]',
+          limit: 2339,
         }),
       providesTags: ['Custom'],
     }),
