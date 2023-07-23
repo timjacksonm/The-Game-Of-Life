@@ -131,12 +131,14 @@ const Canvas = ({ cellSize, pattern, isRunning }: CanvasProps) => {
 
   return (
     <div className='flex flex-1 items-center justify-center'>
-      <canvas
-        width={window.innerWidth * 0.6}
-        height={window.innerHeight * 0.8}
-        ref={canvasRef}
-        className='border border-gray-500'
-      />
+      {typeof window !== 'undefined' && (
+        <canvas
+          width={window.innerWidth * 0.6}
+          height={window.innerHeight * 0.8}
+          ref={canvasRef}
+          className='border border-gray-500'
+        />
+      )}
     </div>
   );
 };
