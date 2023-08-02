@@ -6,7 +6,7 @@ import Canvas from './_canvas';
 export default function Game() {
   const [isRunning, setIsRunning] = useState(false);
   const [pattern, setPattern] = useState<number[][] | null>(null);
-  const [cellSize, setCellSize] = useState(2.5);
+  const [cellSize, setCellSize] = useState(5);
   const [textBoxValue, setTextBoxValue] = useState('61de589bbec647f79484364a');
   const rangeRef = useRef(null);
 

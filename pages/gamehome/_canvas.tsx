@@ -1,4 +1,11 @@
-import { WheelEvent, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  MouseEvent as ReactMouseEvent,
+  WheelEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { produce } from 'immer';
 import { CanvasProps } from '@/types';
 import { drawGrid, nextGen } from '@/utils/gamehelpers';
@@ -74,7 +81,49 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   }, [pattern]);
   // ****************************************** //
 
-  // ************** Scroll Events (Zoom) ************** //
+  // ************** Mouse Events (Click) ************** //
+  // TODO: Figure out a way to differentate between click and drag events
+  function handleClick(event: ReactMouseEvent) {
+    if (isRunningRef.current || !canvasRef.current) return;
+    const cellPlusGapSize = cellSizeRef.current + 1;
+    const { clientX, clientY } = event;
+
+    // Get the position of the canvas relative to the viewport and its dimensions
+    const { left: rectLeft, top: rectTop } = canvasRef.current.getBoundingClientRect();
+    const { width: canvasWidth, height: canvasHeight } = canvasRef.current;
+
+    // Calculate the offset of the drawing area within the canvas to center the grid
+    const offsetX = (canvasWidth - grid[0].length * cellPlusGapSize) / 2;
+    const offsetY = (canvasHeight - grid.length * cellPlusGapSize) / 2;
+
+    // Helper function to calculate cell coordinate from the click position
+    // This takes into account the canvas position, grid size, current grid offset and canvas offset
+    const getCellCoordinate = (
+      clickPos: number,
+      rectPos: number,
+      gridSize: number,
+      offsetCoord: number,
+      canvasOffset: number,
+    ) => {
+      const pos =
+        ((clickPos - rectPos - canvasOffset) / cellPlusGapSize + offsetCoord + gridSize) % gridSize;
+      return Math.floor(pos);
+    };
+
+    // Calculate the x and y cell coordinates in the grid
+    const x = getCellCoordinate(clientX, rectLeft, grid[0].length, offset.x, offsetX);
+    const y = getCellCoordinate(clientY, rectTop, grid.length, offset.y, offsetY);
+
+    setGrid((prevGrid) =>
+      produce(prevGrid, (draftGrid) => {
+        draftGrid[y][x] = draftGrid[y][x] ? 0 : 1;
+      }),
+    );
+  }
+
+  // *************************************************** //
+
+  // ************** Mouse Events (Zoom) ************** //
   const handleScroll = (event: WheelEvent) => {
     const slider = rangeRef.current;
     if (!slider) return;
@@ -171,7 +220,7 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
       canvas.removeEventListener('mouseup', handleMouseUp);
       canvas.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [isRunning, grid]);
+  }, []);
   // *************************************************** //
 
   return (
@@ -183,6 +232,7 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
           ref={canvasRef}
           className='border border-gray-500'
           onWheel={handleScroll}
+          onClick={handleClick}
         />
       )}
     </div>
