@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { WheelEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { produce } from 'immer';
 import { CanvasProps } from '@/types';
 import { drawGrid, nextGen } from '@/utils/gamehelpers';
 
-const Canvas = ({ cellSize, pattern, isRunning }: CanvasProps) => {
+const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasProps) => {
   const emptyGrid = Array.from({ length: 200 }, () => Array<number>(200).fill(0));
   const [grid, setGrid] = useState(emptyGrid);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
+  const [mouseInsideCanvas, setMouseInsideCanvas] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<number>();
   const lastDragPos = useRef<{ x: number; y: number } | null>(null);
@@ -73,6 +74,50 @@ const Canvas = ({ cellSize, pattern, isRunning }: CanvasProps) => {
   }, [pattern]);
   // ****************************************** //
 
+  // ************** Scroll Events (Zoom) ************** //
+  const handleScroll = (event: WheelEvent) => {
+    const slider = rangeRef.current;
+    if (!slider) return;
+    if (!isRunning && mouseInsideCanvas) {
+      const delta = event.deltaY;
+      const step = parseFloat(slider.step) || 1;
+      const max = parseFloat(slider.max) || 95;
+      const min = parseFloat(slider.min) || 2.5;
+
+      if (delta > 0) {
+        // Scrolling down
+        setCellSize((prevSize) => Math.max(prevSize - step, min));
+      } else {
+        // Scrolling up
+        setCellSize((prevSize) => Math.min(prevSize + step, max));
+      }
+    }
+  };
+
+  // only allow zooming when mouse is inside canvas
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const handleMouseEnter = () => {
+      setMouseInsideCanvas(true);
+    };
+
+    const handleMouseLeave = () => {
+      setMouseInsideCanvas(false);
+    };
+
+    canvas.addEventListener('mouseenter', handleMouseEnter);
+    canvas.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      // Clean up event listeners on unmount
+      canvas.removeEventListener('mouseenter', handleMouseEnter);
+      canvas.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+  // *************************************************** //
+
   // ************** Move Events (Panning) ************** //
   // I wanted event listeners to only be added once and remove when this component umounts
   // so I used useRef to keep track of the values of isDragging and cellSize
@@ -88,7 +133,7 @@ const Canvas = ({ cellSize, pattern, isRunning }: CanvasProps) => {
   // Adding dependencies would cause re render and event listeners to be added / removed every time
   useEffect(() => {
     const handleMouseDown = () => {
-      if (cellSizeRef.current <= 2.5 || cellSizeRef.current >= 95 || isRunning) return;
+      if (isRunning) return;
       setIsDragging(true);
     };
 
@@ -126,7 +171,7 @@ const Canvas = ({ cellSize, pattern, isRunning }: CanvasProps) => {
       canvas.removeEventListener('mouseup', handleMouseUp);
       canvas.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [isRunning]);
+  }, [isRunning, grid]);
   // *************************************************** //
 
   return (
@@ -137,6 +182,7 @@ const Canvas = ({ cellSize, pattern, isRunning }: CanvasProps) => {
           height={window.innerHeight * 0.8}
           ref={canvasRef}
           className='border border-gray-500'
+          onWheel={handleScroll}
         />
       )}
     </div>

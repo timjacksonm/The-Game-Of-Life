@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from 'react';
+
 export interface PatternProps {
   select?: string;
   offset?: number;
@@ -20,6 +22,8 @@ export interface CanvasProps {
   cellSize: number;
   pattern: number[][] | null;
   isRunning: boolean;
+  setCellSize: Dispatch<SetStateAction<number>>;
+  rangeRef: React.MutableRefObject<HTMLInputElement | null>;
 }
 
 export interface DrawGridProps {

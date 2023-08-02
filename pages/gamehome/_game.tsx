@@ -1,14 +1,14 @@
 import { fetchWikiPatternById } from '@/utils/api';
 import { decode } from '@/utils/decdoe';
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useRef } from 'react';
 import Canvas from './_canvas';
 
 export default function Game() {
   const [isRunning, setIsRunning] = useState(false);
   const [pattern, setPattern] = useState<number[][] | null>(null);
   const [cellSize, setCellSize] = useState(2.5);
-
   const [textBoxValue, setTextBoxValue] = useState('61de589bbec647f79484364a');
+  const rangeRef = useRef(null);
 
   const handleTextBoxChange = (event: ChangeEvent<HTMLInputElement>) => {
     setTextBoxValue(event.target.value);
@@ -21,6 +21,7 @@ export default function Game() {
       setPattern(decodedString);
     }
   };
+
   return (
     <main className='flex h-screen flex-col'>
       <div className='flex'>
@@ -46,15 +47,22 @@ export default function Game() {
         </div>
       </div>
       <input
-        className='m-2 w-full whitespace-nowrap bg-blue-500 px-4 py-2'
+        className='m-2 hidden w-full whitespace-nowrap bg-blue-500 px-4 py-2'
         type='range'
         min='2.5'
         max='95'
         value={cellSize}
-        onChange={(e) => setCellSize(Math.floor(parseInt(e.target.value)))}
+        ref={rangeRef}
+        readOnly
       />
 
-      <Canvas cellSize={cellSize} pattern={pattern} isRunning={isRunning} />
+      <Canvas
+        cellSize={cellSize}
+        setCellSize={setCellSize}
+        pattern={pattern}
+        isRunning={isRunning}
+        rangeRef={rangeRef}
+      />
     </main>
   );
 }
