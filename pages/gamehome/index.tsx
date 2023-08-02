@@ -1,15 +1,20 @@
-import { useEffect, useState } from "react";
-import Game from "./_game";
+import { useEffect, useState } from 'react';
+import Game from './_game';
+import { warmUpAPI } from '@/utils/api';
 
 export default function GameHome() {
-    const [isClient, setIsClient] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-    useEffect(() => {
-      setIsClient(true);
-    }, []);
+  useEffect(() => {
+    void warmUpAPI();
+    setIsClient(true);
+  }, []);
 
-    if (!isClient) return <div>loading...</div>;
+  if (!isClient) return <div>loading...</div>;
 
-    return <main><Game /></main>;
-  }
-  
+  return (
+    <main>
+      <Game />
+    </main>
+  );
+}

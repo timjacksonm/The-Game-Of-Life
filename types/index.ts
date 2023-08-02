@@ -1,4 +1,4 @@
-export interface patternProps {
+export interface PatternProps {
   select?: string;
   offset?: number;
   limit?: number;
