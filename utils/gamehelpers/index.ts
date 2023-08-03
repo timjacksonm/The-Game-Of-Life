@@ -26,25 +26,23 @@ export function drawGrid({
   }
 }
 
-export function nextGen(setGrid: React.Dispatch<React.SetStateAction<number[][]>>) {
-  setGrid((grid) =>
-    produce(grid, (gridCopy) => {
-      for (let x = 0; x < grid.length; x++) {
-        for (let y = 0; y < grid[x].length; y++) {
-          const cell = grid[x][y];
-          const neighbors = countNeighbors(grid, x, y);
-          // rules
-          if (cell === 1 && neighbors < 2) {
-            gridCopy[x][y] = 0;
-          } else if (cell === 1 && neighbors > 3) {
-            gridCopy[x][y] = 0;
-          } else if (cell === 0 && neighbors === 3) {
-            gridCopy[x][y] = 1;
-          }
+export function nextGen(grid: number[][]) {
+  return produce(grid, (gridCopy) => {
+    for (let x = 0; x < grid.length; x++) {
+      for (let y = 0; y < grid[x].length; y++) {
+        const cell = grid[x][y];
+        const neighbors = countNeighbors(grid, x, y);
+        // rules
+        if (cell === 1 && neighbors < 2) {
+          gridCopy[x][y] = 0;
+        } else if (cell === 1 && neighbors > 3) {
+          gridCopy[x][y] = 0;
+        } else if (cell === 0 && neighbors === 3) {
+          gridCopy[x][y] = 1;
         }
       }
-    }),
-  );
+    }
+  });
 }
 
 export function countNeighbors(grid: number[][], indexX: number, indexY: number) {

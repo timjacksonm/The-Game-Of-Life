@@ -25,9 +25,22 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
 
   // ************** GAME LOOP ************** //
   const gameLoop = useCallback(() => {
-    nextGen(setGrid);
+    const newGrid = nextGen(grid);
+    setGrid(newGrid);
+
+    const ctx = canvasRef.current?.getContext('2d');
+    if (!ctx) return;
+    const currentSize = { width: ctx.canvas.width, height: ctx.canvas.height };
+    drawGrid({
+      grid: newGrid,
+      ctx,
+      cellSize,
+      canvasWidth: currentSize.width,
+      canvasHeight: currentSize.height,
+      offset,
+    });
     gameLoopRef.current = requestAnimationFrame(gameLoop);
-  }, []);
+  }, [grid, cellSize, offset]);
 
   useEffect(() => {
     if (isRunning) {
@@ -46,6 +59,9 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
     // cellSize (Zoom) changes
     // Grid is updated due to pattern loaded
     // Offset is changed due to panning the grid
+
+    // if game is running draw grid is handled by game loop. This draw is only for when game is paused.
+    if (isRunning) return;
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
     const currentSize = { width: ctx.canvas.width, height: ctx.canvas.height };
@@ -127,7 +143,7 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   const handleScroll = (event: WheelEvent) => {
     const slider = rangeRef.current;
     if (!slider) return;
-    if (!isRunning && mouseInsideCanvas) {
+    if (mouseInsideCanvas) {
       const delta = event.deltaY;
       const step = parseFloat(slider.step) || 1;
       const max = parseFloat(slider.max) || 95;
