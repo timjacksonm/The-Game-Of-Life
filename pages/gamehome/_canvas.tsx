@@ -14,14 +14,15 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   const emptyGrid = Array.from({ length: 200 }, () => Array<number>(200).fill(0));
   const [grid, setGrid] = useState(emptyGrid);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
   const [mouseInsideCanvas, setMouseInsideCanvas] = useState(false);
+  const panSpeed = 0.1;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<number>();
   const lastDragPos = useRef<{ x: number; y: number } | null>(null);
-  const isDraggingRef = useRef(isDragging);
+  const isDraggingRef = useRef(false);
   const cellSizeRef = useRef(cellSize);
   const isRunningRef = useRef(isRunning);
+  const posRef = useRef({ x: 0, y: 0 });
 
   // ************** GAME LOOP ************** //
   const gameLoop = useCallback(() => {
@@ -98,43 +99,46 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   // ****************************************** //
 
   // ************** Mouse Events (Click) ************** //
-  // TODO: Figure out a way to differentate between click and drag events
   function handleClick(event: ReactMouseEvent) {
     if (isRunningRef.current || !canvasRef.current) return;
-    const cellPlusGapSize = cellSizeRef.current + 1;
-    const { clientX, clientY } = event;
+    // If the position hasn't changed, it's a click event
+    if (posRef.current.x === event.clientX && posRef.current.y === event.clientY) {
+      const cellPlusGapSize = cellSizeRef.current + 1;
+      const { clientX, clientY } = event;
 
-    // Get the position of the canvas relative to the viewport and its dimensions
-    const { left: rectLeft, top: rectTop } = canvasRef.current.getBoundingClientRect();
-    const { width: canvasWidth, height: canvasHeight } = canvasRef.current;
+      // Get the position of the canvas relative to the viewport and its dimensions
+      const { left: rectLeft, top: rectTop } = canvasRef.current.getBoundingClientRect();
+      const { width: canvasWidth, height: canvasHeight } = canvasRef.current;
 
-    // Calculate the offset of the drawing area within the canvas to center the grid
-    const offsetX = (canvasWidth - grid[0].length * cellPlusGapSize) / 2;
-    const offsetY = (canvasHeight - grid.length * cellPlusGapSize) / 2;
+      // Calculate the offset of the drawing area within the canvas to center the grid
+      const offsetX = (canvasWidth - grid[0].length * cellPlusGapSize) / 2;
+      const offsetY = (canvasHeight - grid.length * cellPlusGapSize) / 2;
 
-    // Helper function to calculate cell coordinate from the click position
-    // This takes into account the canvas position, grid size, current grid offset and canvas offset
-    const getCellCoordinate = (
-      clickPos: number,
-      rectPos: number,
-      gridSize: number,
-      offsetCoord: number,
-      canvasOffset: number,
-    ) => {
-      const pos =
-        ((clickPos - rectPos - canvasOffset) / cellPlusGapSize + offsetCoord + gridSize) % gridSize;
-      return Math.floor(pos);
-    };
+      // Helper function to calculate cell coordinate from the click position
+      // This takes into account the canvas position, grid size, current grid offset and canvas offset
+      const getCellCoordinate = (
+        clickPos: number,
+        rectPos: number,
+        gridSize: number,
+        offsetCoord: number,
+        canvasOffset: number,
+      ) => {
+        const pos =
+          ((clickPos - rectPos - canvasOffset) / cellPlusGapSize + offsetCoord + gridSize) %
+          gridSize;
+        return Math.floor(pos);
+      };
 
-    // Calculate the x and y cell coordinates in the grid
-    const x = getCellCoordinate(clientX, rectLeft, grid[0].length, offset.x, offsetX);
-    const y = getCellCoordinate(clientY, rectTop, grid.length, offset.y, offsetY);
+      // Calculate the x and y cell coordinates in the grid
+      const x = getCellCoordinate(clientX, rectLeft, grid[0].length, offset.x, offsetX);
+      const y = getCellCoordinate(clientY, rectTop, grid.length, offset.y, offsetY);
 
-    setGrid((prevGrid) =>
-      produce(prevGrid, (draftGrid) => {
-        draftGrid[y][x] = draftGrid[y][x] ? 0 : 1;
-      }),
-    );
+      setGrid((prevGrid) =>
+        produce(prevGrid, (draftGrid) => {
+          draftGrid[y][x] = draftGrid[y][x] ? 0 : 1;
+        }),
+      );
+    }
   }
 
   // *************************************************** //
@@ -185,32 +189,28 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
 
   // ************** Move Events (Panning) ************** //
   // I wanted event listeners to only be added once and remove when this component umounts
-  // so I used useRef to keep track of the values of isDragging and cellSize
+  // so I used useRef to keep track of the values of cellSize
   // and used useEffect to update the values when they change
   useEffect(() => {
-    isDraggingRef.current = isDragging;
     cellSizeRef.current = cellSize;
     isRunningRef.current = isRunning;
-  }, [isDragging, cellSize, isRunning]);
-
+  }, [cellSize, isRunning]);
   // This useEffect adds event listeners to the canvas only once and doesn't re render
   // when isDragging or cellSize changes
   // Adding dependencies would cause re render and event listeners to be added / removed every time
   useEffect(() => {
-    const handleMouseDown = () => {
-      if (isRunning) return;
-      setIsDragging(true);
+    const handleMouseDown = (event: MouseEvent) => {
+      isDraggingRef.current = true;
+      posRef.current = { x: event.clientX, y: event.clientY };
     };
 
     const handleMouseUp = () => {
-      if (isRunning) return;
-      setIsDragging(false);
+      isDraggingRef.current = false;
       lastDragPos.current = null;
     };
 
     const handleMouseMove = (event: MouseEvent) => {
-      if (!isDraggingRef.current || isRunning) return;
-      const panSpeed = 0.1;
+      if (!isDraggingRef.current) return;
 
       if (lastDragPos.current) {
         const dx = (event.clientX - lastDragPos.current.x) * panSpeed;
