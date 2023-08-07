@@ -8,7 +8,8 @@ import {
 } from 'react';
 import { produce } from 'immer';
 import { CanvasProps } from '@/types';
-import { drawGrid, nextGen } from '@/utils/gamehelpers';
+import { drawGrid, mouseToGridCoordinates, nextGen } from '@/utils/gamehelpers';
+import Overlay from './_overlay';
 
 const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasProps) => {
   const emptyGrid = Array.from({ length: 200 }, () => Array<number>(200).fill(0));
@@ -22,6 +23,7 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   const isDraggingRef = useRef(false);
   const cellSizeRef = useRef(cellSize);
   const isRunningRef = useRef(isRunning);
+  const offsetRef = useRef(offset);
   const posRef = useRef({ x: 0, y: 0 });
 
   // ************** GAME LOOP ************** //
@@ -103,39 +105,20 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
     if (isRunningRef.current || !canvasRef.current) return;
     // If the position hasn't changed, it's a click event
     if (posRef.current.x === event.clientX && posRef.current.y === event.clientY) {
-      const cellPlusGapSize = cellSizeRef.current + 1;
-      const { clientX, clientY } = event;
+      const coordinates = mouseToGridCoordinates(
+        canvasRef.current,
+        cellSizeRef.current,
+        event,
+        { gridXLength: grid[0].length, gridYLength: grid.length },
+        offset,
+      );
 
-      // Get the position of the canvas relative to the viewport and its dimensions
-      const { left: rectLeft, top: rectTop } = canvasRef.current.getBoundingClientRect();
-      const { width: canvasWidth, height: canvasHeight } = canvasRef.current;
-
-      // Calculate the offset of the drawing area within the canvas to center the grid
-      const offsetX = (canvasWidth - grid[0].length * cellPlusGapSize) / 2;
-      const offsetY = (canvasHeight - grid.length * cellPlusGapSize) / 2;
-
-      // Helper function to calculate cell coordinate from the click position
-      // This takes into account the canvas position, grid size, current grid offset and canvas offset
-      const getCellCoordinate = (
-        clickPos: number,
-        rectPos: number,
-        gridSize: number,
-        offsetCoord: number,
-        canvasOffset: number,
-      ) => {
-        const pos =
-          ((clickPos - rectPos - canvasOffset) / cellPlusGapSize + offsetCoord + gridSize) %
-          gridSize;
-        return Math.floor(pos);
-      };
-
-      // Calculate the x and y cell coordinates in the grid
-      const x = getCellCoordinate(clientX, rectLeft, grid[0].length, offset.x, offsetX);
-      const y = getCellCoordinate(clientY, rectTop, grid.length, offset.y, offsetY);
+      if (!coordinates) return;
+      const { row, col } = coordinates;
 
       setGrid((prevGrid) =>
         produce(prevGrid, (draftGrid) => {
-          draftGrid[y][x] = draftGrid[y][x] ? 0 : 1;
+          draftGrid[row][col] = draftGrid[row][col] ? 0 : 1;
         }),
       );
     }
@@ -194,7 +177,8 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   useEffect(() => {
     cellSizeRef.current = cellSize;
     isRunningRef.current = isRunning;
-  }, [cellSize, isRunning]);
+    offsetRef.current = offset;
+  }, [cellSize, isRunning, offset]);
   // This useEffect adds event listeners to the canvas only once and doesn't re render
   // when isDragging or cellSize changes
   // Adding dependencies would cause re render and event listeners to be added / removed every time
@@ -242,14 +226,19 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   return (
     <div className='flex flex-1 items-center justify-center'>
       {typeof window !== 'undefined' && (
-        <canvas
-          width={window.innerWidth * 0.6}
-          height={window.innerHeight * 0.8}
-          ref={canvasRef}
-          className='border border-gray-500'
-          onWheel={handleScroll}
-          onClick={handleClick}
-        />
+        <>
+          <canvas
+            width={window.innerWidth * 0.6}
+            height={window.innerHeight * 0.8}
+            ref={canvasRef}
+            className='border border-gray-500'
+            onWheel={handleScroll}
+            onClick={handleClick}
+          />
+          {!isRunning && (
+            <Overlay canvasRef={canvasRef} cellSize={cellSize} grid={grid} offset={offset} />
+          )}
+        </>
       )}
     </div>
   );

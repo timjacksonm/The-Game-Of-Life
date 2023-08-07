@@ -67,3 +67,46 @@ export function countNeighbors(grid: number[][], indexX: number, indexY: number)
   }
   return num;
 }
+
+/**
+ * Helper function to calculate cell coordinates from the mouse position
+ * This takes into account the canvas position, grid size, current grid offset and canvas offset
+ **/
+export const mouseToGridCoordinates = (
+  canvasRef: HTMLCanvasElement | null,
+  cellSize: number,
+  event: React.MouseEvent | MouseEvent,
+  gridLength: { gridXLength: number; gridYLength: number },
+  offset: { x: number; y: number },
+) => {
+  if (!canvasRef) return;
+
+  const cellPlusGapSize = cellSize + 1;
+  const { clientX, clientY } = event;
+  const { gridXLength, gridYLength } = gridLength;
+
+  // Get the position of the canvas relative to the viewport and its dimensions
+  const { left: rectLeft, top: rectTop } = canvasRef.getBoundingClientRect();
+  const { width: canvasWidth, height: canvasHeight } = canvasRef;
+
+  // Calculate the offset of the drawing area within the canvas to center the grid
+  const offsetX = (canvasWidth - gridXLength * cellPlusGapSize) / 2;
+  const offsetY = (canvasHeight - gridYLength * cellPlusGapSize) / 2;
+
+  const calcCoordinate = (
+    clickPos: number,
+    rectPos: number,
+    gridSize: number,
+    offsetCoord: number,
+    canvasOffset: number,
+  ) => {
+    const pos =
+      ((clickPos - rectPos - canvasOffset) / cellPlusGapSize + offsetCoord + gridSize) % gridSize;
+    return Math.floor(pos);
+  };
+
+  const col = calcCoordinate(clientX, rectLeft, gridXLength, offset.x, offsetX);
+  const row = calcCoordinate(clientY, rectTop, gridYLength, offset.y, offsetY);
+
+  return { row, col };
+};
