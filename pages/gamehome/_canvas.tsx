@@ -80,26 +80,6 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
 
   // *************************************** //
 
-  // ************** LOAD PATTERN ************** //
-  useEffect(() => {
-    // Centers the new pattern in the middle of the grid
-    if (pattern) {
-      setGrid((prevGrid) =>
-        produce(prevGrid, (draft) => {
-          const centerX = Math.floor(prevGrid[0].length / 2) - Math.floor(pattern[0].length / 2);
-          const centerY = Math.floor(prevGrid.length / 2) - Math.floor(pattern.length / 2);
-
-          for (let i = 0; i < pattern.length; i++) {
-            for (let j = 0; j < pattern[i].length; j++) {
-              draft[centerY + i][centerX + j] = pattern[i][j];
-            }
-          }
-        }),
-      );
-    }
-  }, [pattern]);
-  // ****************************************** //
-
   // ************** Mouse Events (Click) ************** //
   function handleClick(event: ReactMouseEvent) {
     if (isRunningRef.current || !canvasRef.current) return;
@@ -116,11 +96,36 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
       if (!coordinates) return;
       const { row, col } = coordinates;
 
-      setGrid((prevGrid) =>
-        produce(prevGrid, (draftGrid) => {
-          draftGrid[row][col] = draftGrid[row][col] ? 0 : 1;
-        }),
-      );
+      if (pattern) {
+        setGrid((prevGrid) =>
+          produce(prevGrid, (draftGrid) => {
+            const offsetX = Math.floor(pattern[0].length / 2);
+            const offsetY = Math.floor(pattern.length / 2);
+
+            for (let i = 0; i < pattern.length; i++) {
+              for (let j = 0; j < pattern[i].length; j++) {
+                const x = col - offsetX + j;
+                const y = row - offsetY + i;
+                if (
+                  x >= 0 &&
+                  y >= 0 &&
+                  x < prevGrid[0].length &&
+                  y < prevGrid.length &&
+                  pattern[i][j] === 1
+                ) {
+                  draftGrid[y][x] = 1;
+                }
+              }
+            }
+          }),
+        );
+      } else {
+        setGrid((prevGrid) =>
+          produce(prevGrid, (draftGrid) => {
+            draftGrid[row][col] = draftGrid[row][col] ? 0 : 1;
+          }),
+        );
+      }
     }
   }
 
@@ -236,7 +241,14 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
             onClick={handleClick}
           />
           {!isRunning && (
-            <Overlay canvasRef={canvasRef} cellSize={cellSize} grid={grid} offset={offset} />
+            <Overlay
+              canvasRef={canvasRef}
+              cellSize={cellSize}
+              grid={grid}
+              offset={offset}
+              pattern={pattern}
+              mouseInsideCanvas={mouseInsideCanvas}
+            />
           )}
         </>
       )}
