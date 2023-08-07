@@ -231,26 +231,24 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   return (
     <div className='flex flex-1 items-center justify-center'>
       {typeof window !== 'undefined' && (
-        <>
-          <canvas
-            width={window.innerWidth * 0.6}
-            height={window.innerHeight * 0.8}
-            ref={canvasRef}
-            className='border border-gray-500'
-            onWheel={handleScroll}
-            onClick={handleClick}
-          />
-          {!isRunning && (
-            <Overlay
-              canvasRef={canvasRef}
-              cellSize={cellSize}
-              grid={grid}
-              offset={offset}
-              pattern={pattern}
-              mouseInsideCanvas={mouseInsideCanvas}
-            />
-          )}
-        </>
+        <canvas
+          width={window.innerWidth * 0.6}
+          height={window.innerHeight * 0.8}
+          ref={canvasRef}
+          className='border border-gray-500'
+          onWheel={handleScroll}
+          onClick={handleClick}
+        />
+      )}
+      {!isRunning && (
+        <Overlay
+          canvasRef={canvasRef}
+          cellSize={cellSize}
+          grid={grid}
+          offset={offset}
+          pattern={pattern}
+          mouseInsideCanvas={mouseInsideCanvas}
+        />
       )}
     </div>
   );

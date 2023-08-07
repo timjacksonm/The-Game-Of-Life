@@ -85,12 +85,16 @@ const Overlay = ({
   }, [canvasRef, cellSize, grid, offset, pattern, mouseInsideCanvas]);
 
   return (
-    <canvas
-      width={window.innerWidth * 0.6}
-      height={window.innerHeight * 0.8}
-      ref={hoverCanvasRef}
-      className='pointer-events-none absolute'
-    />
+    <>
+      {typeof window !== 'undefined' && (
+        <canvas
+          width={window.innerWidth * 0.6}
+          height={window.innerHeight * 0.8}
+          ref={hoverCanvasRef}
+          className='pointer-events-none absolute'
+        />
+      )}
+    </>
   );
 };
 
