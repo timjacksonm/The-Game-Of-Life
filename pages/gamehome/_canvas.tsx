@@ -6,9 +6,14 @@ import {
   useRef,
   useState,
 } from 'react';
-import { produce } from 'immer';
 import { CanvasProps } from '@/types';
-import { drawGrid, mouseToGridCoordinates, nextGen } from '@/utils/gamehelpers';
+import {
+  drawGrid,
+  mouseToGridCoordinates,
+  nextGen,
+  setGridToPattern,
+  toggleCell,
+} from '@/utils/gamehelpers';
 import Overlay from './_overlay';
 
 const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasProps) => {
@@ -26,6 +31,13 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   const offsetRef = useRef(offset);
   const posRef = useRef({ x: 0, y: 0 });
 
+  // Update refs, helps event handlers always reference the most recent state value without triggering unnecessary re-renders.
+  useEffect(() => {
+    cellSizeRef.current = cellSize;
+    isRunningRef.current = isRunning;
+    offsetRef.current = offset;
+  }, [cellSize, isRunning, offset]);
+
   // ************** GAME LOOP ************** //
   const gameLoop = useCallback(() => {
     const newGrid = nextGen(grid);
@@ -33,13 +45,10 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
 
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
-    const currentSize = { width: ctx.canvas.width, height: ctx.canvas.height };
     drawGrid({
       grid: newGrid,
       ctx,
       cellSize,
-      canvasWidth: currentSize.width,
-      canvasHeight: currentSize.height,
       offset,
     });
     gameLoopRef.current = requestAnimationFrame(gameLoop);
@@ -67,13 +76,10 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
     if (isRunning) return;
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
-    const currentSize = { width: ctx.canvas.width, height: ctx.canvas.height };
     drawGrid({
       grid,
       ctx,
       cellSize,
-      canvasWidth: currentSize.width,
-      canvasHeight: currentSize.height,
       offset,
     });
   }, [cellSize, grid, offset]);
@@ -83,7 +89,7 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   // ************** Mouse Events (Click) ************** //
   function handleClick(event: ReactMouseEvent) {
     if (isRunningRef.current || !canvasRef.current) return;
-    // If the position hasn't changed, it's a click event
+
     if (posRef.current.x === event.clientX && posRef.current.y === event.clientY) {
       const coordinates = mouseToGridCoordinates(
         canvasRef.current,
@@ -97,34 +103,9 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
       const { row, col } = coordinates;
 
       if (pattern) {
-        setGrid((prevGrid) =>
-          produce(prevGrid, (draftGrid) => {
-            const offsetX = Math.floor(pattern[0].length / 2);
-            const offsetY = Math.floor(pattern.length / 2);
-
-            for (let i = 0; i < pattern.length; i++) {
-              for (let j = 0; j < pattern[i].length; j++) {
-                const x = col - offsetX + j;
-                const y = row - offsetY + i;
-                if (
-                  x >= 0 &&
-                  y >= 0 &&
-                  x < prevGrid[0].length &&
-                  y < prevGrid.length &&
-                  pattern[i][j] === 1
-                ) {
-                  draftGrid[y][x] = 1;
-                }
-              }
-            }
-          }),
-        );
+        setGrid((prevGrid) => setGridToPattern(prevGrid, pattern, col, row));
       } else {
-        setGrid((prevGrid) =>
-          produce(prevGrid, (draftGrid) => {
-            draftGrid[row][col] = draftGrid[row][col] ? 0 : 1;
-          }),
-        );
+        setGrid((prevGrid) => toggleCell(prevGrid, col, row));
       }
     }
   }
@@ -151,7 +132,6 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
     }
   };
 
-  // only allow zooming when mouse is inside canvas
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -168,7 +148,6 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
     canvas.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      // Clean up event listeners on unmount
       canvas.removeEventListener('mouseenter', handleMouseEnter);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
     };
@@ -176,17 +155,6 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   // *************************************************** //
 
   // ************** Move Events (Panning) ************** //
-  // I wanted event listeners to only be added once and remove when this component umounts
-  // so I used useRef to keep track of the values of cellSize
-  // and used useEffect to update the values when they change
-  useEffect(() => {
-    cellSizeRef.current = cellSize;
-    isRunningRef.current = isRunning;
-    offsetRef.current = offset;
-  }, [cellSize, isRunning, offset]);
-  // This useEffect adds event listeners to the canvas only once and doesn't re render
-  // when isDragging or cellSize changes
-  // Adding dependencies would cause re render and event listeners to be added / removed every time
   useEffect(() => {
     const handleMouseDown = (event: MouseEvent) => {
       isDraggingRef.current = true;
@@ -245,7 +213,7 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
           canvasRef={canvasRef}
           cellSize={cellSize}
           grid={grid}
-          offset={offset}
+          panningOffset={offset}
           pattern={pattern}
           mouseInsideCanvas={mouseInsideCanvas}
         />

@@ -30,8 +30,6 @@ export interface DrawGridProps {
   grid: number[][];
   ctx: CanvasRenderingContext2D | null | undefined;
   cellSize: number;
-  canvasWidth: number;
-  canvasHeight: number;
   offset: IOffset;
 }
 

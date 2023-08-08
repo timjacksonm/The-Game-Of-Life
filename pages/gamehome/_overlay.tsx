@@ -1,4 +1,4 @@
-import { mouseToGridCoordinates } from '@/utils/gamehelpers';
+import { drawCell, mouseToGridCoordinates } from '@/utils/gamehelpers';
 import { throttle } from 'lodash';
 import { RefObject, useEffect, useRef } from 'react';
 
@@ -6,7 +6,7 @@ interface OverlayProps {
   canvasRef: RefObject<HTMLCanvasElement>;
   cellSize: number;
   grid: number[][];
-  offset: { x: number; y: number };
+  panningOffset: { x: number; y: number };
   pattern: number[][] | null;
   mouseInsideCanvas: boolean;
 }
@@ -15,11 +15,12 @@ const Overlay = ({
   canvasRef,
   cellSize,
   grid,
-  offset,
+  panningOffset,
   pattern,
   mouseInsideCanvas,
 }: OverlayProps) => {
   const hoverCanvasRef = useRef<HTMLCanvasElement>(null);
+  const overlayCellColor = 'yellow';
 
   useEffect(() => {
     const mainCanvas = canvasRef.current;
@@ -30,12 +31,15 @@ const Overlay = ({
     if (!hoverCtx) return;
 
     const gridGap = 1;
-    const currentSize = { width: hoverCanvas.width, height: hoverCanvas.height };
-    const offsetX = (currentSize.width - grid[0].length * (cellSize + gridGap)) / 2;
-    const offsetY = (currentSize.height - grid.length * (cellSize + gridGap)) / 2;
+    const canvasWidth = hoverCanvas.width;
+    const canvasHeight = hoverCanvas.height;
+    const centeringOffset = {
+      x: (canvasWidth - grid[0].length * (cellSize + gridGap)) / 2,
+      y: (canvasHeight - grid.length * (cellSize + gridGap)) / 2,
+    };
 
     const handleMouseMove = throttle((event: MouseEvent) => {
-      hoverCtx.clearRect(0, 0, currentSize.width, currentSize.height);
+      hoverCtx.clearRect(0, 0, canvasWidth, canvasHeight);
 
       if (!mouseInsideCanvas) return;
 
@@ -44,36 +48,33 @@ const Overlay = ({
         cellSize,
         event,
         { gridXLength: grid[0].length, gridYLength: grid.length },
-        offset,
+        panningOffset,
       );
 
       if (!coordinates) return;
       const { row, col } = coordinates;
 
       if (pattern && pattern.length) {
-        const patternX = Math.floor(pattern.length / 2);
-        const patternY = Math.floor(pattern[patternX].length / 2);
-        for (let i = 0; i < pattern.length; i++) {
-          for (let j = 0; j < pattern[i].length; j++) {
-            if (pattern[i][j] === 1) {
-              const wrappedX = (col + j - patternY + grid[0].length) % grid[0].length;
-              const wrappedY = (row + i - patternX + grid.length) % grid.length;
-
-              const coordX = offsetX + wrappedX * (cellSize + gridGap);
-              const coordY = offsetY + wrappedY * (cellSize + gridGap);
-              hoverCtx.fillStyle = 'yellow';
-              hoverCtx.fillRect(coordX, coordY, cellSize, cellSize);
-            }
-          }
-        }
+        drawPatternOnOverlayCanvas(
+          hoverCtx,
+          row,
+          col,
+          pattern,
+          centeringOffset,
+          panningOffset,
+          grid,
+          cellSize,
+          gridGap,
+        );
       } else {
-        // single dot
+        // draw single alive cell on overlay canvas
         const coordX =
-          offsetX + ((col - offset.x + grid[0].length) % grid[0].length) * (cellSize + gridGap);
+          centeringOffset.x +
+          ((col - panningOffset.x + grid[0].length) % grid[0].length) * (cellSize + gridGap);
         const coordY =
-          offsetY + ((row - offset.y + grid.length) % grid.length) * (cellSize + gridGap);
-        hoverCtx.fillStyle = 'yellow';
-        hoverCtx.fillRect(coordX, coordY, cellSize, cellSize);
+          centeringOffset.y +
+          ((row - panningOffset.y + grid.length) % grid.length) * (cellSize + gridGap);
+        drawCell(hoverCtx, coordX, coordY, cellSize, overlayCellColor);
       }
     }, 100);
 
@@ -82,7 +83,39 @@ const Overlay = ({
     return () => {
       mainCanvas.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [canvasRef, cellSize, grid, offset, pattern, mouseInsideCanvas]);
+  }, [canvasRef, cellSize, grid, panningOffset, pattern, mouseInsideCanvas]);
+
+  const drawPatternOnOverlayCanvas = (
+    hoverCtx: CanvasRenderingContext2D,
+    row: number,
+    col: number,
+    pattern: number[][],
+    centeringOffset: { x: number; y: number },
+    panningOffset: { x: number; y: number },
+    grid: number[][],
+    cellSize: number,
+    gridGap: number,
+  ) => {
+    const patternCenterRow = Math.floor(pattern.length / 2);
+    const patternCenterCol = Math.floor(pattern[patternCenterRow].length / 2);
+
+    for (let patternRow = 0; patternRow < pattern.length; patternRow++) {
+      for (let patternCol = 0; patternCol < pattern[patternRow].length; patternCol++) {
+        if (pattern[patternRow][patternCol] === 1) {
+          const coordX =
+            centeringOffset.x +
+            ((col + patternCol - patternCenterCol + grid[0].length) % grid[0].length) *
+              (cellSize + gridGap);
+          const coordY =
+            centeringOffset.y +
+            ((row + patternRow - patternCenterRow + grid.length) % grid.length) *
+              (cellSize + gridGap);
+
+          drawCell(hoverCtx, coordX, coordY, cellSize, 'yellow');
+        }
+      }
+    }
+  };
 
   return (
     <>
