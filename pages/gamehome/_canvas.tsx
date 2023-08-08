@@ -20,7 +20,8 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   const emptyGrid = Array.from({ length: 200 }, () => Array<number>(200).fill(0));
   const [grid, setGrid] = useState(emptyGrid);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [mouseInsideCanvas, setMouseInsideCanvas] = useState(false);
+  const [mouseInsideCanvas, setMouseInsideCanvas] = useState<true | false | null>(null);
+  const mousePositionRef = useRef({ x: 0, y: 0 });
   const panSpeed = 0.1;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<number>();
@@ -167,6 +168,19 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
     };
 
     const handleMouseMove = (event: MouseEvent) => {
+      mousePositionRef.current = { x: event.clientX, y: event.clientY };
+      // on mount, mouseInsideCanvas is null, so we are updating state initially before the mouseenter and mouseleave listeners take over.
+      if (mouseInsideCanvas === null) {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        const mouseIsInside =
+          rect.top <= mousePositionRef.current.y &&
+          mousePositionRef.current.y <= rect.bottom &&
+          rect.left <= mousePositionRef.current.x &&
+          mousePositionRef.current.x <= rect.right;
+        setMouseInsideCanvas(mouseIsInside);
+      }
       if (!isDraggingRef.current) return;
 
       if (lastDragPos.current) {

@@ -8,7 +8,7 @@ interface OverlayProps {
   grid: number[][];
   panningOffset: { x: number; y: number };
   pattern: number[][] | null;
-  mouseInsideCanvas: boolean;
+  mouseInsideCanvas: boolean | null;
 }
 
 const Overlay = ({
