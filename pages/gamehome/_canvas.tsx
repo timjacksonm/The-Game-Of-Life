@@ -16,11 +16,12 @@ import {
 } from '@/utils/gamehelpers';
 import Overlay from './_overlay';
 
-const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasProps) => {
+const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef, speed }: CanvasProps) => {
   const emptyGrid = Array.from({ length: 200 }, () => Array<number>(200).fill(0));
   const [grid, setGrid] = useState(emptyGrid);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [mouseInsideCanvas, setMouseInsideCanvas] = useState<true | false | null>(null);
+  const lastUpdateRef = useRef(0);
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const panSpeed = 0.1;
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -40,20 +41,38 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
   }, [cellSize, isRunning, offset]);
 
   // ************** GAME LOOP ************** //
-  const gameLoop = useCallback(() => {
-    const newGrid = nextGen(grid);
-    setGrid(newGrid);
+  const gameLoop = useCallback(
+    (timestamp: number) => {
+      // Check if the time elapsed is greater than the speed
+      if (timestamp - lastUpdateRef.current > Math.abs(speed)) {
+        const newGrid = nextGen(grid);
+        setGrid(newGrid);
 
-    const ctx = canvasRef.current?.getContext('2d');
-    if (!ctx) return;
-    drawGrid({
-      grid: newGrid,
-      ctx,
-      cellSize,
-      offset,
-    });
-    gameLoopRef.current = requestAnimationFrame(gameLoop);
-  }, [grid, cellSize, offset]);
+        const ctx = canvasRef.current?.getContext('2d');
+        if (!ctx) return;
+        drawGrid({
+          grid: newGrid,
+          ctx,
+          cellSize,
+          offset,
+        });
+        lastUpdateRef.current = timestamp;
+      } else {
+        // still draw the grid but do not update nextGen
+        const ctx = canvasRef.current?.getContext('2d');
+        if (!ctx) return;
+        drawGrid({
+          grid,
+          ctx,
+          cellSize,
+          offset,
+        });
+      }
+
+      gameLoopRef.current = requestAnimationFrame(gameLoop);
+    },
+    [grid, cellSize, offset, speed],
+  );
 
   useEffect(() => {
     if (isRunning) {

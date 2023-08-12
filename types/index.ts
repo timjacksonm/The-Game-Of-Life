@@ -24,6 +24,7 @@ export interface CanvasProps {
   isRunning: boolean;
   setCellSize: Dispatch<SetStateAction<number>>;
   rangeRef: React.MutableRefObject<HTMLInputElement | null>;
+  speed: number;
 }
 
 export interface DrawGridProps {

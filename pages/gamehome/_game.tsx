@@ -7,6 +7,7 @@ export default function Game() {
   const [isRunning, setIsRunning] = useState(false);
   const [pattern, setPattern] = useState<number[][] | null>(null);
   const [cellSize, setCellSize] = useState(5);
+  const [speed, setSpeed] = useState(50); // Default: 50 or twenty generations per second as fastest speed. 500 or 2 generates a second as slowest speed.
   const [textBoxValue, setTextBoxValue] = useState('61de589bbec647f79484364a');
   const rangeRef = useRef(null);
 
@@ -53,7 +54,18 @@ export default function Game() {
         max='95'
         value={cellSize}
         ref={rangeRef}
+        id='hiddenZoomRange'
         readOnly
+      />
+      <input
+        className='m-2 w-48 whitespace-nowrap bg-blue-500 px-4 py-2'
+        type='range'
+        min='-500'
+        max='-50'
+        step={50}
+        value={speed}
+        onChange={(event) => setSpeed(parseInt(event.target.value))}
+        id='speedRange'
       />
 
       <Canvas
@@ -62,6 +74,7 @@ export default function Game() {
         pattern={pattern}
         isRunning={isRunning}
         rangeRef={rangeRef}
+        speed={speed}
       />
     </main>
   );
