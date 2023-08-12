@@ -9,6 +9,7 @@ interface OverlayProps {
   panningOffset: { x: number; y: number };
   pattern: number[][] | null;
   mouseInsideCanvas: boolean | null;
+  isDraggingRef: RefObject<boolean>;
 }
 
 const Overlay = ({
@@ -18,6 +19,7 @@ const Overlay = ({
   panningOffset,
   pattern,
   mouseInsideCanvas,
+  isDraggingRef,
 }: OverlayProps) => {
   const hoverCanvasRef = useRef<HTMLCanvasElement>(null);
   const overlayCellColor = 'yellow';
@@ -96,6 +98,7 @@ const Overlay = ({
     cellSize: number,
     gridGap: number,
   ) => {
+    if (isDraggingRef.current) return;
     const patternCenterRow = Math.floor(pattern.length / 2);
     const patternCenterCol = Math.floor(pattern[patternCenterRow].length / 2);
 
@@ -104,11 +107,13 @@ const Overlay = ({
         if (pattern[patternRow][patternCol] === 1) {
           const coordX =
             centeringOffset.x +
-            ((col + patternCol - patternCenterCol + grid[0].length) % grid[0].length) *
+            ((col + patternCol - patternCenterCol - panningOffset.x + grid[0].length) %
+              grid[0].length) *
               (cellSize + gridGap);
+
           const coordY =
             centeringOffset.y +
-            ((row + patternRow - patternCenterRow + grid.length) % grid.length) *
+            ((row + patternRow - patternCenterRow - panningOffset.y + grid.length) % grid.length) *
               (cellSize + gridGap);
 
           drawCell(hoverCtx, coordX, coordY, cellSize, 'yellow');
@@ -121,7 +126,7 @@ const Overlay = ({
     <>
       {typeof window !== 'undefined' && (
         <canvas
-          width={window.innerWidth * 0.6}
+          width={window.innerWidth * 0.985}
           height={window.innerHeight * 0.8}
           ref={hoverCanvasRef}
           className='pointer-events-none absolute'

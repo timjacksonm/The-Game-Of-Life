@@ -214,7 +214,7 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
     <div className='flex flex-1 items-center justify-center'>
       {typeof window !== 'undefined' && (
         <canvas
-          width={window.innerWidth * 0.6}
+          width={window.innerWidth * 0.985}
           height={window.innerHeight * 0.8}
           ref={canvasRef}
           className='border border-gray-500'
@@ -230,6 +230,7 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
           panningOffset={offset}
           pattern={pattern}
           mouseInsideCanvas={mouseInsideCanvas}
+          isDraggingRef={isDraggingRef}
         />
       )}
     </div>
