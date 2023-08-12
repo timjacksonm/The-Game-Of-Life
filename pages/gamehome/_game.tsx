@@ -72,6 +72,7 @@ export default function Game() {
         cellSize={cellSize}
         setCellSize={setCellSize}
         pattern={pattern}
+        setPattern={setPattern}
         isRunning={isRunning}
         rangeRef={rangeRef}
         speed={speed}

@@ -21,6 +21,7 @@ export interface PatternResponse {
 export interface CanvasProps {
   cellSize: number;
   pattern: number[][] | null;
+  setPattern: Dispatch<SetStateAction<number[][] | null>>;
   isRunning: boolean;
   setCellSize: Dispatch<SetStateAction<number>>;
   rangeRef: React.MutableRefObject<HTMLInputElement | null>;

@@ -145,3 +145,31 @@ export const toggleCell = (grid: number[][], col: number, row: number) =>
   produce(grid, (draftGrid) => {
     draftGrid[row][col] = draftGrid[row][col] ? 0 : 1;
   });
+
+export const interpolatePanSpeed = (currentCellSize: number): number => {
+  // Define known points for both interpolation segments.
+  const x1 = 5,
+    y1 = 0.1;
+  const xMid = 15,
+    yMid = 0.025; // Pre-halved
+  const x2 = 95,
+    y2 = 0.01; // Pre-halved
+
+  // This function returns the cubic interpolation between two points.
+  const cubicInterpolation = (t: number, yStart: number, yEnd: number): number => {
+    const factor = t * t * t;
+    return yStart * (1 - factor) + yEnd * factor;
+  };
+
+  // This function returns the quintic interpolation between two points.
+  const quinticInterpolation = (t: number, yStart: number, yEnd: number): number => {
+    const factor = t * t * t * t * t;
+    return yStart * (1 - factor) + yEnd * factor;
+  };
+
+  if (currentCellSize <= xMid) {
+    return cubicInterpolation((currentCellSize - x1) / (xMid - x1), y1, yMid);
+  } else {
+    return quinticInterpolation((currentCellSize - xMid) / (x2 - xMid), yMid, y2);
+  }
+};

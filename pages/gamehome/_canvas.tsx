@@ -9,6 +9,7 @@ import {
 import { CanvasProps } from '@/types';
 import {
   drawGrid,
+  interpolatePanSpeed,
   mouseToGridCoordinates,
   nextGen,
   setGridToPattern,
@@ -16,14 +17,21 @@ import {
 } from '@/utils/gamehelpers';
 import Overlay from './_overlay';
 
-const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef, speed }: CanvasProps) => {
+const Canvas = ({
+  cellSize,
+  pattern,
+  setPattern,
+  isRunning,
+  setCellSize,
+  rangeRef,
+  speed,
+}: CanvasProps) => {
   const emptyGrid = Array.from({ length: 200 }, () => Array<number>(200).fill(0));
   const [grid, setGrid] = useState(emptyGrid);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [mouseInsideCanvas, setMouseInsideCanvas] = useState<true | false | null>(null);
   const lastUpdateRef = useRef(0);
   const mousePositionRef = useRef({ x: 0, y: 0 });
-  const panSpeed = 0.1;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<number>();
   const lastDragPos = useRef<{ x: number; y: number } | null>(null);
@@ -32,6 +40,7 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef, speed }: 
   const isRunningRef = useRef(isRunning);
   const offsetRef = useRef(offset);
   const posRef = useRef({ x: 0, y: 0 });
+  const panSpeedRef = useRef(0.1); // Default: 0.1 at cellSize 5. 0.01 at cellSize 95.
 
   // Update refs, helps event handlers always reference the most recent state value without triggering unnecessary re-renders.
   useEffect(() => {
@@ -126,6 +135,8 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef, speed }: 
 
       if (pattern) {
         setGrid((prevGrid) => setGridToPattern(prevGrid, pattern, col, row, grid));
+        // temporarily set pattern array to null until I add UI to remove pattern from brush
+        setPattern(null);
       } else {
         setGrid((prevGrid) => toggleCell(prevGrid, col, row));
       }
@@ -138,19 +149,28 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef, speed }: 
   const handleScroll = (event: WheelEvent) => {
     const slider = rangeRef.current;
     if (!slider) return;
+
     if (mouseInsideCanvas) {
       const delta = event.deltaY;
       const step = parseFloat(slider.step) || 1;
       const max = parseFloat(slider.max) || 95;
       const min = parseFloat(slider.min) || 2.5;
 
+      let newCellSize: number;
       if (delta > 0) {
         // Scrolling down
-        setCellSize((prevSize) => Math.max(prevSize - step, min));
+        newCellSize = Math.max(cellSize - step, min);
+        setCellSize(newCellSize);
       } else {
         // Scrolling up
-        setCellSize((prevSize) => Math.min(prevSize + step, max));
+        newCellSize = Math.min(cellSize + step, max);
+        setCellSize(newCellSize);
       }
+
+      if (!panSpeedRef.current) return;
+      // Update panSpeed based on the new cellSize
+      const newPanSpeed = interpolatePanSpeed(newCellSize);
+      panSpeedRef.current = newPanSpeed;
     }
   };
 
@@ -204,9 +224,9 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef, speed }: 
       }
       if (!isDraggingRef.current) return;
 
-      if (lastDragPos.current) {
-        const dx = (event.clientX - lastDragPos.current.x) * panSpeed;
-        const dy = (event.clientY - lastDragPos.current.y) * panSpeed;
+      if (lastDragPos.current && panSpeedRef.current) {
+        const dx = (event.clientX - lastDragPos.current.x) * panSpeedRef.current;
+        const dy = (event.clientY - lastDragPos.current.y) * panSpeedRef.current;
 
         setOffset((prevOffset) => ({
           x: (prevOffset.x - dx) % grid[0].length,
