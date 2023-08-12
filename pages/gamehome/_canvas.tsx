@@ -87,6 +87,8 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef, speed }: 
 
   // ************** DRAW GRID ************** //
   useEffect(() => {
+    // TODO-fix: when window resize the grid dissapears and doesn't draw again until a cell is clicked.
+
     // Only updates if:
     // cellSize (Zoom) changes
     // Grid is updated due to pattern loaded
