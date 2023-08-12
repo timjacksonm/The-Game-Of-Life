@@ -104,7 +104,7 @@ const Canvas = ({ cellSize, pattern, isRunning, setCellSize, rangeRef }: CanvasP
       const { row, col } = coordinates;
 
       if (pattern) {
-        setGrid((prevGrid) => setGridToPattern(prevGrid, pattern, col, row));
+        setGrid((prevGrid) => setGridToPattern(prevGrid, pattern, col, row, grid));
       } else {
         setGrid((prevGrid) => toggleCell(prevGrid, col, row));
       }

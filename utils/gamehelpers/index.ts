@@ -123,29 +123,23 @@ export const setGridToPattern = (
   pattern: number[][],
   col: number,
   row: number,
-) => {
-  const colOffset = Math.floor(pattern[0].length / 2);
-  const rowOffset = Math.floor(pattern.length / 2);
+  fullGrid: number[][],
+): number[][] =>
+  produce(grid, (draft) => {
+    const patternCenterRow = Math.floor(pattern.length / 2);
+    const patternCenterCol = Math.floor(pattern[patternCenterRow].length / 2);
 
-  return produce(grid, (draftGrid) => {
     for (let patternRow = 0; patternRow < pattern.length; patternRow++) {
       for (let patternCol = 0; patternCol < pattern[patternRow].length; patternCol++) {
-        const newCol = col - colOffset + patternCol;
-        const newRow = row - rowOffset + patternRow;
-
-        if (
-          newCol >= 0 &&
-          newRow >= 0 &&
-          newCol < draftGrid[0].length &&
-          newRow < draftGrid.length &&
-          pattern[patternRow][patternCol] === 1
-        ) {
-          draftGrid[newRow][newCol] = 1;
+        if (pattern[patternRow][patternCol] === 1) {
+          const gridRow = (row + patternRow - patternCenterRow + fullGrid.length) % fullGrid.length;
+          const gridCol =
+            (col + patternCol - patternCenterCol + fullGrid[0].length) % fullGrid[0].length;
+          draft[gridRow][gridCol] = 1;
         }
       }
     }
   });
-};
 
 export const toggleCell = (grid: number[][], col: number, row: number) =>
   produce(grid, (draftGrid) => {
