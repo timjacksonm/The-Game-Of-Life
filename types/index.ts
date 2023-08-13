@@ -44,4 +44,7 @@ export interface IGameContext {
   cellColor: string;
   pattern: number[][] | null;
   setPattern: Dispatch<SetStateAction<number[][] | null>>;
+  generationCount: number;
+  setGenerationCount: Dispatch<SetStateAction<number>>;
+  setAliveCount: Dispatch<SetStateAction<number>>;
 }

@@ -173,3 +173,9 @@ export const interpolatePanSpeed = (currentCellSize: number): number => {
     return quinticInterpolation((currentCellSize - xMid) / (x2 - xMid), yMid, y2);
   }
 };
+
+export const getAliveCellsCount = (grid: number[][]): number =>
+  grid.reduce(
+    (accRow, row) => accRow + row.reduce((accCell, cell) => accCell + (cell ? 1 : 0), 0),
+    0,
+  );

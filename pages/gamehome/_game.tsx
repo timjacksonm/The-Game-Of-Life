@@ -9,13 +9,18 @@ export const GameContext = createContext<IGameContext>({
   cellColor: '#32CD32',
   pattern: null,
   setPattern: () => void 0,
+  generationCount: 0,
+  setGenerationCount: () => void 0,
+  setAliveCount: () => void 0,
 });
 
 export default function Game() {
   const [isRunning, setIsRunning] = useState(false);
+  const [generationCount, setGenerationCount] = useState(0);
+  const [aliveCount, setAliveCount] = useState(0);
   const [pattern, setPattern] = useState<number[][] | null>(null);
   const [cellSize, setCellSize] = useState(5);
-  const [speed, setSpeed] = useState(50); // Default: 50 or twenty generations per second as fastest speed. 500 or 2 generates a second as slowest speed.
+  const [speed, setSpeed] = useState(50); // Default: 50 or 20 generations per second as fastest speed. 500 or 2 generates a second as slowest speed.
   const [pickerColor, setPickerColor] = useState('#32CD32');
   const [cellColor, setCellColor] = useState('#32CD32'); // green
   const [overlayCellColor, setOverlayCellColor] = useState('#FFFF00'); // yellow
@@ -70,6 +75,10 @@ export default function Game() {
             value={textBoxValue}
             onChange={handleTextBoxChange}
           />
+          <div className='flex justify-between'>
+            <p>{`Generation: ${generationCount}`}</p>
+            <p>{`Alive: ${aliveCount}`}</p>
+          </div>
         </div>
       </div>
       <input
@@ -114,7 +123,17 @@ export default function Game() {
         />
       </div>
 
-      <GameContext.Provider value={{ overlayCellColor, cellColor, pattern, setPattern }}>
+      <GameContext.Provider
+        value={{
+          overlayCellColor,
+          cellColor,
+          pattern,
+          setPattern,
+          generationCount,
+          setGenerationCount,
+          setAliveCount,
+        }}
+      >
         <Canvas
           cellSize={cellSize}
           setCellSize={setCellSize}

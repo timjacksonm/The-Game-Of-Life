@@ -10,6 +10,7 @@ import {
 import { CanvasProps } from '@/types';
 import {
   drawGrid,
+  getAliveCellsCount,
   interpolatePanSpeed,
   mouseToGridCoordinates,
   nextGen,
@@ -35,7 +36,8 @@ const Canvas = ({ cellSize, isRunning, setCellSize, rangeRef, speed }: CanvasPro
   const offsetRef = useRef(offset);
   const posRef = useRef({ x: 0, y: 0 });
   const panSpeedRef = useRef(0.1); // Default: 0.1 at cellSize 5. 0.01 at cellSize 95.
-  const { pattern, setPattern, cellColor } = useContext(GameContext);
+  const { pattern, setPattern, cellColor, setGenerationCount, setAliveCount } =
+    useContext(GameContext);
 
   // Update refs, helps event handlers always reference the most recent state value without triggering unnecessary re-renders.
   useEffect(() => {
@@ -51,6 +53,7 @@ const Canvas = ({ cellSize, isRunning, setCellSize, rangeRef, speed }: CanvasPro
       if (timestamp - lastUpdateRef.current > Math.abs(speed)) {
         const newGrid = nextGen(grid);
         setGrid(newGrid);
+        setGenerationCount((prevGen) => prevGen + 1);
 
         const ctx = canvasRef.current?.getContext('2d');
         if (!ctx) return;
@@ -99,7 +102,9 @@ const Canvas = ({ cellSize, isRunning, setCellSize, rangeRef, speed }: CanvasPro
     // cellSize (Zoom) changes
     // Grid is updated due to pattern loaded
     // Offset is changed due to panning the grid
-
+    if (grid) {
+      setAliveCount(getAliveCellsCount(grid));
+    }
     // if game is running draw grid is handled by game loop. This draw is only for when game is paused.
     if (isRunning) return;
     const ctx = canvasRef.current?.getContext('2d');
