@@ -2,6 +2,7 @@ import {
   MouseEvent as ReactMouseEvent,
   WheelEvent,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -16,16 +17,9 @@ import {
   toggleCell,
 } from '@/utils/gamehelpers';
 import Overlay from './_overlay';
+import { GameContext } from './_game';
 
-const Canvas = ({
-  cellSize,
-  pattern,
-  setPattern,
-  isRunning,
-  setCellSize,
-  rangeRef,
-  speed,
-}: CanvasProps) => {
+const Canvas = ({ cellSize, isRunning, setCellSize, rangeRef, speed }: CanvasProps) => {
   const emptyGrid = Array.from({ length: 200 }, () => Array<number>(200).fill(0));
   const [grid, setGrid] = useState(emptyGrid);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -41,6 +35,7 @@ const Canvas = ({
   const offsetRef = useRef(offset);
   const posRef = useRef({ x: 0, y: 0 });
   const panSpeedRef = useRef(0.1); // Default: 0.1 at cellSize 5. 0.01 at cellSize 95.
+  const { pattern, setPattern, cellColor } = useContext(GameContext);
 
   // Update refs, helps event handlers always reference the most recent state value without triggering unnecessary re-renders.
   useEffect(() => {
@@ -64,6 +59,7 @@ const Canvas = ({
           ctx,
           cellSize,
           offset,
+          cellColor,
         });
         lastUpdateRef.current = timestamp;
       } else {
@@ -75,12 +71,13 @@ const Canvas = ({
           ctx,
           cellSize,
           offset,
+          cellColor,
         });
       }
 
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     },
-    [grid, cellSize, offset, speed],
+    [grid, cellSize, offset, speed, cellColor],
   );
 
   useEffect(() => {
@@ -112,8 +109,9 @@ const Canvas = ({
       ctx,
       cellSize,
       offset,
+      cellColor,
     });
-  }, [cellSize, grid, offset]);
+  }, [cellSize, grid, offset, cellColor]);
 
   // *************************************** //
 
@@ -269,7 +267,6 @@ const Canvas = ({
           cellSize={cellSize}
           grid={grid}
           panningOffset={offset}
-          pattern={pattern}
           mouseInsideCanvas={mouseInsideCanvas}
           isDraggingRef={isDraggingRef}
         />

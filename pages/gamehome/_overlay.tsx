@@ -1,13 +1,13 @@
 import { drawCell, mouseToGridCoordinates } from '@/utils/gamehelpers';
 import { throttle } from 'lodash';
-import { RefObject, useEffect, useRef } from 'react';
+import { RefObject, useContext, useEffect, useRef } from 'react';
+import { GameContext } from './_game';
 
 interface OverlayProps {
   canvasRef: RefObject<HTMLCanvasElement>;
   cellSize: number;
   grid: number[][];
   panningOffset: { x: number; y: number };
-  pattern: number[][] | null;
   mouseInsideCanvas: boolean | null;
   isDraggingRef: RefObject<boolean>;
 }
@@ -17,12 +17,11 @@ const Overlay = ({
   cellSize,
   grid,
   panningOffset,
-  pattern,
   mouseInsideCanvas,
   isDraggingRef,
 }: OverlayProps) => {
   const hoverCanvasRef = useRef<HTMLCanvasElement>(null);
-  const overlayCellColor = 'yellow';
+  const { overlayCellColor, pattern } = useContext(GameContext);
 
   useEffect(() => {
     const mainCanvas = canvasRef.current;
@@ -67,6 +66,7 @@ const Overlay = ({
           grid,
           cellSize,
           gridGap,
+          overlayCellColor,
         );
       } else {
         // draw single alive cell on overlay canvas
@@ -85,7 +85,7 @@ const Overlay = ({
     return () => {
       mainCanvas.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [canvasRef, cellSize, grid, panningOffset, pattern, mouseInsideCanvas]);
+  }, [canvasRef, cellSize, grid, panningOffset, pattern, mouseInsideCanvas, overlayCellColor]);
 
   const drawPatternOnOverlayCanvas = (
     hoverCtx: CanvasRenderingContext2D,
@@ -97,6 +97,7 @@ const Overlay = ({
     grid: number[][],
     cellSize: number,
     gridGap: number,
+    overlayCellColor: string,
   ) => {
     if (isDraggingRef.current) return;
     const patternCenterRow = Math.floor(pattern.length / 2);
@@ -116,7 +117,7 @@ const Overlay = ({
             ((row + patternRow - patternCenterRow - panningOffset.y + grid.length) % grid.length) *
               (cellSize + gridGap);
 
-          drawCell(hoverCtx, coordX, coordY, cellSize, 'yellow');
+          drawCell(hoverCtx, coordX, coordY, cellSize, overlayCellColor);
         }
       }
     }

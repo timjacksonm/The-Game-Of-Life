@@ -20,8 +20,6 @@ export interface PatternResponse {
 
 export interface CanvasProps {
   cellSize: number;
-  pattern: number[][] | null;
-  setPattern: Dispatch<SetStateAction<number[][] | null>>;
   isRunning: boolean;
   setCellSize: Dispatch<SetStateAction<number>>;
   rangeRef: React.MutableRefObject<HTMLInputElement | null>;
@@ -33,9 +31,17 @@ export interface DrawGridProps {
   ctx: CanvasRenderingContext2D | null | undefined;
   cellSize: number;
   offset: IOffset;
+  cellColor: string;
 }
 
 export interface IOffset {
   x: number;
   y: number;
+}
+
+export interface IGameContext {
+  overlayCellColor: string;
+  cellColor: string;
+  pattern: number[][] | null;
+  setPattern: Dispatch<SetStateAction<number[][] | null>>;
 }

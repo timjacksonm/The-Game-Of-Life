@@ -1,7 +1,7 @@
 import { DrawGridProps } from '@/types';
 import { produce } from 'immer';
 
-export function drawGrid({ grid, ctx, cellSize, offset }: DrawGridProps) {
+export function drawGrid({ grid, ctx, cellSize, offset, cellColor }: DrawGridProps) {
   if (!ctx) return;
   const canvasWidth = ctx.canvas.width;
   const canvasHeight = ctx.canvas.height;
@@ -16,7 +16,7 @@ export function drawGrid({ grid, ctx, cellSize, offset }: DrawGridProps) {
         offsetX + ((col - offset.x + grid[0].length) % grid[0].length) * (cellSize + gridGap);
       const coordY =
         offsetY + ((row - offset.y + grid.length) % grid.length) * (cellSize + gridGap);
-      ctx.fillStyle = grid[row][col] ? '#32CD32' : '#393e46';
+      ctx.fillStyle = grid[row][col] ? cellColor : '#393e46';
       ctx.fillRect(coordX, coordY, cellSize, cellSize);
     }
   }
