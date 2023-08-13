@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
-
 export interface PatternProps {
   select?: string;
   offset?: number;
@@ -18,14 +16,6 @@ export interface PatternResponse {
   createdAt?: string;
 }
 
-export interface CanvasProps {
-  cellSize: number;
-  isRunning: boolean;
-  setCellSize: Dispatch<SetStateAction<number>>;
-  rangeRef: React.MutableRefObject<HTMLInputElement | null>;
-  speed: number;
-}
-
 export interface DrawGridProps {
   grid: number[][];
   ctx: CanvasRenderingContext2D | null | undefined;
@@ -40,11 +30,11 @@ export interface IOffset {
 }
 
 export interface IGameContext {
-  overlayCellColor: string;
   cellColor: string;
-  pattern: number[][] | null;
-  setPattern: Dispatch<SetStateAction<number[][] | null>>;
+  cellSize: number;
   generationCount: number;
-  setGenerationCount: Dispatch<SetStateAction<number>>;
-  setAliveCount: Dispatch<SetStateAction<number>>;
+  isRunning: boolean;
+  overlayCellColor: string;
+  pattern: number[][] | null;
+  speed: number;
 }

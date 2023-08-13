@@ -5,7 +5,6 @@ import { GameContext } from './_game';
 
 interface OverlayProps {
   canvasRef: RefObject<HTMLCanvasElement>;
-  cellSize: number;
   grid: number[][];
   panningOffset: { x: number; y: number };
   mouseInsideCanvas: boolean | null;
@@ -14,14 +13,60 @@ interface OverlayProps {
 
 const Overlay = ({
   canvasRef,
-  cellSize,
   grid,
   panningOffset,
   mouseInsideCanvas,
   isDraggingRef,
 }: OverlayProps) => {
   const hoverCanvasRef = useRef<HTMLCanvasElement>(null);
-  const { overlayCellColor, pattern } = useContext(GameContext);
+  const { cellSize, pattern, overlayCellColor } = useContext(GameContext);
+
+  const drawPatternOnOverlayCanvas = (
+    hoverCtx: CanvasRenderingContext2D,
+    row: number,
+    col: number,
+    pattern: number[][],
+    centeringOffset: { x: number; y: number },
+    panningOffset: { x: number; y: number },
+    grid: number[][],
+    cellSize: number,
+    gridGap: number,
+    overlayCellColor: string,
+  ) => {
+    if (isDraggingRef.current) return;
+    const patternCenterRow = Math.floor(pattern.length / 2);
+    const patternCenterCol = Math.floor(pattern[patternCenterRow].length / 2);
+
+    for (let patternRow = 0; patternRow < pattern.length; patternRow++) {
+      for (let patternCol = 0; patternCol < pattern[patternRow].length; patternCol++) {
+        if (pattern[patternRow][patternCol] === 1) {
+          // Calculate the X-coordinate where the cell in the pattern should be drawn on the overlay canvas.
+          // The 'centeringOffset.x' accounts for the grid's horizontal centering in the canvas.
+          // The '(col + patternCol - patternCenterCol - panningOffset.x + grid[0].length) % grid[0].length'
+          // calculates the wrapped column index after considering pattern centering and panning adjustments.
+          // This creates a toroidal (wrap-around) effect for the pattern within the grid.
+          // The '(cellSize + gridGap)' adjusts for the cell size and gap between cells.
+          const coordX =
+            centeringOffset.x +
+            ((col + patternCol - patternCenterCol - panningOffset.x + grid[0].length) %
+              grid[0].length) *
+              (cellSize + gridGap);
+          // Calculate the Y-coordinate where the cell in the pattern should be drawn on the overlay canvas.
+          // The 'centeringOffset.y' accounts for the grid's vertical centering in the canvas.
+          // The '(row + patternRow - patternCenterRow - panningOffset.y + grid.length) % grid.length'
+          // calculates the wrapped row index after considering pattern centering and panning adjustments.
+          // This creates a toroidal (wrap-around) effect for the pattern within the grid.
+          // The '(cellSize + gridGap)' adjusts for the cell size and gap between cells.
+          const coordY =
+            centeringOffset.y +
+            ((row + patternRow - patternCenterRow - panningOffset.y + grid.length) % grid.length) *
+              (cellSize + gridGap);
+
+          drawCell(hoverCtx, coordX, coordY, cellSize, overlayCellColor);
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     const mainCanvas = canvasRef.current;
@@ -39,6 +84,8 @@ const Overlay = ({
       y: (canvasHeight - grid.length * (cellSize + gridGap)) / 2,
     };
 
+    // throttle prevents this from triggering more than it needs too.
+    // With this unset and a large pattern it would cause performance problems.
     const handleMouseMove = throttle((event: MouseEvent) => {
       hoverCtx.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -69,13 +116,26 @@ const Overlay = ({
           overlayCellColor,
         );
       } else {
-        // draw single alive cell on overlay canvas
+        // Draw a single alive cell on the overlay canvas.
+
+        // Calculate the X-coordinate where the cell should be drawn on the overlay canvas.
+        // The 'centeringOffset.x' adjusts for centering the grid in the canvas.
+        // The '(col - panningOffset.x + grid[0].length) % grid[0].length' computes
+        // the toroidal (wrap-around) effect after considering panning and grid boundaries.
+        // The '(cellSize + gridGap)' factors in the cell size and gap between cells.
         const coordX =
           centeringOffset.x +
           ((col - panningOffset.x + grid[0].length) % grid[0].length) * (cellSize + gridGap);
+
+        // Calculate the Y-coordinate where the cell should be drawn on the overlay canvas.
+        // The 'centeringOffset.y' adjusts for centering the grid in the canvas.
+        // The '(row - panningOffset.y + grid.length) % grid.length' computes
+        // the toroidal (wrap-around) effect after considering panning and grid boundaries.
+        // The '(cellSize + gridGap)' factors in the cell size and gap between cells.
         const coordY =
           centeringOffset.y +
           ((row - panningOffset.y + grid.length) % grid.length) * (cellSize + gridGap);
+
         drawCell(hoverCtx, coordX, coordY, cellSize, overlayCellColor);
       }
     }, 100);
@@ -86,42 +146,6 @@ const Overlay = ({
       mainCanvas.removeEventListener('mousemove', handleMouseMove);
     };
   }, [canvasRef, cellSize, grid, panningOffset, pattern, mouseInsideCanvas, overlayCellColor]);
-
-  const drawPatternOnOverlayCanvas = (
-    hoverCtx: CanvasRenderingContext2D,
-    row: number,
-    col: number,
-    pattern: number[][],
-    centeringOffset: { x: number; y: number },
-    panningOffset: { x: number; y: number },
-    grid: number[][],
-    cellSize: number,
-    gridGap: number,
-    overlayCellColor: string,
-  ) => {
-    if (isDraggingRef.current) return;
-    const patternCenterRow = Math.floor(pattern.length / 2);
-    const patternCenterCol = Math.floor(pattern[patternCenterRow].length / 2);
-
-    for (let patternRow = 0; patternRow < pattern.length; patternRow++) {
-      for (let patternCol = 0; patternCol < pattern[patternRow].length; patternCol++) {
-        if (pattern[patternRow][patternCol] === 1) {
-          const coordX =
-            centeringOffset.x +
-            ((col + patternCol - patternCenterCol - panningOffset.x + grid[0].length) %
-              grid[0].length) *
-              (cellSize + gridGap);
-
-          const coordY =
-            centeringOffset.y +
-            ((row + patternRow - patternCenterRow - panningOffset.y + grid.length) % grid.length) *
-              (cellSize + gridGap);
-
-          drawCell(hoverCtx, coordX, coordY, cellSize, overlayCellColor);
-        }
-      }
-    }
-  };
 
   return (
     <>

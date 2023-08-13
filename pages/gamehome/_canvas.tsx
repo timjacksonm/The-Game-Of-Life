@@ -1,5 +1,7 @@
 import {
+  Dispatch,
   MouseEvent as ReactMouseEvent,
+  SetStateAction,
   WheelEvent,
   useCallback,
   useContext,
@@ -7,7 +9,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import { CanvasProps } from '@/types';
 import {
   drawGrid,
   getAliveCellsCount,
@@ -20,11 +21,27 @@ import {
 import Overlay from './_overlay';
 import { GameContext } from './_game';
 
-const Canvas = ({ cellSize, isRunning, setCellSize, rangeRef, speed }: CanvasProps) => {
+interface CanvasProps {
+  rangeRef: React.MutableRefObject<HTMLInputElement | null>;
+  setAliveCount: Dispatch<SetStateAction<number>>;
+  setCellSize: Dispatch<SetStateAction<number>>;
+  setGenerationCount: Dispatch<SetStateAction<number>>;
+  setPattern: Dispatch<SetStateAction<number[][] | null>>;
+}
+
+const Canvas = ({
+  rangeRef,
+  setAliveCount,
+  setCellSize,
+  setGenerationCount,
+  setPattern,
+}: CanvasProps) => {
   const emptyGrid = Array.from({ length: 200 }, () => Array<number>(200).fill(0));
   const [grid, setGrid] = useState(emptyGrid);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [mouseInsideCanvas, setMouseInsideCanvas] = useState<true | false | null>(null);
+  const { cellColor, cellSize, isRunning, pattern, speed } = useContext(GameContext);
+
   const lastUpdateRef = useRef(0);
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -36,8 +53,6 @@ const Canvas = ({ cellSize, isRunning, setCellSize, rangeRef, speed }: CanvasPro
   const offsetRef = useRef(offset);
   const posRef = useRef({ x: 0, y: 0 });
   const panSpeedRef = useRef(0.1); // Default: 0.1 at cellSize 5. 0.01 at cellSize 95.
-  const { pattern, setPattern, cellColor, setGenerationCount, setAliveCount } =
-    useContext(GameContext);
 
   // Update refs, helps event handlers always reference the most recent state value without triggering unnecessary re-renders.
   useEffect(() => {
@@ -269,7 +284,6 @@ const Canvas = ({ cellSize, isRunning, setCellSize, rangeRef, speed }: CanvasPro
       {!isRunning && (
         <Overlay
           canvasRef={canvasRef}
-          cellSize={cellSize}
           grid={grid}
           panningOffset={offset}
           mouseInsideCanvas={mouseInsideCanvas}

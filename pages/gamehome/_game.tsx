@@ -5,13 +5,13 @@ import Canvas from './_canvas';
 import { IGameContext } from '@/types';
 
 export const GameContext = createContext<IGameContext>({
-  overlayCellColor: '#FFFF00',
   cellColor: '#32CD32',
-  pattern: null,
-  setPattern: () => void 0,
+  cellSize: 5,
   generationCount: 0,
-  setGenerationCount: () => void 0,
-  setAliveCount: () => void 0,
+  isRunning: false,
+  overlayCellColor: '#FFFF00',
+  pattern: null,
+  speed: 50,
 });
 
 export default function Game() {
@@ -125,21 +125,21 @@ export default function Game() {
 
       <GameContext.Provider
         value={{
-          overlayCellColor,
           cellColor,
-          pattern,
-          setPattern,
+          cellSize,
           generationCount,
-          setGenerationCount,
-          setAliveCount,
+          isRunning,
+          overlayCellColor,
+          pattern,
+          speed,
         }}
       >
         <Canvas
-          cellSize={cellSize}
-          setCellSize={setCellSize}
-          isRunning={isRunning}
           rangeRef={rangeRef}
-          speed={speed}
+          setAliveCount={setAliveCount}
+          setCellSize={setCellSize}
+          setGenerationCount={setGenerationCount}
+          setPattern={setPattern}
         />
       </GameContext.Provider>
     </main>
