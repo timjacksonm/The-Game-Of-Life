@@ -17,7 +17,7 @@
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
     "eslint": "8.45.0",
-    "eslint-config-next": "13.4.12",
+    "eslint-config-next": "13.4.13",
     "immer": "^10.0.2",
     "lodash": "^4.17.21",
     "next": "13.4.12",
