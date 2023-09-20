@@ -22,6 +22,8 @@ import Overlay from './_overlay';
 import { GameContext } from './_game';
 
 interface CanvasProps {
+  grid: number[][];
+  setGrid: Dispatch<SetStateAction<number[][]>>;
   rangeRef: React.MutableRefObject<HTMLInputElement | null>;
   setAliveCount: Dispatch<SetStateAction<number>>;
   setCellSize: Dispatch<SetStateAction<number>>;
@@ -30,14 +32,14 @@ interface CanvasProps {
 }
 
 const Canvas = ({
+  grid,
+  setGrid,
   rangeRef,
   setAliveCount,
   setCellSize,
   setGenerationCount,
   setPattern,
 }: CanvasProps) => {
-  const emptyGrid = Array.from({ length: 200 }, () => Array<number>(200).fill(0));
-  const [grid, setGrid] = useState(emptyGrid);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [mouseInsideCanvas, setMouseInsideCanvas] = useState<true | false | null>(null);
   const { cellColor, cellSize, isRunning, pattern, speed } = useContext(GameContext);
@@ -270,7 +272,7 @@ const Canvas = ({
   // *************************************************** //
 
   return (
-    <div className='flex flex-1 items-center justify-center'>
+    <div className='flex justify-center'>
       {typeof window !== 'undefined' && (
         <canvas
           width={window.innerWidth * 0.985}
