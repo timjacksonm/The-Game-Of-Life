@@ -2,6 +2,7 @@ export interface PatternProps {
   select?: string;
   offset?: number;
   limit?: number;
+  value?: string;
 }
 
 export interface PatternResponse {
@@ -14,6 +15,20 @@ export interface PatternResponse {
   description?: string[];
   rleString?: string;
   createdAt?: string;
+}
+
+export interface PatternAPIError {
+  message?: {
+    errors?: ErrorObject[];
+  };
+}
+
+export interface ErrorObject {
+  location?: string;
+  msg?: string;
+  path?: string;
+  type?: string;
+  value?: string;
 }
 
 export interface DrawGridProps {

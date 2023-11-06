@@ -25,7 +25,8 @@
       "utils/*": ["lib/utils/*"],
       "styles/*": ["styles/*"],
       "components/*": ["components/*"],
-      "lib/types/*": ["lib/types/*"]
+      "lib/types/*": ["lib/types/*"],
+      "assets/*": ["assets/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

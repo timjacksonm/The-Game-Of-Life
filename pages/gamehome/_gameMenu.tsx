@@ -1,15 +1,18 @@
 // import { fetchWikiPatternById } from '@/utils/api';
 // import { decode } from '@/utils/decdoe';
 import { Dispatch, SetStateAction } from 'react';
-// import { GameContext } from './_game';
 import { GameActions } from '@/types';
 import Controls from '@/components/controls';
-import Guide from '@/components/guide';
-import Options from '@/components/options';
+import { FiPlay, FiPause, FiSettings } from 'react-icons/fi';
+import { FaBook } from 'react-icons/fa';
 
 interface GameControlsProps {
   gameActions: GameActions;
   resetGenerationCount: () => void;
+  guideOpen: boolean;
+  optionsOpen: boolean;
+  toggleGuide: () => void;
+  toggleOptions: () => void;
   setPattern: Dispatch<SetStateAction<number[][] | null>>;
   setOverlayCellColor: Dispatch<SetStateAction<string>>;
   setCellColor: Dispatch<SetStateAction<string>>;
@@ -19,9 +22,12 @@ interface GameControlsProps {
 export default function GameMenu({
   gameActions,
   resetGenerationCount,
-} // setPattern,
-// setOverlayCellColor,
-// setCellColor,
+  toggleGuide,
+  toggleOptions,
+  guideOpen,
+  optionsOpen, // setPattern,
+  // setCellColor,
+} // setOverlayCellColor,
 : GameControlsProps) {
   // const [pickerColor, setPickerColor] = useState('#32CD32');
   // const [textBoxValue, setTextBoxValue] = useState('61de589bbec647f79484364a');
@@ -53,11 +59,16 @@ export default function GameMenu({
   // };
   return (
     <>
-      <div className='flex justify-around py-4'>
-        <Guide />
+      <div className='mx-auto flex justify-around py-4'>
+        <button className='mr-6 flex flex-col items-center justify-center' onClick={toggleGuide}>
+          <FaBook color={guideOpen ? '#3b82f6' : '#fff'} size='2em' />
+          <p className='pt-1'>Guide</p>
+        </button>
         <Controls gameActions={gameActions} resetGenerationCount={resetGenerationCount} />
-        <Options />
-
+        <button className='ml-6 flex flex-col items-center justify-center' onClick={toggleOptions}>
+          <FiSettings color={optionsOpen ? '#3b82f6' : '#fff'} size='2em' />
+          <p className='pt-1'>Options</p>
+        </button>
         {/* <button
           className='m-2 w-min whitespace-nowrap bg-blue-500 px-4 py-2'
           onClick={() => void loadPattern()}

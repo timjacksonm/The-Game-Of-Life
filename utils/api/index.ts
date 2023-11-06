@@ -1,4 +1,4 @@
-import { PatternResponse, PatternProps } from '@/types';
+import { PatternResponse, PatternProps, PatternAPIError } from '@/types';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -16,24 +16,20 @@ export const warmUpAPI = async () => {
   }
 };
 
-export const fetchAllWikiPatterns = async (patternProps: PatternProps) => {
-  const { select, offset, limit } = patternProps;
+export const fetchAllWikiPatterns = async (queryParams?: PatternProps) => {
+  const url = constructUrl(`${baseUrl}/wikicollection/patterns`, queryParams ?? {});
 
-  const queryParams = {
-    select,
-    offset,
-    limit,
-  };
-
-  const url = constructUrl(`${baseUrl}/wikicollection/patterns`, queryParams);
-
-  const response = await fetch(url, {
+  const res = await fetch(url, {
     headers,
   });
 
-  const result = (await response.json()) as PatternResponse[];
+  if (!res.ok) {
+    const error = (await res.json()) as PatternAPIError;
+    console.error(error);
+    throw error;
+  }
 
-  return result;
+  return res.json();
 };
 
 export const fetchWikiPatternById = async (id: string, patternProps: PatternProps) => {
@@ -49,9 +45,7 @@ export const fetchWikiPatternById = async (id: string, patternProps: PatternProp
     headers,
   });
 
-  const result = (await response.json()) as PatternResponse;
-
-  return result;
+  return (await response.json()) as PatternResponse;
 };
 
 const constructUrl = (baseUrl: string, queryParams: PatternProps) => {

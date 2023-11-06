@@ -3,6 +3,8 @@ import Canvas from './_canvas';
 import { IGameContext } from '@/types';
 import GameMenu from './_gameMenu';
 import useGameLogic from '@/utils/hooks/useGameLogic';
+import Guide from '@/components/guide';
+import Options from '@/components/options';
 
 export const GameContext = createContext<IGameContext>({
   cellColor: '#32CD32',
@@ -27,10 +29,15 @@ export default function Game() {
 
   const rangeRef = useRef(null);
 
+  const [guideOpen, setGuideOpen] = useState(false);
+  const [optionsOpen, setOptionsOpen] = useState(false);
+
   const resetGenerationCount = () => setGenerationCount(0);
+  const toggleGuide = () => setGuideOpen(!guideOpen);
+  const toggleOptions = () => setOptionsOpen(!optionsOpen);
 
   return (
-    <main className='flex h-screen flex-col'>
+    <main className='flex h-screen flex-col justify-center'>
       <GameContext.Provider
         value={{
           cellColor,
@@ -43,18 +50,23 @@ export default function Game() {
           aliveCount,
         }}
       >
+        {optionsOpen && <Options />}
         <GameMenu
           gameActions={gameActions}
           resetGenerationCount={resetGenerationCount}
+          toggleGuide={toggleGuide}
+          toggleOptions={toggleOptions}
           setPattern={setPattern}
           setOverlayCellColor={setOverlayCellColor}
           setCellColor={setCellColor}
           setSpeed={setSpeed}
+          guideOpen={guideOpen}
+          optionsOpen={optionsOpen}
         />
-
+        {guideOpen && <Guide />}
         {/* hidden zoom range slider */}
         <input
-          className='m-2 hidden w-full whitespace-nowrap bg-blue-500 px-4 py-2'
+          className='hidden'
           type='range'
           min='2.5'
           max='95'
@@ -63,7 +75,6 @@ export default function Game() {
           id='hiddenZoomRange'
           readOnly
         />
-
         <Canvas
           grid={grid}
           setGrid={setGrid}
@@ -77,12 +88,3 @@ export default function Game() {
     </main>
   );
 }
-
-// useEffect(() => {
-//   const fetchData = async () => {
-//     const result = await fetchWikiPatternById("asdf", { limit: 5 });
-//     setAllPatterns(result);
-//   };
-
-//   void fetchData();
-// }, []);
