@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAllWikiPatterns } from '@/utils/api';
-import Combobox from './dropdowncombobox';
+import Combobox from './combobox';
 import { Pattern } from '@/types';
 
 const Patterns = () => {

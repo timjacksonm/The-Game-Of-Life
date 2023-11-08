@@ -3,6 +3,7 @@ import { useCombobox } from 'downshift';
 import clsx from 'clsx';
 import { FiStar, FiX } from 'react-icons/fi';
 import { Pattern } from '@/types';
+import { generatePatternFilter } from '@/utils/helpers';
 
 interface ComboboxProps {
   patternOptions: Pattern[];
@@ -24,14 +25,7 @@ const Combobox = ({ patternOptions }: ComboboxProps) => {
     // itemToString handles the value that is displayed in the input
     itemToString: (item) => item?.title ?? '',
     onInputValueChange: ({ inputValue }) => {
-      setItems(
-        patternOptions.filter((item) => {
-          if (item.title && inputValue) {
-            return item.title.toLowerCase().includes(inputValue.toLowerCase());
-          }
-          return false;
-        }),
-      );
+      setItems(patternOptions.filter(generatePatternFilter(inputValue)));
     },
   });
 
