@@ -1,7 +1,6 @@
 import { GameContext } from '@/pages/gamehome/_game';
 import { GameActions } from '@/types';
 import { useContext } from 'react';
-import { FiPlay, FiPause, FiSettings } from 'react-icons/fi';
 
 interface ControlsProps {
   gameActions: GameActions;

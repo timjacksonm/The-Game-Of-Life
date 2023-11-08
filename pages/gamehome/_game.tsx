@@ -3,7 +3,7 @@ import Canvas from './_canvas';
 import { IGameContext } from '@/types';
 import GameMenu from './_gameMenu';
 import useGameLogic from '@/utils/hooks/useGameLogic';
-import Guide from '@/components/guide';
+// import Guide from '@/components/guide';
 import Options from '@/components/options';
 
 export const GameContext = createContext<IGameContext>({
@@ -63,7 +63,7 @@ export default function Game() {
           guideOpen={guideOpen}
           optionsOpen={optionsOpen}
         />
-        {guideOpen && <Guide />}
+        {/* {guideOpen && <Guide />} */}
         {/* hidden zoom range slider */}
         <input
           className='hidden'

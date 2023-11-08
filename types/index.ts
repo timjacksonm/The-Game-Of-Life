@@ -5,16 +5,22 @@ export interface PatternProps {
   value?: string;
 }
 
-export interface PatternResponse {
+export interface Pattern {
+  _id: string;
+  title?: string;
+  author?: string;
+  desccription?: string;
   size?: {
     x: number;
     y: number;
   };
-  _id: string;
-  title?: string;
-  description?: string[];
   rleString?: string;
-  createdAt?: string;
+  favorite?: boolean;
+}
+
+export interface PatternResponse {
+  results: Pattern[];
+  totalCount: number;
 }
 
 export interface PatternAPIError {

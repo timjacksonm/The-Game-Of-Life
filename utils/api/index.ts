@@ -16,7 +16,9 @@ export const warmUpAPI = async () => {
   }
 };
 
-export const fetchAllWikiPatterns = async (queryParams?: PatternProps) => {
+export const fetchAllWikiPatterns = async (
+  queryParams?: PatternProps,
+): Promise<PatternResponse | PatternAPIError> => {
   const url = constructUrl(`${baseUrl}/wikicollection/patterns`, queryParams ?? {});
 
   const res = await fetch(url, {
@@ -29,7 +31,7 @@ export const fetchAllWikiPatterns = async (queryParams?: PatternProps) => {
     throw error;
   }
 
-  return res.json();
+  return res.json() as unknown as PatternResponse;
 };
 
 export const fetchWikiPatternById = async (id: string, patternProps: PatternProps) => {

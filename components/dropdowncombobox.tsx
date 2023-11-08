@@ -1,91 +1,88 @@
 import { useState } from 'react';
 import { useCombobox } from 'downshift';
 import clsx from 'clsx';
+import { FiStar, FiX } from 'react-icons/fi';
+import { Pattern } from '@/types';
 
-function ComboBoxExample(props) {
-  const books = props.data?.results ?? [];
-  function getBooksFilter(inputValue) {
-    const lowerCasedInputValue = inputValue.toLowerCase();
-
-    return function booksFilter(book) {
-      return (
-        !inputValue ||
-        book.title.toLowerCase().includes(lowerCasedInputValue) ||
-        book.author.toLowerCase().includes(lowerCasedInputValue)
-      );
-    };
-  }
-
-  function ComboBox() {
-    const [items, setItems] = useState(books);
-    const {
-      isOpen,
-      getToggleButtonProps,
-      getLabelProps,
-      getMenuProps,
-      getInputProps,
-      highlightedIndex,
-      getItemProps,
-      selectedItem,
-    } = useCombobox({
-      onInputValueChange({ inputValue }) {
-        setItems(books.filter(getBooksFilter(inputValue)));
-      },
-      items,
-      isOpen: true,
-      itemToString(item) {
-        return item ? item.title : '';
-      },
-    });
-
-    return (
-      <div>
-        <div className='flex w-72 flex-col gap-1'>
-          <label className='w-fit' {...getLabelProps()}>
-            Choose your favorite book:
-          </label>
-          <div className='flex gap-0.5 bg-white shadow-sm'>
-            <input
-              placeholder='Best book ever'
-              className='w-full p-1.5 text-black'
-              {...getInputProps()}
-            />
-            <button
-              aria-label='toggle menu'
-              className='px-2'
-              type='button'
-              {...getToggleButtonProps()}
-            >
-              {isOpen ? <>&#8593;</> : <>&#8595;</>}
-            </button>
-          </div>
-        </div>
-        <ul
-          className={`absolute z-10 mt-1 max-h-80 w-72 overflow-scroll bg-white p-0 shadow-md ${
-            !(isOpen && items.length) && 'hidden'
-          }`}
-          {...getMenuProps()}
-        >
-          {isOpen &&
-            items.map((item, index) => (
-              <li
-                className={clsx(
-                  highlightedIndex === index && 'bg-blue-300',
-                  selectedItem === item && 'font-bold',
-                  'flex flex-col px-3 py-2 text-black shadow-sm',
-                )}
-                key={item._id}
-                {...getItemProps({ item, index })}
-              >
-                <span>{item.title}</span>
-                <span className='text-sm text-gray-700'>{item.author}</span>
-              </li>
-            ))}
-        </ul>
-      </div>
-    );
-  }
-  return <ComboBox />;
+interface ComboboxProps {
+  patternOptions: Pattern[];
 }
 
-export default ComboBoxExample;
+const Combobox = ({ patternOptions }: ComboboxProps) => {
+  const [items, setItems] = useState(patternOptions);
+  const {
+    getLabelProps,
+    getMenuProps,
+    getInputProps,
+    highlightedIndex,
+    getItemProps,
+    selectedItem,
+    selectItem,
+  } = useCombobox({
+    items,
+    isOpen: true,
+    // itemToString handles the value that is displayed in the input
+    itemToString: (item) => item?.title ?? '',
+    onInputValueChange: ({ inputValue }) => {
+      setItems(
+        patternOptions.filter((item) => {
+          if (item.title && inputValue) {
+            return item.title.toLowerCase().includes(inputValue.toLowerCase());
+          }
+          return false;
+        }),
+      );
+    },
+  });
+
+  return (
+    <div>
+      {selectedItem?._id}
+      <div className='flex w-3/4 flex-col gap-1'>
+        <label className='w-fit' {...getLabelProps()}>
+          Choose a pattern:
+        </label>
+        <div className='flex gap-0.5 text-black shadow-sm'>
+          <input placeholder='Search...' className='w-full p-1.5' {...getInputProps()} />
+          <button
+            className='bg-white'
+            onClick={() => {
+              selectItem(null);
+            }}
+          >
+            <FiX />
+          </button>
+        </div>
+      </div>
+      <ul
+        className={'absolute z-10 mt-1 max-h-80 w-3/4 overflow-y-scroll bg-slate-400 p-0 shadow-md'}
+        {...getMenuProps()}
+      >
+        {items.map((item, index) => (
+          <li
+            className={clsx(
+              highlightedIndex === index && 'bg-blue-300',
+              'flex px-3 py-2 shadow-sm',
+            )}
+            key={item._id}
+            {...getItemProps({ item, index })}
+          >
+            {item.favorite && <FiStar fill='yellow' />}
+            <div
+              className={clsx(
+                selectedItem === item && 'font-bold text-blue-500',
+                'flex flex-col text-white',
+              )}
+            >
+              <span className='text-lg'>{item.title}</span>
+              <span className='text-sm text-gray-600'>{item.author}</span>
+            </div>
+          </li>
+        ))}
+        {items.length === 0 && <li className='text-white'>No results found</li>}
+      </ul>
+    </div>
+  );
+};
+
+export default Combobox;

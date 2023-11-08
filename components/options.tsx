@@ -29,11 +29,4 @@ export default function Options() {
       </Folders>
     </div>
   );
-  // return (
-  //   <div className='absolute right-0 h-screen w-1/3 overflow-hidden bg-gray-600 pr-6'>
-  //     {/* <Settings {...props} /> */}
-  //     {/* <Details selected={selected} {...props} />
-  //     {isOpen && <Patterns {...props} setSelected={setSelected} selected={selected} />} */}
-  //   </div>
-  // );
 }
