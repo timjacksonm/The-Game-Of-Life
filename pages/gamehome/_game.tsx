@@ -15,10 +15,13 @@ export const GameContext = createContext<IGameContext>({
   pattern: null,
   speed: 50,
   aliveCount: 0,
+  startGame: () => {},
+  stopGame: () => {},
+  clearGrid: () => {},
 });
 
 export default function Game() {
-  const { grid, setGrid, isRunning, ...gameActions } = useGameLogic();
+  const { grid, setGrid, isRunning, startGame, stopGame, clearGrid } = useGameLogic();
   const [generationCount, setGenerationCount] = useState(0);
   const [aliveCount, setAliveCount] = useState(0);
   const [pattern, setPattern] = useState<number[][] | null>(null);
@@ -48,11 +51,13 @@ export default function Game() {
           pattern,
           speed,
           aliveCount,
+          startGame,
+          stopGame,
+          clearGrid,
         }}
       >
         {optionsOpen && <Options />}
         <GameMenu
-          gameActions={gameActions}
           resetGenerationCount={resetGenerationCount}
           toggleGuide={toggleGuide}
           toggleOptions={toggleOptions}

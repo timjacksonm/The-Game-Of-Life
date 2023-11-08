@@ -59,9 +59,6 @@ export interface IGameContext {
   pattern: number[][] | null;
   speed: number;
   aliveCount: number;
-}
-
-export interface GameActions {
   startGame: () => void;
   stopGame: () => void;
   clearGrid: () => void;

@@ -1,13 +1,11 @@
 // import { fetchWikiPatternById } from '@/utils/api';
 // import { decode } from '@/utils/decdoe';
 import { Dispatch, SetStateAction } from 'react';
-import { GameActions } from '@/types';
 import Controls from '@/components/controls';
 import { FiSettings } from 'react-icons/fi';
 import { FaBook } from 'react-icons/fa';
 
 interface GameControlsProps {
-  gameActions: GameActions;
   resetGenerationCount: () => void;
   guideOpen: boolean;
   optionsOpen: boolean;
@@ -20,7 +18,6 @@ interface GameControlsProps {
 }
 
 export default function GameMenu({
-  gameActions,
   resetGenerationCount,
   toggleGuide,
   toggleOptions,
@@ -34,7 +31,7 @@ export default function GameMenu({
           <FaBook color={guideOpen ? '#3b82f6' : '#fff'} size='2em' />
           <p className='pt-1'>Guide</p>
         </button>
-        <Controls gameActions={gameActions} resetGenerationCount={resetGenerationCount} />
+        <Controls resetGenerationCount={resetGenerationCount} />
         <button className='ml-6 flex flex-col items-center justify-center' onClick={toggleOptions}>
           <FiSettings color={optionsOpen ? '#3b82f6' : '#fff'} size='2em' />
           <p className='pt-1'>Options</p>

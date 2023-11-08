@@ -1,15 +1,13 @@
 import { GameContext } from '@/pages/gamehome/_game';
-import { GameActions } from '@/types';
 import { useContext } from 'react';
 
 interface ControlsProps {
-  gameActions: GameActions;
   resetGenerationCount: () => void;
 }
 
-export default function Controls({ gameActions, resetGenerationCount }: ControlsProps) {
-  const { isRunning, generationCount, aliveCount } = useContext(GameContext);
-  const { startGame, stopGame, clearGrid } = gameActions;
+export default function Controls({ resetGenerationCount }: ControlsProps) {
+  const { isRunning, generationCount, aliveCount, startGame, stopGame, clearGrid } =
+    useContext(GameContext);
 
   const handleReset = () => {
     clearGrid();
