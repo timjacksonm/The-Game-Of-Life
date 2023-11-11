@@ -6,12 +6,17 @@ interface ControlsProps {
 }
 
 export default function Controls({ resetGenerationCount }: ControlsProps) {
-  const { isRunning, generationCount, aliveCount, startGame, stopGame, clearGrid } =
+  const { isRunning, generationCount, aliveCount, startGame, stopGame, clearGrid, closeAllMenus } =
     useContext(GameContext);
 
   const handleReset = () => {
     clearGrid();
     resetGenerationCount();
+  };
+
+  const handleClickStartGame = () => {
+    startGame();
+    closeAllMenus();
   };
   return (
     <div>
@@ -19,7 +24,7 @@ export default function Controls({ resetGenerationCount }: ControlsProps) {
         className={`m-2 w-min whitespace-nowrap px-4 py-2 ${
           isRunning ? 'bg-gray-400' : 'bg-blue-500'
         }`}
-        onClick={startGame}
+        onClick={handleClickStartGame}
         disabled={isRunning}
       >
         Start

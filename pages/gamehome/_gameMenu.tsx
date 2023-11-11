@@ -11,7 +11,6 @@ interface GameControlsProps {
   optionsOpen: boolean;
   toggleGuide: () => void;
   toggleOptions: () => void;
-  setPattern: Dispatch<SetStateAction<number[][] | null>>;
   setOverlayCellColor: Dispatch<SetStateAction<string>>;
   setCellColor: Dispatch<SetStateAction<string>>;
   setSpeed: Dispatch<SetStateAction<number>>;

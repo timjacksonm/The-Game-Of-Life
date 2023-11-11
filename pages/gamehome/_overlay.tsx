@@ -19,13 +19,13 @@ const Overlay = ({
   isDraggingRef,
 }: OverlayProps) => {
   const hoverCanvasRef = useRef<HTMLCanvasElement>(null);
-  const { cellSize, pattern, overlayCellColor } = useContext(GameContext);
+  const { cellSize, brushPattern, overlayCellColor } = useContext(GameContext);
 
   const drawPatternOnOverlayCanvas = (
     hoverCtx: CanvasRenderingContext2D,
     row: number,
     col: number,
-    pattern: number[][],
+    brushPattern: number[][],
     centeringOffset: { x: number; y: number },
     panningOffset: { x: number; y: number },
     grid: number[][],
@@ -34,12 +34,12 @@ const Overlay = ({
     overlayCellColor: string,
   ) => {
     if (isDraggingRef.current) return;
-    const patternCenterRow = Math.floor(pattern.length / 2);
-    const patternCenterCol = Math.floor(pattern[patternCenterRow].length / 2);
+    const patternCenterRow = Math.floor(brushPattern.length / 2);
+    const patternCenterCol = Math.floor(brushPattern[patternCenterRow].length / 2);
 
-    for (let patternRow = 0; patternRow < pattern.length; patternRow++) {
-      for (let patternCol = 0; patternCol < pattern[patternRow].length; patternCol++) {
-        if (pattern[patternRow][patternCol] === 1) {
+    for (let patternRow = 0; patternRow < brushPattern.length; patternRow++) {
+      for (let patternCol = 0; patternCol < brushPattern[patternRow].length; patternCol++) {
+        if (brushPattern[patternRow][patternCol] === 1) {
           // Calculate the X-coordinate where the cell in the pattern should be drawn on the overlay canvas.
           // The 'centeringOffset.x' accounts for the grid's horizontal centering in the canvas.
           // The '(col + patternCol - patternCenterCol - panningOffset.x + grid[0].length) % grid[0].length'
@@ -102,12 +102,12 @@ const Overlay = ({
       if (!coordinates) return;
       const { row, col } = coordinates;
 
-      if (pattern && pattern.length) {
+      if (brushPattern && brushPattern.length) {
         drawPatternOnOverlayCanvas(
           hoverCtx,
           row,
           col,
-          pattern,
+          brushPattern,
           centeringOffset,
           panningOffset,
           grid,
@@ -145,7 +145,7 @@ const Overlay = ({
     return () => {
       mainCanvas.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [canvasRef, cellSize, grid, panningOffset, pattern, mouseInsideCanvas, overlayCellColor]);
+  }, [canvasRef, cellSize, grid, panningOffset, brushPattern, mouseInsideCanvas, overlayCellColor]);
 
   return (
     <>

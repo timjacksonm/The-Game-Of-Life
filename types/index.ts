@@ -9,7 +9,7 @@ export interface Pattern {
   _id: string;
   title?: string;
   author?: string;
-  desccription?: string;
+  description?: string[];
   size?: {
     x: number;
     y: number;
@@ -56,10 +56,13 @@ export interface IGameContext {
   generationCount: number;
   isRunning: boolean;
   overlayCellColor: string;
-  pattern: number[][] | null;
+  brushPattern: number[][] | null;
   speed: number;
   aliveCount: number;
   startGame: () => void;
   stopGame: () => void;
   clearGrid: () => void;
+  applyPatternToBrush: (pattern: number[][]) => void;
+  removePatternFromBrush: () => void;
+  closeAllMenus: () => void;
 }

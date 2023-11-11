@@ -17,7 +17,7 @@ export default function Options() {
   };
 
   return (
-    <div className='absolute right-0 h-screen w-1/3 overflow-hidden bg-gray-600'>
+    <div className='absolute right-0 z-10 h-screen w-1/3 overflow-hidden bg-gray-600'>
       <Folders
         state={selectedFolder}
         folderName1='Patterns'

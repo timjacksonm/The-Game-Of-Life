@@ -39,9 +39,7 @@ const Combobox = ({ setPatternToView }: ComboboxProps) => {
   }, [patternOptions, isSuccess]);
 
   useEffect(() => {
-    if (selectedItem) {
-      setPatternToView(selectedItem._id);
-    }
+    setPatternToView(selectedItem?._id ?? '');
   }, [selectedItem, setPatternToView]);
 
   if (error) {

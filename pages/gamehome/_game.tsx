@@ -12,19 +12,31 @@ export const GameContext = createContext<IGameContext>({
   generationCount: 0,
   isRunning: false,
   overlayCellColor: '#FFFF00',
-  pattern: null,
+  brushPattern: null,
   speed: 50,
   aliveCount: 0,
   startGame: () => {},
   stopGame: () => {},
   clearGrid: () => {},
+  applyPatternToBrush: () => {},
+  removePatternFromBrush: () => {},
+  closeAllMenus: () => {},
 });
 
 export default function Game() {
-  const { grid, setGrid, isRunning, startGame, stopGame, clearGrid } = useGameLogic();
+  const {
+    grid,
+    setGrid,
+    isRunning,
+    startGame,
+    stopGame,
+    clearGrid,
+    applyPatternToBrush,
+    removePatternFromBrush,
+    brushPattern,
+  } = useGameLogic();
   const [generationCount, setGenerationCount] = useState(0);
   const [aliveCount, setAliveCount] = useState(0);
-  const [pattern, setPattern] = useState<number[][] | null>(null);
   const [cellSize, setCellSize] = useState(5);
   const [speed, setSpeed] = useState(50); // Default: 50 or 20 generations per second as fastest speed. 500 or 2 generates a second as slowest speed.
   const [cellColor, setCellColor] = useState('#32CD32'); // green
@@ -38,6 +50,10 @@ export default function Game() {
   const resetGenerationCount = () => setGenerationCount(0);
   const toggleGuide = () => setGuideOpen(!guideOpen);
   const toggleOptions = () => setOptionsOpen(!optionsOpen);
+  const closeAllMenus = () => {
+    setGuideOpen(false);
+    setOptionsOpen(false);
+  };
 
   return (
     <main className='flex h-screen flex-col justify-center'>
@@ -48,12 +64,15 @@ export default function Game() {
           generationCount,
           isRunning,
           overlayCellColor,
-          pattern,
+          brushPattern,
           speed,
           aliveCount,
           startGame,
           stopGame,
           clearGrid,
+          applyPatternToBrush,
+          removePatternFromBrush,
+          closeAllMenus,
         }}
       >
         {optionsOpen && <Options />}
@@ -61,7 +80,6 @@ export default function Game() {
           resetGenerationCount={resetGenerationCount}
           toggleGuide={toggleGuide}
           toggleOptions={toggleOptions}
-          setPattern={setPattern}
           setOverlayCellColor={setOverlayCellColor}
           setCellColor={setCellColor}
           setSpeed={setSpeed}
@@ -87,7 +105,7 @@ export default function Game() {
           setAliveCount={setAliveCount}
           setCellSize={setCellSize}
           setGenerationCount={setGenerationCount}
-          setPattern={setPattern}
+          removePatternFromBrush={removePatternFromBrush}
         />
       </GameContext.Provider>
     </main>

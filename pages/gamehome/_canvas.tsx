@@ -28,7 +28,7 @@ interface CanvasProps {
   setAliveCount: Dispatch<SetStateAction<number>>;
   setCellSize: Dispatch<SetStateAction<number>>;
   setGenerationCount: Dispatch<SetStateAction<number>>;
-  setPattern: Dispatch<SetStateAction<number[][] | null>>;
+  removePatternFromBrush: () => void;
 }
 
 const Canvas = ({
@@ -38,11 +38,11 @@ const Canvas = ({
   setAliveCount,
   setCellSize,
   setGenerationCount,
-  setPattern,
+  removePatternFromBrush,
 }: CanvasProps) => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [mouseInsideCanvas, setMouseInsideCanvas] = useState<true | false | null>(null);
-  const { cellColor, cellSize, isRunning, pattern, speed } = useContext(GameContext);
+  const { cellColor, cellSize, isRunning, brushPattern, speed } = useContext(GameContext);
 
   const lastUpdateRef = useRef(0);
   const mousePositionRef = useRef({ x: 0, y: 0 });
@@ -153,10 +153,8 @@ const Canvas = ({
       if (!coordinates) return;
       const { row, col } = coordinates;
 
-      if (pattern) {
-        setGrid((prevGrid) => setGridToPattern(prevGrid, pattern, col, row, grid));
-        // temporarily set pattern array to null until I add UI to remove pattern from brush
-        setPattern(null);
+      if (brushPattern) {
+        setGrid((prevGrid) => setGridToPattern(prevGrid, brushPattern, col, row, grid));
       } else {
         setGrid((prevGrid) => toggleCell(prevGrid, col, row));
       }
@@ -218,6 +216,11 @@ const Canvas = ({
 
   // ************** Move Events (Panning) ************** //
   useEffect(() => {
+    const handleRightClick = (event: MouseEvent) => {
+      event.preventDefault();
+      removePatternFromBrush();
+    };
+
     const handleMouseDown = (event: MouseEvent) => {
       isDraggingRef.current = true;
       posRef.current = { x: event.clientX, y: event.clientY };
@@ -262,11 +265,13 @@ const Canvas = ({
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mouseup', handleMouseUp);
     canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('contextmenu', handleRightClick);
 
     return () => {
       canvas.removeEventListener('mousedown', handleMouseDown);
       canvas.removeEventListener('mouseup', handleMouseUp);
       canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.addEventListener('contextmenu', handleRightClick);
     };
   }, []);
   // *************************************************** //
