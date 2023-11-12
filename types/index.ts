@@ -1,3 +1,5 @@
+import { ChangeEvent } from 'react';
+
 export interface PatternProps {
   select?: string;
   offset?: number;
@@ -52,6 +54,7 @@ export interface IOffset {
 
 export interface IGameContext {
   cellColor: string;
+  pickerColor: string;
   cellSize: number;
   generationCount: number;
   isRunning: boolean;
@@ -65,4 +68,7 @@ export interface IGameContext {
   applyPatternToBrush: (pattern: number[][]) => void;
   removePatternFromBrush: () => void;
   closeAllMenus: () => void;
+  handleColorChange: (event: ChangeEvent<HTMLInputElement>, isOverlay?: boolean) => void;
+  applyColorChange: () => void;
+  handleSpeedChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }

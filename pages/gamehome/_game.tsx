@@ -1,4 +1,4 @@
-import { useState, createContext, useRef } from 'react';
+import { useState, createContext, useRef, ChangeEvent } from 'react';
 import Canvas from './_canvas';
 import { IGameContext } from '@/types';
 import GameMenu from './_gameMenu';
@@ -9,6 +9,7 @@ import Guide from '@/components/guide';
 
 export const GameContext = createContext<IGameContext>({
   cellColor: '#32CD32',
+  pickerColor: '#32CD32',
   cellSize: 5,
   generationCount: 0,
   isRunning: false,
@@ -22,6 +23,9 @@ export const GameContext = createContext<IGameContext>({
   applyPatternToBrush: () => {},
   removePatternFromBrush: () => {},
   closeAllMenus: () => {},
+  handleColorChange: () => {},
+  applyColorChange: () => {},
+  handleSpeedChange: () => {},
 });
 
 export default function Game() {
@@ -42,6 +46,7 @@ export default function Game() {
   const [speed, setSpeed] = useState(50); // Default: 50 or 20 generations per second as fastest speed. 500 or 2 generates a second as slowest speed.
   const [cellColor, setCellColor] = useState('#32CD32'); // green
   const [overlayCellColor, setOverlayCellColor] = useState('#FFFF00'); // yellow
+  const [pickerColor, setPickerColor] = useState('#32CD32');
 
   const rangeRef = useRef(null);
 
@@ -56,12 +61,28 @@ export default function Game() {
     setOptionsOpen(false);
     removePatternFromBrush();
   };
+  const handleColorChange = (event: ChangeEvent<HTMLInputElement>, isOverlay?: boolean) => {
+    if (!isOverlay) {
+      setPickerColor(event.target.value);
+    } else {
+      setOverlayCellColor(event.target.value);
+    }
+  };
+  // only applies when focus is off the color picker
+  const applyColorChange = () => {
+    if (pickerColor) {
+      setCellColor(pickerColor);
+    }
+  };
+  const handleSpeedChange = (event: ChangeEvent<HTMLInputElement>) =>
+    setSpeed(parseInt(event.target.value));
 
   return (
     <main className='flex h-screen flex-col justify-center'>
       <GameContext.Provider
         value={{
           cellColor,
+          pickerColor,
           cellSize,
           generationCount,
           isRunning,
@@ -75,6 +96,9 @@ export default function Game() {
           applyPatternToBrush,
           removePatternFromBrush,
           closeAllMenus,
+          handleColorChange,
+          applyColorChange,
+          handleSpeedChange,
         }}
       >
         {!isRunning && optionsOpen && <Options />}
