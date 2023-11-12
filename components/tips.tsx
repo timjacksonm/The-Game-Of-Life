@@ -3,13 +3,12 @@ import React from 'react';
 function Tips() {
   const tipList = [
     {
-      description:
-        '1.) If a loaded pattern is too large. Zoom out by pressing Ctrl + Mouswheel Down or Ctrl + MINUS',
+      description: '1.) To load a pattern go into options and apply a pattern to your mouse!',
       key: 0,
     },
     {
       description:
-        '2.) To remove a loaded pattern from cursor without opening the settings menu just right click!',
+        '2.) To remove a loaded pattern from cursor without opening the options menu just right click on the grid.',
       key: 1,
     },
     {
@@ -24,7 +23,7 @@ function Tips() {
     },
     {
       description:
-        '4.) Patterns in collections are listed from smallest size to the largest. So scroll down to view larger patterns!',
+        '4.) Available patterns are listed from smallest size to the largest. So scroll down to view larger patterns or apply a filter.',
       key: 3,
     },
     {
@@ -39,11 +38,11 @@ function Tips() {
         {tipList.map((data) => (
           <div
             key={data.key}
-            className="p-3 zoom80:m-6 zoom50:m-12 zoom33:m-16 zoom25:m-20 zoom75:p-6 zoom50:p-9 zoom25:p-12"
+            className='zoom80:m-6 zoom50:m-12 zoom33:m-16 zoom25:m-20 zoom75:p-6 zoom50:p-9 zoom25:p-12 p-3'
           >
             {data.description}
             {data.list && (
-              <ul className="p-1">
+              <ul className='p-1'>
                 {data.list.map((item, i) => (
                   <li key={i}>{item}</li>
                 ))}

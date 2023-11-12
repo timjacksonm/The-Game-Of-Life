@@ -50,7 +50,7 @@ const Rules = () => {
     },
   ];
   return (
-    <div className='flex h-screen flex-col p-3'>
+    <div className='flex h-screen flex-col pt-3'>
       <div className='zoom80:m-6 zoom50:m-12 zoom33:m-16 zoom25:m-20 m-3'>
         {rulesDescription.map((element) => (
           <p key={element.key} className='zoom75:py-3 py-1'>
@@ -58,7 +58,7 @@ const Rules = () => {
           </p>
         ))}
       </div>
-      <ol className='h-full divide-y divide-gray-400 overflow-y-scroll p-5'>
+      <ol className='h-full divide-y divide-gray-400 overflow-y-scroll border-t-4 border-gray-400 p-5'>
         {rulesList.map((rule) => (
           <li
             key={rule.key}

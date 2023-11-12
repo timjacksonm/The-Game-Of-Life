@@ -5,6 +5,7 @@ import GameMenu from './_gameMenu';
 import useGameLogic from '@/utils/hooks/useGameLogic';
 // import Guide from '@/components/guide';
 import Options from '@/components/options';
+import Guide from '@/components/guide';
 
 export const GameContext = createContext<IGameContext>({
   cellColor: '#32CD32',
@@ -87,7 +88,7 @@ export default function Game() {
           guideOpen={guideOpen}
           optionsOpen={optionsOpen}
         />
-        {/* {!isRunning && guideOpen && <Guide />} */}
+        {!isRunning && guideOpen && <Guide />}
         {/* hidden zoom range slider */}
         <input
           className='hidden'
