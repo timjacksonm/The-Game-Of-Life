@@ -1,4 +1,4 @@
-import { PatternResponse, PatternProps } from '@/types';
+import { PatternResponse, PatternProps, PatternAPIError, Pattern } from '@/types';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -16,27 +16,28 @@ export const warmUpAPI = async () => {
   }
 };
 
-export const fetchAllWikiPatterns = async (patternProps: PatternProps) => {
-  const { select, offset, limit } = patternProps;
+export const fetchAllWikiPatterns = async (
+  queryParams?: PatternProps,
+): Promise<PatternResponse | PatternAPIError> => {
+  const url = constructUrl(`${baseUrl}/wikicollection/patterns`, queryParams ?? {});
 
-  const queryParams = {
-    select,
-    offset,
-    limit,
-  };
-
-  const url = constructUrl(`${baseUrl}/wikicollection/patterns`, queryParams);
-
-  const response = await fetch(url, {
+  const res = await fetch(url, {
     headers,
   });
 
-  const result = (await response.json()) as PatternResponse[];
+  if (!res.ok) {
+    const error = (await res.json()) as PatternAPIError;
+    console.error(error);
+    throw error;
+  }
 
-  return result;
+  return res.json() as unknown as PatternResponse;
 };
 
-export const fetchWikiPatternById = async (id: string, patternProps: PatternProps) => {
+export const fetchWikiPatternById = async (
+  id: string,
+  patternProps: PatternProps,
+): Promise<Pattern> => {
   const { select, offset, limit } = patternProps;
   const queryParams = {
     select,
@@ -45,13 +46,17 @@ export const fetchWikiPatternById = async (id: string, patternProps: PatternProp
   };
 
   const url = constructUrl(`${baseUrl}/wikicollection/patterns/${id}`, queryParams);
-  const response = await fetch(url, {
+  const res = await fetch(url, {
     headers,
   });
 
-  const result = (await response.json()) as PatternResponse;
+  if (!res.ok) {
+    const error = (await res.json()) as PatternAPIError;
+    console.error(error);
+    throw error;
+  }
 
-  return result;
+  return res.json() as unknown as Pattern;
 };
 
 const constructUrl = (baseUrl: string, queryParams: PatternProps) => {

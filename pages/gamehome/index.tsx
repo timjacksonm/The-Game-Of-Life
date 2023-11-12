@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import Game from './_game';
 import { warmUpAPI } from '@/utils/api';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export default function GameHome() {
+  const queryClient = new QueryClient();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -13,8 +15,8 @@ export default function GameHome() {
   if (!isClient) return <div>loading...</div>;
 
   return (
-    <main>
+    <QueryClientProvider client={queryClient}>
       <Game />
-    </main>
+    </QueryClientProvider>
   );
 }

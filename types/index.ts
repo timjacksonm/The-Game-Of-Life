@@ -1,19 +1,42 @@
+import { ChangeEvent } from 'react';
+
 export interface PatternProps {
   select?: string;
   offset?: number;
   limit?: number;
+  value?: string;
 }
 
-export interface PatternResponse {
+export interface Pattern {
+  _id: string;
+  title?: string;
+  author?: string;
+  description?: string[];
   size?: {
     x: number;
     y: number;
   };
-  _id: string;
-  title?: string;
-  description?: string[];
   rleString?: string;
-  createdAt?: string;
+  favorite?: boolean;
+}
+
+export interface PatternResponse {
+  results: Pattern[];
+  totalCount: number;
+}
+
+export interface PatternAPIError {
+  message?: {
+    errors?: ErrorObject[];
+  };
+}
+
+export interface ErrorObject {
+  location?: string;
+  msg?: string;
+  path?: string;
+  type?: string;
+  value?: string;
 }
 
 export interface DrawGridProps {
@@ -31,17 +54,21 @@ export interface IOffset {
 
 export interface IGameContext {
   cellColor: string;
+  pickerColor: string;
   cellSize: number;
   generationCount: number;
   isRunning: boolean;
   overlayCellColor: string;
-  pattern: number[][] | null;
+  brushPattern: number[][] | null;
   speed: number;
   aliveCount: number;
-}
-
-export interface GameActions {
   startGame: () => void;
   stopGame: () => void;
   clearGrid: () => void;
+  applyPatternToBrush: (pattern: number[][]) => void;
+  removePatternFromBrush: () => void;
+  closeAllMenus: () => void;
+  handleColorChange: (event: ChangeEvent<HTMLInputElement>, isOverlay?: boolean) => void;
+  applyColorChange: () => void;
+  handleSpeedChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
