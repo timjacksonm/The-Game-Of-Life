@@ -22,14 +22,19 @@ export default function GameMenu({
   guideOpen,
   optionsOpen,
 }: GameControlsProps) {
-  const { isRunning } = useContext(GameContext);
+  const { isRunning, stopGame } = useContext(GameContext);
+
+  const handleClick = (action: () => void) => {
+    if (isRunning) stopGame();
+    action();
+  };
+
   return (
     <>
       <div className='mx-auto flex justify-around py-4'>
         <button
           className='mr-6 flex flex-col items-center justify-center'
-          onClick={toggleGuide}
-          disabled={isRunning}
+          onClick={() => handleClick(toggleGuide)}
         >
           <FaBook color={guideOpen ? '#3b82f6' : '#fff'} size='2em' />
           <p className='pt-1'>Guide</p>
@@ -37,8 +42,7 @@ export default function GameMenu({
         <Controls resetGenerationCount={resetGenerationCount} />
         <button
           className='ml-6 flex flex-col items-center justify-center'
-          onClick={toggleOptions}
-          disabled={isRunning}
+          onClick={() => handleClick(toggleOptions)}
         >
           <FiSettings color={optionsOpen ? '#3b82f6' : '#fff'} size='2em' />
           <p className='pt-1'>Options</p>
