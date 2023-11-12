@@ -53,6 +53,7 @@ export default function Game() {
   const closeAllMenus = () => {
     setGuideOpen(false);
     setOptionsOpen(false);
+    removePatternFromBrush();
   };
 
   return (
@@ -75,7 +76,7 @@ export default function Game() {
           closeAllMenus,
         }}
       >
-        {optionsOpen && <Options />}
+        {!isRunning && optionsOpen && <Options />}
         <GameMenu
           resetGenerationCount={resetGenerationCount}
           toggleGuide={toggleGuide}
@@ -86,7 +87,7 @@ export default function Game() {
           guideOpen={guideOpen}
           optionsOpen={optionsOpen}
         />
-        {/* {guideOpen && <Guide />} */}
+        {/* {!isRunning && guideOpen && <Guide />} */}
         {/* hidden zoom range slider */}
         <input
           className='hidden'

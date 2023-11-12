@@ -1,36 +1,23 @@
 import { usePattern } from '@/utils/api/hooks/usePattern';
-import { GiPalette } from 'react-icons/gi';
 import LoadingIcon from './loader';
-import Button from './button';
-import { useContext } from 'react';
-import { GameContext } from '@/pages/gamehome/_game';
+import { useEffect } from 'react';
+
 import { decode } from '@/utils/decdoe';
 
 interface PatternDetailsProps {
   selectedPatternId: string;
+  setDecodedPattern: (decodedPattern: number[][] | null) => void;
 }
 
-const PatternDetails = ({ selectedPatternId }: PatternDetailsProps) => {
+const PatternDetails = ({ selectedPatternId, setDecodedPattern }: PatternDetailsProps) => {
   const { patternDetails, isLoading, error } = usePattern(selectedPatternId);
-  const { applyPatternToBrush, removePatternFromBrush } = useContext(GameContext);
 
-  const handleClickApply = () => {
-    if (!patternDetails) return;
-
-    if (patternDetails.rleString && patternDetails.size) {
+  useEffect(() => {
+    if (patternDetails?.rleString && patternDetails?.size) {
       const decodedString = decode(patternDetails.rleString, patternDetails.size);
-      applyPatternToBrush(decodedString);
+      setDecodedPattern(decodedString);
     }
-  };
-
-  const handleClickRemove = () => {
-    removePatternFromBrush();
-  };
-
-  // function removeBrushHandler() {
-  //   setBrush([]);
-  //   setLiveCoords(() => new Set());
-  // }
+  }, [patternDetails, setDecodedPattern]);
 
   const renderContent = () => {
     if (error) {
@@ -71,19 +58,7 @@ const PatternDetails = ({ selectedPatternId }: PatternDetailsProps) => {
     );
   };
 
-  return (
-    <>
-      <div className='flex h-1/5 border-y-2 border-gray-400'>
-        <Button clickHanlder={handleClickRemove} name='Remove Pattern'>
-          <GiPalette title='Palette' size='2em' />
-        </Button>
-        <Button clickHanlder={handleClickApply} name='Apply Pattern'>
-          <GiPalette title='Palette' size='2em' />
-        </Button>
-      </div>
-      {renderContent()}
-    </>
-  );
+  return renderContent();
 };
 
 export default PatternDetails;

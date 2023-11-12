@@ -8,9 +8,10 @@ import LoadingIcon from './loader';
 
 interface ComboboxProps {
   setPatternToView: (patternId: string) => void;
+  clearSelectedPattern: () => void;
 }
 
-const Combobox = ({ setPatternToView }: ComboboxProps) => {
+const Combobox = ({ setPatternToView, clearSelectedPattern }: ComboboxProps) => {
   const { patternOptions, totalCount, isLoading, isSuccess, error } = usePatterns();
 
   const [items, setItems] = useState(patternOptions);
@@ -41,6 +42,11 @@ const Combobox = ({ setPatternToView }: ComboboxProps) => {
   useEffect(() => {
     setPatternToView(selectedItem?._id ?? '');
   }, [selectedItem, setPatternToView]);
+
+  const handleClearSelection = () => {
+    selectItem(null);
+    clearSelectedPattern();
+  };
 
   if (error) {
     return;
@@ -82,24 +88,22 @@ const Combobox = ({ setPatternToView }: ComboboxProps) => {
   return (
     <div>
       <h1>{`Total available patterns: ${totalCount}`}</h1>
-      <div className='flex w-3/4 flex-col gap-1'>
+      <div className='flex w-11/12 flex-col gap-1'>
         <label className='w-fit' {...getLabelProps()}>
           Choose a pattern:
         </label>
-        <div className='flex gap-0.5 text-black shadow-sm'>
-          <input placeholder='Search...' className='w-full p-1.5' {...getInputProps()} />
+        <div className='relative flex gap-0.5 text-black shadow-sm'>
+          <input placeholder='Search...' className='w-full p-1.5 pr-10' {...getInputProps()} />
           <button
-            className='bg-white'
-            onClick={() => {
-              selectItem(null);
-            }}
+            className='absolute right-2 top-1/2 -translate-y-1/2 transform bg-white p-2'
+            onClick={handleClearSelection}
           >
             <FiX />
           </button>
         </div>
       </div>
       <ul
-        className={'absolute z-10 mt-1 max-h-80 w-3/4 overflow-y-scroll bg-slate-400 p-0 shadow-md'}
+        className={'z-10 mt-1 h-96 w-11/12 overflow-y-scroll bg-slate-400 p-0 shadow-md'}
         {...getMenuProps()}
       >
         {renderContent()}
