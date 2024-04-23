@@ -95,7 +95,7 @@ const Combobox = ({ setPatternToView, clearSelectedPattern }: ComboboxProps) => 
         <div className='relative flex gap-0.5 text-black shadow-sm'>
           <input placeholder='Search...' className='w-full p-1.5 pr-10' {...getInputProps()} />
           <button
-            className='absolute right-2 top-1/2 -translate-y-1/2 transform bg-white p-2'
+            className='absolute right-2 top-1/2 -translate-y-1/2 bg-white p-2'
             onClick={handleClearSelection}
           >
             <FiX />
