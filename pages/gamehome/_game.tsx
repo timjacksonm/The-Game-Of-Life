@@ -3,7 +3,6 @@ import Canvas from './_canvas';
 import { IGameContext } from '@/types';
 import GameMenu from './_gameMenu';
 import useGameLogic from '@/utils/hooks/useGameLogic';
-// import Guide from '@/components/guide';
 import Options from '@/components/options';
 import Guide from '@/components/guide';
 
@@ -54,12 +53,21 @@ export default function Game() {
   const [optionsOpen, setOptionsOpen] = useState(false);
 
   const resetGenerationCount = () => setGenerationCount(0);
-  const toggleGuide = () => setGuideOpen(!guideOpen);
-  const toggleOptions = () => setOptionsOpen(!optionsOpen);
   const closeAllMenus = () => {
     setGuideOpen(false);
     setOptionsOpen(false);
     removePatternFromBrush();
+  };
+  const toggleMenu = (name: string) => {
+    if (name === 'guide') {
+      setGuideOpen(!guideOpen);
+      setOptionsOpen(false);
+    }
+
+    if (name === 'options') {
+      setOptionsOpen(!optionsOpen);
+      setGuideOpen(false);
+    }
   };
   const handleColorChange = (event: ChangeEvent<HTMLInputElement>, isOverlay?: boolean) => {
     if (!isOverlay) {
@@ -78,7 +86,7 @@ export default function Game() {
     setSpeed(parseInt(event.target.value));
 
   return (
-    <main className='flex h-screen flex-col justify-center'>
+    <main className='relative flex h-screen flex-col  justify-center overflow-hidden'>
       <GameContext.Provider
         value={{
           cellColor,
@@ -101,18 +109,31 @@ export default function Game() {
           handleSpeedChange,
         }}
       >
-        {!isRunning && optionsOpen && <Options />}
+        <div
+          className={`absolute left-0 top-0 w-1/3 transform transition-transform duration-500 ${
+            !guideOpen ? '-translate-x-full' : 'translate-x-0'
+          }`}
+        >
+          {!isRunning && <Guide />}
+        </div>
+        <div
+          className={`absolute right-0 top-0 w-1/3 transform transition-transform duration-500 ${
+            !optionsOpen ? 'translate-x-full' : 'translate-x-0'
+          }`}
+        >
+          {!isRunning && <Options />}
+        </div>
+
         <GameMenu
           resetGenerationCount={resetGenerationCount}
-          toggleGuide={toggleGuide}
-          toggleOptions={toggleOptions}
+          toggleMenu={toggleMenu}
           setOverlayCellColor={setOverlayCellColor}
           setCellColor={setCellColor}
           setSpeed={setSpeed}
           guideOpen={guideOpen}
           optionsOpen={optionsOpen}
         />
-        {!isRunning && guideOpen && <Guide />}
+
         {/* hidden zoom range slider */}
         <input
           className='hidden'

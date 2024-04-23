@@ -88,16 +88,21 @@ const Combobox = ({ setPatternToView, clearSelectedPattern }: ComboboxProps) => 
       </li>
     ));
   };
+  // temp fix. ref on getInputProps is adding odd layout shift issues
+  // eslint-disable-next-line
+  // @ts-ignore
+  const { ref, ...inputProps } = getInputProps();
 
   return (
     <div>
       <h1>{`Total available patterns: ${totalCount}`}</h1>
-      <div className='flex w-11/12 flex-col gap-1'>
+      <div className='flex flex-col gap-1'>
         <label className='w-fit' {...getLabelProps()}>
           Choose a pattern:
         </label>
         <div className='relative flex gap-0.5 text-black shadow-sm'>
-          <input placeholder='Search...' className='w-full p-1.5 pr-10' {...getInputProps()} />
+          <input placeholder='Search...' className='w-full p-1.5 pr-10' {...inputProps} />
+
           <button
             className='absolute right-2 top-1/2 -translate-y-1/2 bg-white p-2'
             onClick={handleClearSelection}
@@ -107,7 +112,7 @@ const Combobox = ({ setPatternToView, clearSelectedPattern }: ComboboxProps) => 
         </div>
       </div>
       <ul
-        className={'z-10 mt-1 h-96 w-11/12 overflow-y-scroll bg-slate-400 p-0 shadow-md'}
+        className={'z-10 mt-1 h-96 overflow-y-scroll bg-slate-400 p-0 shadow-md'}
         {...getMenuProps()}
       >
         {renderContent()}

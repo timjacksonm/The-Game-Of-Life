@@ -17,7 +17,7 @@ const Guide = () => {
   };
 
   return (
-    <div className='absolute h-screen w-1/3 overflow-hidden bg-gray-600'>
+    <div className='h-screen w-full overflow-hidden bg-gray-600'>
       <Folders
         state={selectedFolder}
         folderName1='Rules'
