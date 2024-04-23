@@ -28,7 +28,11 @@ const Combobox = ({ setPatternToView, clearSelectedPattern }: ComboboxProps) => 
     isOpen: true,
     // itemToString handles the value that is displayed in the input
     itemToString: (item) => item?.title ?? '',
-    onInputValueChange: ({ inputValue }) => {
+    onInputValueChange: ({ inputValue, selectedItem }) => {
+      // don't change items list if query matches selected item
+      if (selectedItem && inputValue === selectedItem.title) {
+        return;
+      }
       setItems(patternOptions.filter(generatePatternFilter(inputValue)));
     },
   });
