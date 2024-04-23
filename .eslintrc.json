@@ -20,6 +20,7 @@
     "import/newline-after-import": "error",
     "import/no-duplicates": "error",
     "arrow-body-style": ["error", "as-needed"],
-    "no-console": ["error", { "allow": ["warn", "error"] }]
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "semi": ["error", "always"]
   }
 }
