@@ -5,6 +5,7 @@ import GameMenu from './_gameMenu';
 import useGameLogic from '@/utils/hooks/useGameLogic';
 import Options from '@/components/options';
 import Guide from '@/components/guide';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export const GameContext = createContext<IGameContext>({
   cellColor: '#32CD32',
@@ -28,6 +29,7 @@ export const GameContext = createContext<IGameContext>({
 });
 
 export default function Game() {
+  const queryClient = new QueryClient();
   const {
     grid,
     setGrid,
@@ -86,75 +88,77 @@ export default function Game() {
     setSpeed(parseInt(event.target.value));
 
   return (
-    <main className='relative flex h-screen flex-col  justify-center overflow-hidden'>
-      <GameContext.Provider
-        value={{
-          cellColor,
-          pickerColor,
-          cellSize,
-          generationCount,
-          isRunning,
-          overlayCellColor,
-          brushPattern,
-          speed,
-          aliveCount,
-          startGame,
-          stopGame,
-          clearGrid,
-          applyPatternToBrush,
-          removePatternFromBrush,
-          closeAllMenus,
-          handleColorChange,
-          applyColorChange,
-          handleSpeedChange,
-        }}
-      >
-        <div
-          className={`absolute left-0 top-0 w-1/3 transform transition-transform duration-500 ${
-            !guideOpen ? '-translate-x-full' : 'translate-x-0'
-          }`}
+    <QueryClientProvider client={queryClient}>
+      <main className='relative flex h-screen flex-col  justify-center overflow-hidden'>
+        <GameContext.Provider
+          value={{
+            cellColor,
+            pickerColor,
+            cellSize,
+            generationCount,
+            isRunning,
+            overlayCellColor,
+            brushPattern,
+            speed,
+            aliveCount,
+            startGame,
+            stopGame,
+            clearGrid,
+            applyPatternToBrush,
+            removePatternFromBrush,
+            closeAllMenus,
+            handleColorChange,
+            applyColorChange,
+            handleSpeedChange,
+          }}
         >
-          {!isRunning && <Guide />}
-        </div>
-        <div
-          className={`absolute right-0 top-0 w-1/3 transform transition-transform duration-500 ${
-            !optionsOpen ? 'translate-x-full' : 'translate-x-0'
-          }`}
-        >
-          {!isRunning && <Options />}
-        </div>
+          <div
+            className={`absolute left-0 top-0 w-1/3 transform transition-transform duration-500 ${
+              !guideOpen ? '-translate-x-full' : 'translate-x-0'
+            }`}
+          >
+            {!isRunning && <Guide />}
+          </div>
+          <div
+            className={`absolute right-0 top-0 w-1/3 transform transition-transform duration-500 ${
+              !optionsOpen ? 'translate-x-full' : 'translate-x-0'
+            }`}
+          >
+            {!isRunning && <Options />}
+          </div>
 
-        <GameMenu
-          resetGenerationCount={resetGenerationCount}
-          toggleMenu={toggleMenu}
-          setOverlayCellColor={setOverlayCellColor}
-          setCellColor={setCellColor}
-          setSpeed={setSpeed}
-          guideOpen={guideOpen}
-          optionsOpen={optionsOpen}
-        />
+          <GameMenu
+            resetGenerationCount={resetGenerationCount}
+            toggleMenu={toggleMenu}
+            setOverlayCellColor={setOverlayCellColor}
+            setCellColor={setCellColor}
+            setSpeed={setSpeed}
+            guideOpen={guideOpen}
+            optionsOpen={optionsOpen}
+          />
 
-        {/* hidden zoom range slider */}
-        <input
-          className='hidden'
-          type='range'
-          min='2.5'
-          max='95'
-          value={cellSize}
-          ref={rangeRef}
-          id='hiddenZoomRange'
-          readOnly
-        />
-        <Canvas
-          grid={grid}
-          setGrid={setGrid}
-          rangeRef={rangeRef}
-          setAliveCount={setAliveCount}
-          setCellSize={setCellSize}
-          setGenerationCount={setGenerationCount}
-          removePatternFromBrush={removePatternFromBrush}
-        />
-      </GameContext.Provider>
-    </main>
+          {/* hidden zoom range slider */}
+          <input
+            className='hidden'
+            type='range'
+            min='2.5'
+            max='95'
+            value={cellSize}
+            ref={rangeRef}
+            id='hiddenZoomRange'
+            readOnly
+          />
+          <Canvas
+            grid={grid}
+            setGrid={setGrid}
+            rangeRef={rangeRef}
+            setAliveCount={setAliveCount}
+            setCellSize={setCellSize}
+            setGenerationCount={setGenerationCount}
+            removePatternFromBrush={removePatternFromBrush}
+          />
+        </GameContext.Provider>
+      </main>
+    </QueryClientProvider>
   );
 }
